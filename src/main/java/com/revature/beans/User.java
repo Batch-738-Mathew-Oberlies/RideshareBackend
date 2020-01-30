@@ -12,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import org.springframework.stereotype.Component;
 
 /**
@@ -36,6 +39,8 @@ public class User implements Serializable {
 	
 	@NotBlank
 	@Column(name="user_name")
+	@Size(min=3,max=12)
+	@Pattern(regexp="^\\w+\\.?\\w+$")
 	private String userName;
 	
 	@ManyToOne
@@ -44,17 +49,23 @@ public class User implements Serializable {
 	
 	@NotBlank
 	@Column(name="first_name")
+	@Size(max=30)
+	@Pattern(regexp="^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$")
 	private String firstName;
 	
 	@NotBlank
 	@Column(name="last_name")
+	@Size(max=30)
+	@Pattern(regexp="^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$")
 	private String lastName;
 	
 	@Email
+	@Pattern(regexp="^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$")
 	private String email;
 	
 	@NotBlank
 	@Column(name="phone_number")
+	@Pattern(regexp="^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$")
 	private String phoneNumber;
 	
 	@Column(name="is_driver")
