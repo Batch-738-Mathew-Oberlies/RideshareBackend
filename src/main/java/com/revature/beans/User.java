@@ -53,14 +53,14 @@ public class User implements Serializable {
 	@NotBlank
 	@Column(name="first_name")
 	@Size(max=30)
-	@Pattern(regexp="^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$")
+	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$")
 	private String firstName;
 	
 	@Valid
 	@NotBlank
 	@Column(name="last_name")
 	@Size(max=30)
-	@Pattern(regexp="^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$")
+	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$")
 	private String lastName;
 	
 	@Email
