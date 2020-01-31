@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -37,6 +38,7 @@ public class User implements Serializable {
 	@Column(name="user_id")
 	private int userId;
 	
+	@Valid
 	@NotBlank
 	@Column(name="user_name")
 	@Size(min=3,max=12)
@@ -47,12 +49,14 @@ public class User implements Serializable {
 	@JoinColumn(name="batch_number")
 	private Batch batch;
 	
+	@Valid
 	@NotBlank
 	@Column(name="first_name")
 	@Size(max=30)
 	@Pattern(regexp="^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$")
 	private String firstName;
 	
+	@Valid
 	@NotBlank
 	@Column(name="last_name")
 	@Size(max=30)
@@ -80,9 +84,51 @@ public class User implements Serializable {
 	public User() {
 		super();
 	}
-	
-	public User(int userId, String userName, Batch batch, String firstName, String lastName, String email,
-			String phoneNumber) {
+
+	public User(int userId, @NotBlank @Size(min = 3, max = 12) @Pattern(regexp = "^\\w+\\.?\\w+$") String userName,
+			Batch batch,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String firstName,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String lastName,
+			@Email @Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$") String email,
+			@NotBlank @Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$") String phoneNumber,
+			boolean isDriver, boolean isActive, boolean isAcceptingRides) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.batch = batch;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.isDriver = isDriver;
+		this.isActive = isActive;
+		this.isAcceptingRides = isAcceptingRides;
+	}
+
+	public User(@NotBlank @Size(min = 3, max = 12) @Pattern(regexp = "^\\w+\\.?\\w+$") String userName, Batch batch,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String firstName,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String lastName,
+			@Email @Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$") String email,
+			@NotBlank @Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$") String phoneNumber,
+			boolean isDriver, boolean isActive, boolean isAcceptingRides) {
+		super();
+		this.userName = userName;
+		this.batch = batch;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.isDriver = isDriver;
+		this.isActive = isActive;
+		this.isAcceptingRides = isAcceptingRides;
+	}
+
+	public User(int userId, @NotBlank @Size(min = 3, max = 12) @Pattern(regexp = "^\\w+\\.?\\w+$") String userName,
+			Batch batch,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String firstName,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String lastName,
+			@Email @Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$") String email,
+			@NotBlank @Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$") String phoneNumber) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -173,6 +219,10 @@ public class User implements Serializable {
 		this.isAcceptingRides = isAcceptingRides;
 	}
 
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -202,20 +252,17 @@ public class User implements Serializable {
 		if (batch == null) {
 			if (other.batch != null)
 				return false;
-		} 
-		else if (!batch.equals(other.batch))
+		} else if (!batch.equals(other.batch))
 			return false;
 		if (email == null) {
 			if (other.email != null)
 				return false;
-		} 
-		else if (!email.equals(other.email))
+		} else if (!email.equals(other.email))
 			return false;
 		if (firstName == null) {
 			if (other.firstName != null)
 				return false;
-		} 
-		else if (!firstName.equals(other.firstName))
+		} else if (!firstName.equals(other.firstName))
 			return false;
 		if (isAcceptingRides != other.isAcceptingRides)
 			return false;
@@ -226,22 +273,19 @@ public class User implements Serializable {
 		if (lastName == null) {
 			if (other.lastName != null)
 				return false;
-		} 
-		else if (!lastName.equals(other.lastName))
+		} else if (!lastName.equals(other.lastName))
 			return false;
 		if (phoneNumber == null) {
 			if (other.phoneNumber != null)
 				return false;
-		} 
-		else if (!phoneNumber.equals(other.phoneNumber))
+		} else if (!phoneNumber.equals(other.phoneNumber))
 			return false;
 		if (userId != other.userId)
 			return false;
 		if (userName == null) {
 			if (other.userName != null)
 				return false;
-		} 
-		else if (!userName.equals(other.userName))
+		} else if (!userName.equals(other.userName))
 			return false;
 		return true;
 	}
@@ -252,5 +296,9 @@ public class User implements Serializable {
 				+ ", lastName=" + lastName + ", email=" + email + ", phoneNumber=" + phoneNumber + ", isDriver="
 				+ isDriver + ", isActive=" + isActive + ", isAcceptingRides=" + isAcceptingRides + "]";
 	}
+
+	
+	
+	
 	
 }
