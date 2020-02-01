@@ -1,0 +1,18 @@
+[
+    {
+        "adminId": 1,
+        "userName": "Ms. Admin"
+    },
+    {
+        "adminId": 2,
+        "userName": "Mr. Admin"
+    },
+    {
+        "adminId": 3,
+        "userName": "Dr. Admin"
+    },
+    {
+        "adminId": 4,
+        "userName": "Mademoiselle Admin"
+    }
+]

@@ -1,0 +1,71 @@
+[
+    {
+        "carId": 1,
+        "color": "testuser1",
+        "seats": 4,
+        "make": "User",
+        "model": "testuser@test.com",
+        "year": 2323,
+        "user": {
+            "userId": 2,
+            "userName": "testuser2",
+            "batch": {
+                "batchNumber": 5,
+                "batchLocation": "pittsburgh"
+            },
+            "firstName": "Test",
+            "lastName": "User",
+            "email": "testuser@test.com",
+            "phoneNumber": "777-777-7777",
+            "driver": false,
+            "active": false,
+            "acceptingRides": false
+        }
+    },
+    {
+        "carId": 3,
+        "color": "testuser1",
+        "seats": 6,
+        "make": "Make4",
+        "model": "model4",
+        "year": 1999,
+        "user": {
+            "userId": 4,
+            "userName": "testuser4",
+            "batch": {
+                "batchNumber": 4,
+                "batchLocation": "morgantown"
+            },
+            "firstName": "Test4",
+            "lastName": "User4",
+            "email": "testuser4@test.com",
+            "phoneNumber": "777-444-4444",
+            "driver": true,
+            "active": true,
+            "acceptingRides": true
+        }
+    },
+    {
+        "carId": 4,
+        "color": "brown13",
+        "seats": 3,
+        "make": "Make13",
+        "model": "mode13",
+        "year": 1999,
+        "user": {
+            "userId": 7,
+            "userName": "testuser13",
+            "batch": {
+                "batchNumber": 2,
+                "batchLocation": "washington"
+            },
+            "firstName": "Test13",
+            "lastName": "User13",
+            "email": "testuser113@test.com",
+            "phoneNumber": "777-333-3333",
+            "driver": true,
+            "active": true,
+            "acceptingRides": true
+        }
+    }
+]
