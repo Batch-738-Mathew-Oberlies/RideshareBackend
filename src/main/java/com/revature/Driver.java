@@ -1,7 +1,10 @@
 package com.revature;
  
-import com.revature.beans.Distance;
- 
+import com.revature.controllers.DistanceController;
+import com.revature.controllers.JSONReaderController;
+
+import java.util.ArrayList;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean; 
@@ -34,8 +37,13 @@ public class Driver {
 
 	public static void main(String[] args) {
 		SpringApplication.run(Driver.class, args); 
+		
+		ArrayList addresses = JSONReaderController.dataCleaner(args);
+		System.out.println("\n---------addresses from main():---------");
+		System.out.println(addresses);
+		System.out.println("---------addresses from main():---------\n");
 
-		Distance.main(args);
+		DistanceController.getSorted(args);
 	}
 	 
  

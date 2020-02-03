@@ -1,4 +1,4 @@
-package com.revature.beans;
+package com.revature.controllers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -9,7 +9,7 @@ import java.util.Scanner;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class JSONWriter {
+public class JSONWriterController {
 
 	@SuppressWarnings("unchecked")
 	public static void main(String[] args) {
