@@ -1,12 +1,17 @@
 package com.revature.controllers;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.validation.Valid;
+import javax.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +43,7 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin
 @Api(tags= {"User"})
 public class UserController {
+	private Validator validator;
 	
 	@Autowired
 	private UserService us;
@@ -87,13 +93,66 @@ public class UserController {
 	 * 
 	 * @param user represents the new User object being sent.
 	 * @return The newly created object with a 201 code.
+	 * 
+	 * Sends custom error messages when incorrect input is used
 	 */
 	
 	@ApiOperation(value="Adds a new user", tags= {"User"})
 	@PostMapping
-	public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
+	public Map<String, Set<String>> addUser(@Valid @RequestBody User user, BindingResult result) {
 		
-		return new ResponseEntity<>(us.addUser(user), HttpStatus.CREATED);
+		 Map<String, Set<String>> errors = new HashMap<>();
+		 
+		 for (FieldError fieldError : result.getFieldErrors()) {
+		      String code = fieldError.getCode();
+		      String field = fieldError.getField();
+		      if (code.equals("NotBlank") || code.equals("NotNull")) {
+		        errors.computeIfAbsent(field, key -> new HashSet<>()).add(field+" required");
+		      }
+		      //username custom error message
+		      else if (code.equals("Size") && field.equals("userName")) {
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Username must be between 3 and 12 characters in length");
+		      }
+		      else if (code.equals("Pattern") && field.equals("userName")) {
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Username may not have any illegal characters such as $@-");
+		      }
+		      else if (code.equals("Valid") && field.equals("userName")) {
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid userName");
+		      }
+		      //first name custom error message
+		      else if (code.equals("Size") && field.equals("firstName")) {
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("First name cannot be more than 30 characters in length");
+		      }
+		      else if (code.equals("Pattern") && field.equals("firstName")) {
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("First name allows only 1 space or hyphen and no illegal characters");
+		      }
+		      else if (code.equals("Valid") && field.equals("firstName")) {
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid firstName");
+		      }
+		      //last name custom error message
+		      else if (code.equals("Size") && field.equals("lastName")) {
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Last name cannot be more than 30 characters in length");
+		      }
+		      else if (code.equals("Pattern") && field.equals("lastName")) {
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Last name allows only 1 space or hyphen and no illegal characters");
+		      }
+		      else if (code.equals("Valid") && field.equals("lastName")) {
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid lastName");
+		      }
+		      //email custom error messages
+		      else if (code.equals("Email") && field.equals("email")) {
+		              errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid Email");
+		      }
+		      else if (code.equals("Pattern") && field.equals("email")) {
+	              errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid Email");
+		      }
+		      //phone number custom error messages
+		      else if (code.equals("Pattern") && field.equals("phoneNumber")) {
+	              errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid Phone Number");
+		      }
+		    }
+		    return errors;
+		
 	}
 	
 	/**
@@ -123,5 +182,6 @@ public class UserController {
 		
 		return us.deleteUserById(id);
 	}
+	
 	
 }
