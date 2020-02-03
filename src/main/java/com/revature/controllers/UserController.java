@@ -151,6 +151,9 @@ public class UserController {
 	              errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid Phone Number");
 		      }
 		    }
+			if (errors.isEmpty()) {
+		 		us.addUser(user);
+		 	}
 		    return errors;
 		
 	}
