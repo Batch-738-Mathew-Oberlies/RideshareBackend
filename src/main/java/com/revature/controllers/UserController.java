@@ -23,7 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.Driver;
+import com.revature.beans.Batch;
 import com.revature.beans.User;
+import com.revature.services.BatchService;
 import com.revature.services.UserService;
 
 import io.swagger.annotations.Api;
@@ -43,7 +46,6 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin
 @Api(tags= {"User"})
 public class UserController {
-	private Validator validator;
 	
 	@Autowired
 	private UserService us;
@@ -151,6 +153,7 @@ public class UserController {
 	              errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid Phone Number");
 		      }
 		    }
+
 			if (errors.isEmpty()) {
 		 		us.addUser(user);
 		 	}
