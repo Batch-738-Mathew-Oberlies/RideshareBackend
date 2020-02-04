@@ -23,7 +23,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.revature.Driver;
+import com.revature.beans.Batch;
 import com.revature.beans.User;
+import com.revature.services.BatchService;
 import com.revature.services.UserService;
 
 import io.swagger.annotations.Api;
@@ -43,7 +46,6 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin
 @Api(tags= {"User"})
 public class UserController {
-	private Validator validator;
 	
 	@Autowired
 	private UserService us;
@@ -117,7 +119,7 @@ public class UserController {
 		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Username may not have any illegal characters such as $@-");
 		      }
 		      else if (code.equals("Valid") && field.equals("userName")) {
-		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid userName");
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid username");
 		      }
 		      //first name custom error message
 		      else if (code.equals("Size") && field.equals("firstName")) {
@@ -127,7 +129,7 @@ public class UserController {
 		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("First name allows only 1 space or hyphen and no illegal characters");
 		      }
 		      else if (code.equals("Valid") && field.equals("firstName")) {
-		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid firstName");
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid first name");
 		      }
 		      //last name custom error message
 		      else if (code.equals("Size") && field.equals("lastName")) {
@@ -137,7 +139,7 @@ public class UserController {
 		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Last name allows only 1 space or hyphen and no illegal characters");
 		      }
 		      else if (code.equals("Valid") && field.equals("lastName")) {
-		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid lastName");
+		          errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid last name");
 		      }
 		      //email custom error messages
 		      else if (code.equals("Email") && field.equals("email")) {
@@ -151,6 +153,9 @@ public class UserController {
 	              errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid Phone Number");
 		      }
 		    }
+		 	if (errors.isEmpty()) {
+		 		us.addUser(user);
+		 	}
 		    return errors;
 		
 	}
