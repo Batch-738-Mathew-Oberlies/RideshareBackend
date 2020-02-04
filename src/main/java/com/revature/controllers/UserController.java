@@ -43,8 +43,7 @@ public class UserController {
 	private UserService us;
 	
 	/**
-	 * HTTP GET method (/users)
-	 * 
+	 * HTTP GET method (/users) 
 	 * @param isDriver represents if the user is a driver or rider.
 	 * @param username represents the user's username.
 	 * @param location represents the batch's location.
