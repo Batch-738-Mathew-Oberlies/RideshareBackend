@@ -43,7 +43,7 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
 	public User getUserById(int id) {
-		return ur.findById(id).get();  //	return ur.getOne(id);
+		return ur.findById(id).get();
 	}
 	
 	/**

@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
@@ -33,6 +35,8 @@ public class Admin implements Serializable {
 	
 	@NotBlank
 	@Column(name="user_name")
+	@Size(min=3,max=12)
+	@Pattern(regexp="^\\w+\\.?\\w+$")
 	private String userName;
 	
 	public Admin() {

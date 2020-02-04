@@ -81,11 +81,6 @@ public class JSONReaderService {
 //				}
 		}
 
-//		System.out.println(" ---newList:  API distances from driver h_addres---- ");
-//		System.out.println(newList);
- 
-//		System.out.println(" ---streets-only from JSONReaderController---- ");
-//		System.out.println(streets);
 		return streets;
 
 	}

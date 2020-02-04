@@ -1,5 +1,9 @@
 insert into batches values
 (1, 'Morgantown');
+
+insert into admins values
+(1, 'admin1');
+
 insert into users values 
 (1, 'gpichmann0@artisteer.com', 'Grady', '5 Carpenter Plaza', 'New York City', 'NY', '10275', false, false, false, 'Pichmann', '212-374-3466', 'gpichmann0', '30401 Esker Point', 'Des Moines', 'IA', '50347', 1),
 (2, 'smigheli1@indiatimes.com', 'Salvidor', '6371 Elka Court', 'Columbus', 'OH', '43220', false, true, true, 'Migheli', '614-513-2776', 'smigheli1', '35747 3rd Park', 'Philadelphia', 'PA', '19131', 1),
@@ -22,3 +26,25 @@ insert into users values
 (19, 'gtootellj@latimes.com', 'Geneva', '27592 La Follette Trail', 'Anaheim', 'CA', '92812', false, false, false, 'Tootell', '714-167-0152', 'gtootellj', '61696 Algoma Park', 'Terre Haute', 'IN', '47812', 1),
 (20, 'cgeertzk@senate.gov', 'Cissy', '5 Spaight Court', 'Spring', 'TX', '77386', false, false, true, 'Geertz', '281-310-3238', 'cgeertzk', '3 Dexter Alley', 'Frederick', 'MD', '21705', 1),
 (21, 'lozintsevl@freewebs.com', 'Lynn', '26467 Loftsgordon Park', 'Charlotte', 'NC', '28242', true, false, true, 'Ozintsev', '704-108-6483', 'lozintsevl', '38 Muir Plaza', 'Pittsburgh', 'PA', '15210', 1);
+
+insert into cars values 
+(1, 'Teal', 'Ford', 'Thunderbird', 3, 1972, 1),
+(2, 'Orange', 'Lexus', 'IS', 1, 2012, 2),
+(3, 'Puce', 'Saab', '9-3', 2, 2000, 3),
+(4, 'Fuscia', 'Isuzu', 'Rodeo', 3, 2003, 4),
+(5, 'Violet', 'GMC', 'Sierra 2500', 2, 2007, 5),
+(6, 'Orange', 'Hyundai', 'Santa Fe', 1, 2003, 6),
+(7, 'Yellow', 'Chrysler', 'Fifth Ave', 5, 1992, 7),
+(8, 'Maroon', 'Honda', 'Ridgeline', 5, 2010, 8),
+(9, 'Teal', 'Ford', 'Aerostar', 3, 1990, 9),
+(10, 'Pink', 'Mercedes-Benz', '300CE', 2, 1993, 10),
+(11, 'Crimson', 'MINI', 'Cooper Countryman', 2, 2011, 11),
+(12, 'Khaki', 'Dodge', 'Viper', 4, 1994, 12),
+(13, 'Pink', 'Pontiac', 'Bonneville', 2, 1987, 13),
+(14, 'Khaki', 'Buick', 'Electra', 4, 1985, 14),
+(15, 'Puce', 'Lamborghini', 'Countach', 5, 1990, 15),
+(16, 'Indigo', 'Ford', 'Taurus', 1, 2012, 16),
+(17, 'Indigo', 'Volkswagen', 'Golf III', 1, 1994, 17),
+(18, 'Goldenrod', 'Lotus', 'Esprit', 1, 2002, 18),
+(19, 'Red', 'Land Rover', 'Range Rover', 1, 1989, 19),
+(20, 'Pink', 'Mercedes-Benz', 'M-Class', 5, 2000, 20);

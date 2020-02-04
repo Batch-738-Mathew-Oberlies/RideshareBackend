@@ -1,5 +1,7 @@
 package com.revature.beans;
+
 import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,16 +10,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+
 import org.springframework.stereotype.Component;
-/**
- * User class that represents a driver/rider. All users have an id, username, corresponding batch, first name,
- * last name, email, phone number, isDriver, isActive and isAcceptingRides.
- * 
- * @author Adonis Cabreja
- *
- */
+
+
+import org.springframework.stereotype.Component;
+
 @Component
 @Entity
 @Table(name="users")
@@ -27,22 +31,36 @@ public class User implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="user_id")
 	private int userId;
+
+	@Valid
 	@NotBlank
 	@Column(name="user_name")
+	@Size(min=3,max=12)
+	@Pattern(regexp="^\\w+\\.?\\w+$")
 	private String userName;
 	@ManyToOne
 	@JoinColumn(name="batch_number")
 	private Batch batch;
+	
+	@Valid
 	@NotBlank
 	@Column(name="first_name")
+	@Size(max=30)
+	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$")
 	private String firstName;
+	
+	@Valid
 	@NotBlank
 	@Column(name="last_name")
+	@Size(max=30)
+	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$")
 	private String lastName;
 	@Email
+	@Pattern(regexp="^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$")
 	private String email;
 	@NotBlank
 	@Column(name="phone_number")
+	@Pattern(regexp="^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$")
 	private String phoneNumber;
 	@Column(name="is_driver")
 	private boolean isDriver;
@@ -74,11 +92,56 @@ public class User implements Serializable {
 	@NotBlank
 	@Column(name = "w_state")
 	private String wState;
+	
 	public User() {
 		super();
 	}
-	public User(int userId, String userName, Batch batch, String firstName, String lastName, String email,
-			String phoneNumber) {
+
+
+	public User(int userId, @NotBlank @Size(min = 3, max = 12) @Pattern(regexp = "^\\w+\\.?\\w+$") String userName,
+			Batch batch,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String firstName,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String lastName,
+			@Email @Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$") String email,
+			@NotBlank @Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$") String phoneNumber,
+			boolean isDriver, boolean isActive, boolean isAcceptingRides) {
+		super();
+		this.userId = userId;
+		this.userName = userName;
+		this.batch = batch;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.isDriver = isDriver;
+		this.isActive = isActive;
+		this.isAcceptingRides = isAcceptingRides;
+	}
+
+	public User(@NotBlank @Size(min = 3, max = 12) @Pattern(regexp = "^\\w+\\.?\\w+$") String userName, Batch batch,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String firstName,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String lastName,
+			@Email @Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$") String email,
+			@NotBlank @Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$") String phoneNumber,
+			boolean isDriver, boolean isActive, boolean isAcceptingRides) {
+		super();
+		this.userName = userName;
+		this.batch = batch;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.phoneNumber = phoneNumber;
+		this.isDriver = isDriver;
+		this.isActive = isActive;
+		this.isAcceptingRides = isAcceptingRides;
+	}
+
+	public User(int userId, @NotBlank @Size(min = 3, max = 12) @Pattern(regexp = "^\\w+\\.?\\w+$") String userName,
+			Batch batch,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String firstName,
+			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String lastName,
+			@Email @Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$") String email,
+			@NotBlank @Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$") String phoneNumber) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -192,54 +255,7 @@ public class User implements Serializable {
 	public void setAcceptingRides(boolean isAcceptingRides) {
 		this.isAcceptingRides = isAcceptingRides;
 	}
-	public String gethAddress() {
-		return hAddress;
-	}
-	public void sethAddress(String hAddress) {
-		this.hAddress = hAddress;
-	}
-	public String gethCity() {
-		return hCity;
-	}
-	public void sethCity(String hCity) {
-		this.hCity = hCity;
-	}
-	public String gethZip() {
-		return hZip;
-	}
-	public void sethZip(String hZip) {
-		this.hZip = hZip;
-	}
-	public String gethState() {
-		return hState;
-	}
-	public void sethState(String hState) {
-		this.hState = hState;
-	}
-	public String getwAddress() {
-		return wAddress;
-	}
-	public void setwAddress(String wAddress) {
-		this.wAddress = wAddress;
-	}
-	public String getwCity() {
-		return wCity;
-	}
-	public void setwCity(String wCity) {
-		this.wCity = wCity;
-	}
-	public String getwZip() {
-		return wZip;
-	}
-	public void setwZip(String wZip) {
-		this.wZip = wZip;
-	}
-	public String getwState() {
-		return wState;
-	}
-	public void setwState(String wState) {
-		this.wState = wState;
-	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -287,26 +303,7 @@ public class User implements Serializable {
 			if (other.firstName != null)
 				return false;
 		} else if (!firstName.equals(other.firstName))
-			return false;
-		if (hAddress == null) {
-			if (other.hAddress != null)
-				return false;
-		} else if (!hAddress.equals(other.hAddress))
-			return false;
-		if (hCity == null) {
-			if (other.hCity != null)
-				return false;
-		} else if (!hCity.equals(other.hCity))
-			return false;
-		if (hState == null) {
-			if (other.hState != null)
-				return false;
-		} else if (!hState.equals(other.hState))
-			return false;
-		if (hZip == null) {
-			if (other.hZip != null)
-				return false;
-		} else if (!hZip.equals(other.hZip))
+
 			return false;
 		if (isAcceptingRides != other.isAcceptingRides)
 			return false;
@@ -330,26 +327,7 @@ public class User implements Serializable {
 			if (other.userName != null)
 				return false;
 		} else if (!userName.equals(other.userName))
-			return false;
-		if (wAddress == null) {
-			if (other.wAddress != null)
-				return false;
-		} else if (!wAddress.equals(other.wAddress))
-			return false;
-		if (wCity == null) {
-			if (other.wCity != null)
-				return false;
-		} else if (!wCity.equals(other.wCity))
-			return false;
-		if (wState == null) {
-			if (other.wState != null)
-				return false;
-		} else if (!wState.equals(other.wState))
-			return false;
-		if (wZip == null) {
-			if (other.wZip != null)
-				return false;
-		} else if (!wZip.equals(other.wZip))
+
 			return false;
 		return true;
 	}
@@ -361,4 +339,5 @@ public class User implements Serializable {
 				+ hAddress + ", hCity=" + hCity + ", hZip=" + hZip + ", hState=" + hState + ", wAddress=" + wAddress
 				+ ", wCity=" + wCity + ", wZip=" + wZip + ", wState=" + wState + "]";
 	}
+
 }
