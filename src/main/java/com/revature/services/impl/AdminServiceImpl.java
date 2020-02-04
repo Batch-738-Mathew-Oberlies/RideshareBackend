@@ -43,7 +43,7 @@ public class AdminServiceImpl implements AdminService {
 	
 	@Override
 	public Admin getAdminById(int id) {
-		return ar.getOne(id);
+		return ar.findById(id).get();
 	}
 
 	/**
