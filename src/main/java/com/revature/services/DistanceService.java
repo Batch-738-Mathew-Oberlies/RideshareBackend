@@ -1,7 +1,10 @@
 package com.revature.services;
 
 import java.io.EOFException;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.util.ArrayList;
@@ -9,6 +12,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+
+import org.json.simple.parser.ParseException;
 
 import com.google.maps.DirectionsApi.RouteRestriction;
 import com.google.maps.DistanceMatrixApi;
@@ -27,12 +33,35 @@ import com.revature.services.JSONReaderService;
 
 public class DistanceService {
 
+	 
  
-	private static final String API_KEY = "AIzaSyATbV5Em-m8ZtrBiDgCG1oFlNjNxV3r8M4";
-	 
-	private static long[][] matrix;
-	 
 
+//	private static long[][] matrix;
+	 
+	public static String getApiKey() {
+		
+		// apikey string in file "distanceapi.txt" in folder "api", located 2 levels above root directory. 
+		// example:  pathSomewhere/api/myFolders/rideshare-user-service/src/main
+		String apiKey = "../../api/distanceapi.txt";
+		
+		try {
+			File textFile = new File(apiKey);
+			Scanner scanText = new Scanner(textFile);
+			String value = scanText.next(); 
+			
+			final String API_KEY = value;
+			scanText.close();
+			return API_KEY;
+			
+		} catch (FileNotFoundException e) {
+			System.out.println("Welcome script file not found: " + apiKey.toString());
+			return null;
+		} 
+
+	}
+	
+	
+	
 	public static void getSorted(String[] args) {
 		
 		// WORK ADDRESS DESTINATION: REVATURE @ High Street 
@@ -80,6 +109,10 @@ public class DistanceService {
 
 	public static void distanceMatrix(String[] origins, String[] destinations)
 			throws ApiException, InterruptedException, IOException {
+		
+		//set up key
+		String API_KEY = getApiKey();
+		
 		GeoApiContext context = new GeoApiContext.Builder().apiKey(API_KEY).build();
 		List<Double> arrlist = new ArrayList<Double>();
 		DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(context);
@@ -135,8 +168,10 @@ public class DistanceService {
 	
 	// Lookups up and returns the address of an batch given its name and  location attributes
 	public static String lookupAddr(String batch) throws ApiException, InterruptedException, IOException {
-
-		// set up key
+		
+		//set up key
+		String API_KEY = getApiKey();
+		
 		GeoApiContext lookupBatch = new GeoApiContext.Builder().apiKey(API_KEY).build();
 		GeocodingResult[] results = GeocodingApi.geocode(lookupBatch, batch).await();
 
@@ -151,6 +186,8 @@ public class DistanceService {
 	public static LatLng lookupCoord(String batch) throws ApiException, InterruptedException, IOException {
 			
 		//set up key
+		String API_KEY = getApiKey();
+		
 		GeoApiContext lookupBatch = new GeoApiContext.Builder()
 			    .apiKey(API_KEY)
 			    .build();
@@ -194,6 +231,8 @@ public class DistanceService {
 	public static long getDriveDist(String addrOne, String addrTwo)
 			throws ApiException, InterruptedException, IOException {
 
+		String API_KEY = getApiKey();
+		
 		GeoApiContext distCalcer = new GeoApiContext.Builder().apiKey(API_KEY).build();
 
 		DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(distCalcer);
