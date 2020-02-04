@@ -24,13 +24,12 @@ public class DistanceController {
 	public static void getSorted(String[] args) {
 		
 		// WORK ADDRESS DESTINATION: REVATURE @ High Street 
-		String addrFive = "496 High St., Suite 200, 26505"; 
-		
+		//String addrFive = "496 High St., Suite 200, 26505"; 
 		
 		//  STEP 1.) FILTER OUT OTHER CITIES FROM SQL 
 
 		//  STEP 2. Post-filter RIDERS ADDRESS ==  data  JSONReader data FROM JSON
-		ArrayList streetsFromReader = JSONReaderController.dataCleaner(args);
+		ArrayList<Object> streetsFromReader = JSONReaderController.dataCleaner(args);
 		ArrayList<String> strArray = new ArrayList<String>();
 		
 		for(Object o: streetsFromReader) {
@@ -41,12 +40,12 @@ public class DistanceController {
 		String strToArray[] = new String[strArray.size()];
 		strToArray = strArray.toArray(strToArray);
 		
-		// STEP 2 (cont'd). DRIVER ADDRESS
-        String addrFour = "900 Willowdale Road, 26505 "; // Mountaineer Field at Milan-Puskar Stadium
-		String[] origins = new String[] { addrFour };
-		
 		System.out.println("==pre-DistanceMatrix Input==="); 
 		String[] destinations =    strToArray;
+		
+		// STEP 2 (cont'd). DRIVER ADDRESS
+        String origin = "900 Willowdale Road, 26505 "; // Mountaineer Field at Milan-Puskar Stadium
+		String[] origins = new String[] { origin };
 		
 		try {
 			// READ in Drivers' Home address  &  Riders' Home addresses  
@@ -67,7 +66,6 @@ public class DistanceController {
 
 	}
 
-//	public static void distanceMatrix(String[] origins, String[] destinations)
 	public static void distanceMatrix(String[] origins, String[] destinations)
 			throws ApiException, InterruptedException, IOException {
 		GeoApiContext context = new GeoApiContext.Builder().apiKey(API_KEY).build();
@@ -78,8 +76,12 @@ public class DistanceController {
 
 		for (int i = 0; i < origins.length; i++) {
 			for (int j = 0; j < destinations.length; j++) {
-				System.out.println((j+1) + "): " + t.rows[i].elements[j].distance.inMeters + " meters");
-				arrlist.add((double) t.rows[i].elements[j].distance.inMeters);
+				try {
+					System.out.println((j+1) + "): " + t.rows[i].elements[j].distance.inMeters + " meters");
+					arrlist.add((double) t.rows[i].elements[j].distance.inMeters);
+				} catch (Exception e) {
+				System.out.println("invalid address");
+				}
 			}
 		}
 		System.out.println("-");

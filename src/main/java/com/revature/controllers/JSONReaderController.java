@@ -21,7 +21,7 @@ public class JSONReaderController {
 
 		// Local Data for DEV ---> Same format as API json
 		try {
-			dataReady = new FileReader("src/main/resources/addresses.json");
+			dataReady = new FileReader("src/main/resources/users_address.json");
 
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -52,17 +52,17 @@ public class JSONReaderController {
 		for (Object o : addressList) {
 			JSONObject user = (JSONObject) o;
 
-			Long userId = (Long) user.get("userId");
-			System.out.println(userId);
+			Long user_id = (Long) user.get("user_id");
+			System.out.println(user_id);
 			
-			String firstName = (String) user.get("firstName");
-			String lastName = (String) user.get("lastName");
-			String fullName = firstName + " " + lastName;
+			String first_name = (String) user.get("first_name");
+			String last_name = (String) user.get("last_name");
+			String fullName = first_name + " " + last_name;
 			System.out.println(fullName); 
 
-			String street = (String) user.get("hAddress");
-			String hZip = (String) user.get("hZip");
-			String addrConcat = street + " "+ hZip; 
+			String street = (String) user.get("h_address");
+			String h_zip = (String) user.get("h_zip");
+			String addrConcat = street + " "+ h_zip; 
 			System.out.println(addrConcat);
 			
 			streets.add(addrConcat);
