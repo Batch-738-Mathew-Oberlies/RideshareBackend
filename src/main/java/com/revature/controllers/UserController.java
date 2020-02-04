@@ -109,7 +109,41 @@ public class UserController {
 		      String code = fieldError.getCode();
 		      String field = fieldError.getField();
 		      if (code.equals("NotBlank") || code.equals("NotNull")) {
-		        errors.computeIfAbsent(field, key -> new HashSet<>()).add(field+" required");
+//		    	  
+		    	  switch (field) {
+		    	  case "userName":
+		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add("Username field required");
+		    		  break;
+		    	  case "firstName":
+		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add("First name field required");
+		    		  break;
+		    	  case "lastName":
+		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add("Last name field required");
+		    		  break;
+		    	  case "wAddress":
+		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add("Work address field required");
+		    		  break;
+		    	  case "wState":
+		    	  case "hState":
+		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add("State field required");
+		    		  break;
+		    	  case "phoneNumber":
+		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add("Phone number field required");
+		    		  break;
+		    	  case "hAddress":
+		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add("Home address field required");
+		    		  break;
+		    	  case "hZip":
+		    	  case "wZip":
+		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add("Zip code field required");
+		    		  break;
+		    	  case "hCity":
+		    	  case "wCity":
+		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add("City field required");
+		    		  break;
+		    	  default:
+		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add(field+" required");
+		    	  }
 		      }
 		      //username custom error message
 		      else if (code.equals("Size") && field.equals("userName")) {
