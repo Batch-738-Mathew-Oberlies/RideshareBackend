@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -11,9 +13,62 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 public class JSONReaderService {
+	
+	@SuppressWarnings("unchecked")
+	public static Map<Integer, String> dataMapper() {
+		JSONParser jsonParser = new JSONParser();
+		FileReader dataReady = null;
 
-//	@SuppressWarnings("unchecked") 
-	public static ArrayList<Object> dataCleaner(String[] args) {
+		// Local Data for DEV ---> Same format as API json
+		try {
+			dataReady = new FileReader("src/main/resources/users_address.json"); 
+			
+		} catch (FileNotFoundException e) { 
+			e.printStackTrace(); 
+		}
+		
+		Object obj = null; 
+			try {
+				obj = jsonParser.parse(dataReady);
+				
+			} catch (IOException | ParseException e) { 
+				e.printStackTrace();  
+		}
+			
+		JSONArray addressList = (JSONArray) obj;
+		System.out.println("\n... Reading in From addresses.json ...");
+		System.out.println(addressList);
+		 
+		Map idAndStreets = new HashMap(); 
+		System.out.println("\n... Place ...");
+		System.out.println(addressList);
+		
+		for (Object o : addressList) {
+			JSONObject user = (JSONObject) o;
+			// Convert userId from string to integer
+			Long user_id = (Long) user.get("user_id");
+			long u=user_id;  
+			int intUser=(int)u;  
+			System.out.println(intUser);
+
+			// Concatetate street & zip
+			String street = (String) user.get("h_address");
+			String h_zip = (String) user.get("h_zip");
+			String addrConcat = street + " "+ h_zip; 
+			System.out.println(addrConcat);
+			
+			idAndStreets.put(intUser, addrConcat); // make map of id/streets
+			
+			System.out.println(" \n");
+ 
+		}
+		 System.out.println(idAndStreets);
+		return idAndStreets;
+		
+	}
+	
+	@SuppressWarnings("unchecked") 
+	public static ArrayList<Object> dataCleaner() {
 
 		// JSON parser object to parse read file
 		JSONParser jsonParser = new JSONParser();
@@ -40,8 +95,7 @@ public class JSONReaderService {
 
 		} catch (ParseException e) {
 			e.printStackTrace();
-		}
-		
+		} 
 		ArrayList streets = new ArrayList();
         ArrayList newList = new ArrayList();
 		JSONArray addressList = (JSONArray) obj;
@@ -64,16 +118,13 @@ public class JSONReaderService {
 			String h_zip = (String) user.get("h_zip");
 			String addrConcat = street + " "+ h_zip; 
 			System.out.println(addrConcat);
-			
-			streets.add(addrConcat);
+			  
+			streets.add(addrConcat); // make array of streets
 			newList.add(o);
-//			System.out.println(newList);
 			System.out.println(" \n");
-			
-//			String email = (String) user.get("email");
-//			System.out.println(email);
-			
-//				// For getting batch with real users list
+			 
+//				// IN CASE WE STILL USE BATCH 
+				// For getting batch with real users list
 //				JSONArray batch = (JSONArray) user.get("batch");
 //
 //				for (Object b : batch) {

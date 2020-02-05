@@ -31,10 +31,7 @@ public class Driver {
 	 */
 	
 	public static void main(String[] args) {
-		SpringApplication.run(Driver.class, args);
-		
-		// temp location for calling DistanceMatrix
-		DistanceService.getSorted(args);
+		SpringApplication.run(Driver.class, args); 
 	}
 	
 	/**
