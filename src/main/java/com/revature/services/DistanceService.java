@@ -35,8 +35,7 @@ import com.revature.services.JSONReaderService;
 
 public class DistanceService {
  
-	// Place googleMapAPIKey into Environment Vars 
-	//		Key => googleMapAPIKey, and Value is the key (shared on private slack).
+	// Place key googleMapAPIKey & value apiKey (to be shared on slack) into Environment Vars.
 	
 	public static String getGoogleMAPKey() {
         Map<String, String> env = System.getenv();
@@ -48,8 +47,8 @@ public class DistanceService {
         }
         return null;
     }
-
-	public static void getSorted() {
+	
+	public static  ArrayList<Double> getSorted(Integer userId, String userAddress) {
 		
 		// WORK ADDRESS DESTINATION: REVATURE @ High Street 
 		//String addrFive = "496 High St., Suite 200, 26505"; 
@@ -60,27 +59,38 @@ public class DistanceService {
 		ArrayList<Object> streetsFromReader = JSONReaderService.dataCleaner();
 		ArrayList<String> strArray = new ArrayList<String>();
 		
-		// STEP 2. Map
-		//		TODO
-	
+		// STEP 2. Map UserId's and Addresses
+		Map idAndLocations = JSONReaderService.dataMapper();
+		System.out.println("getting JSON.dataMapper()'s id+locatiosn"+idAndLocations);
+		
 		for(Object o: streetsFromReader) {
 			strArray.add(o.toString());
 		}
 		System.out.println("strArray.toString: "+strArray.toString());
 		strArray.toString();
+		
+		
+		
 		String strToArray[] = new String[strArray.size()];
 		strToArray = strArray.toArray(strToArray);
 		
 		System.out.println("==pre-DistanceMatrix Input==="); 
-		String[] destinations =    strToArray;
+		String[] destinations = strToArray;
 		
 		// STEP 2 (cont'd). DRIVER ADDRESS
-        String origin = "900 Willowdale Road, 26505 "; // Mountaineer Field at Milan-Puskar Stadium
+		int uId = userId;
+        String origin = userAddress;
 		String[] origins = new String[] { origin };
 		
 		try {
 			// READ in Drivers' Home address  &  Riders' Home addresses  
-			distanceMatrix(origins, destinations);
+//			distanceMatrix(origins, destinations);
+			ArrayList<Double> distances = distanceMatrix(origins, destinations);
+			System.out.println("from DistanceService.getSorted: "+ distances);
+			//
+			 
+		   
+			return distances;
 			
 		} catch (ApiException e) {
 			System.out.println("OOPS, API not connecting ....");
@@ -94,17 +104,20 @@ public class DistanceService {
 			System.out.println("OOPS, IO Exception ...");
 			e.printStackTrace();
 		}
+		return null; 
+		
+		 
 
 	}
 
-	public static void distanceMatrix(String[] origins, String[] destinations)
+	public static   ArrayList<Double> distanceMatrix(String[] origins, String[] destinations)
 			throws ApiException, InterruptedException, IOException {
 		
 		//set up key
 		String API_KEY = getGoogleMAPKey();
 		
 		GeoApiContext context = new GeoApiContext.Builder().apiKey(API_KEY).build();
-		List<Double> arrlist = new ArrayList<Double>();
+		ArrayList<Double> arrlist = new ArrayList<Double>();
 		DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(context);
 		DistanceMatrix t = req.origins(origins).destinations(destinations).mode(TravelMode.DRIVING).units(Unit.IMPERIAL)
 				.await();
@@ -123,25 +136,17 @@ public class DistanceService {
 		System.out.println("-");
 		Collections.sort(arrlist);
 		System.out.println("SORTED: " + arrlist.toString());
-
-		int i = 0;
+		
+		
+		int i = 0; 
 		for (double x : arrlist) {
 			i++;
 			System.out.println(i + "): " + x / 1609 + " miles");
 		}
+		System.out.println(arrlist);
+//		return (ArrayList<Double>) arrlist;
+		return arrlist;
 	} 
- 
-	public static String getValue() {
-		Map<String, String> env = System.getenv();
-		for (Map.Entry <String, String> entry: env.entrySet()) {
-			if(entry.getKey().equals("googleMapAPIKey")) {
-				System.out.println(env);  // long list 
-				return entry.getValue();
-			}
-		}
-		return null;
-	}
-	
 
 	/// Currently not-yet-used Google API's :::: ///////////////////
 	

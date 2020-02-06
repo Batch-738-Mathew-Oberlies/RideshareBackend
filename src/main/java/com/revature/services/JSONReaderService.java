@@ -14,6 +14,7 @@ import org.json.simple.parser.ParseException;
 
 public class JSONReaderService {
 	
+	// Method under construction
 	@SuppressWarnings("unchecked")
 	public static Map<Integer, String> dataMapper() {
 		JSONParser jsonParser = new JSONParser();

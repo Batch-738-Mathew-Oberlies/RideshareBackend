@@ -55,9 +55,7 @@ public class LoginController {
 		if(userName.length() == 0) {
 		       errors.computeIfAbsent("userName", key -> new HashSet<>()).add("userName required!");
 		}
-		/*if((userName == null || userName.equals("") || passWord.isEmpty())) {
-		       errors.computeIfAbsent("passWord", key -> new HashSet<>()).add("passWord required!");
-		}*/
+	 
 		if (errors.isEmpty()) {
 			//call login service here
 			return keys;
