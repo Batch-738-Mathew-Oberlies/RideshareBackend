@@ -41,7 +41,6 @@ public class DistanceService {
         Map<String, String> env = System.getenv();
         for (Map.Entry <String, String> entry: env.entrySet()) {
             if(entry.getKey().equals("googleMapAPIKey")) {
-            	System.out.println(env);  // long list 
                 return entry.getValue();
             }
         }
@@ -143,8 +142,7 @@ public class DistanceService {
 			i++;
 			System.out.println(i + "): " + x / 1609 + " miles");
 		}
-		System.out.println(arrlist);
-//		return (ArrayList<Double>) arrlist;
+		System.out.println(arrlist); 
 		return arrlist;
 	} 
 

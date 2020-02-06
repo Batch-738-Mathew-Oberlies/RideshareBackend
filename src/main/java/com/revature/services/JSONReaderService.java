@@ -35,15 +35,13 @@ public class JSONReaderService {
 			} catch (IOException | ParseException e) { 
 				e.printStackTrace();  
 		}
+		// Declare Map for loop
+		Map idAndStreets = new HashMap();  
 			
 		JSONArray addressList = (JSONArray) obj;
-		System.out.println("\n... Reading in From addresses.json ...");
-		System.out.println(addressList);
-		 
-		Map idAndStreets = new HashMap(); 
-		System.out.println("\n... Place ...");
-		System.out.println(addressList);
-		
+//		System.out.println("\n... Reading in From addresses.json ...");
+//		System.out.println(addressList);
+
 		for (Object o : addressList) {
 			JSONObject user = (JSONObject) o;
 			// Convert userId from string to integer
@@ -58,10 +56,8 @@ public class JSONReaderService {
 			String addrConcat = street + " "+ h_zip; 
 			System.out.println(addrConcat);
 			
+			// Make Hash of userId/addresses PRE-distanceMatrix
 			idAndStreets.put(intUser, addrConcat); // make map of id/streets
-			
-			System.out.println(" \n");
- 
 		}
 		 System.out.println(idAndStreets);
 		return idAndStreets;
@@ -122,7 +118,7 @@ public class JSONReaderService {
 			  
 			streets.add(addrConcat); // make array of streets
 			newList.add(o);
-			System.out.println(" \n");
+			 
 			 
 //				// IN CASE WE STILL USE BATCH 
 				// For getting batch with real users list

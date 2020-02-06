@@ -1,6 +1,7 @@
 package com.revature;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.LinkedHashMap;
@@ -17,10 +18,10 @@ import com.revature.services.JSONReaderService;
 // For Dev only ... Run this file, and choose between methods
 public class DevDemo {
 
-	public static void main(String[] args) {
+	public static void main(String... args) {
 		// After login, get int and address
-		int userId = 1;
-		String userAddress = "100 Central AVenue, 87104";
+		int userId = 1;//1;
+		String userAddress = " "; //"100 Central AVenue, 87104";
 
 		try {
 			frontpage(userId, userAddress);
@@ -32,18 +33,19 @@ public class DevDemo {
 	public static void frontpage(Integer userId, String userAddress)
 			throws ApiException, InterruptedException, IOException {
 		System.out.println("\n----------------------------------\n"
-				+ "1.) DistanceService.getSorted(Integer userId, String userAddress);   (1) \n"
-				+ "2.) MakeAPICall();   (2) \n"
-				+ "3.) JSONReaderService.dataCleaner();  (3)\n"
-				+ "4.) JSONReaderService.dataCleaner();  (4)\n" 
-				+ "0.) close console and stop program (0)\n "
+				+ "(1) DistanceService.getSorted(userId, address) \n"
+				+ "(2) MakeAPICall(); \n" 
+				+ "(3) JSONReaderService.dataCleaner();  \n"
+				+ "(4) JSONReaderService.dataMapper(); \n"
+				+ "(5) HashMap, LinkedHashMap, TreeMap \n"
+				+ "(0) close console and stop program \n "
 				+ "----------------------------------");
 
 		try {
 			Scanner newScan = new Scanner(System.in);
 			boolean hasNextInt = newScan.hasNextInt();
 			int val = newScan.nextInt();
-			if (val < 0 | val > 3 | !hasNextInt) {
+			if (val < 0 | val > 5 | !hasNextInt) {
 				System.out.println("Please enter valid choices: 0-3");
 
 			} else {
@@ -51,7 +53,8 @@ public class DevDemo {
 				case 1: {
 
 					String[] args = null;
-					DistanceService.getSorted(userId, userAddress);
+					inputIdAndAddress();
+//					DistanceService.getSorted(userId, userAddress);
 					break;
 				}
 				case 2: {
@@ -60,21 +63,29 @@ public class DevDemo {
 					 * http://localhost:8080/findMyPeeps/{myUserId}/{myAddress}")
 					 */
 					System.out.println("http://localhost:8080/findMyPeeps/{myUserId}/{myAddress}\")");
-					String userId1= "2";
+					String userId1 = "2";
 					Integer intUser = Integer.parseInt(userId1);
-					String address = "1 Central Ave. Albuquerque, NM 87104";
-					
+					String address = " 496 High St., 26505";
+
 					List<Double> distances = DistanceService.getSorted(intUser, address);
+					
+					System.out.println(distances);
 					break;
 				}
 				case 3: {
+					ArrayList<Object> userObject  = JSONReaderService.dataCleaner();
+					System.out.println("DevDemo get value" + userObject);
+
+					break;
+				}
+				case 4: {
 					Map idAndLocation = JSONReaderService.dataMapper();
 					System.out.println("DevDemo get value" + idAndLocation);
 
 					break;
-				} 
-				case 4: {
-					Map<Integer, String> map = new HashMap<Integer, String>();
+				}
+				case 5: {
+					HashMap<Integer, String> map = new HashMap<Integer, String>();
 					Map<Integer, String> linkedHashMap = new LinkedHashMap<Integer, String>();
 					Map<Integer, String> treeMap = new TreeMap<Integer, String>();
 
@@ -104,6 +115,32 @@ public class DevDemo {
 		frontpage(userId, userAddress);
 	}
 
+	public static void inputIdAndAddress() {
+
+		try {
+			System.out.println(" enter your userId:");
+			Scanner scanner = new Scanner(System.in);
+			String userId = scanner.next();
+
+			System.out.println("and your street number, like 500");
+			String num = scanner.next();
+			
+			System.out.println("and your street, like Koehler");
+			String userStreet = scanner.next();
+			
+			System.out.println("and your zip 26505");
+			String zip = scanner.next();
+			
+			String strAddress = num+" "+userStreet+" "+zip; 
+			
+			List<Double> distances  = DistanceService.getSorted(Integer.parseInt(userId), strAddress);
+			System.out.println(distances);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	public static String takeApart(Map<Integer, String> map) {
 		Map<String, String> env = System.getenv();
 		for (Map.Entry<String, String> entry : env.entrySet()) {
@@ -127,24 +164,24 @@ public class DevDemo {
 		return null;
 	}
 
-	public static void myHashMap(Map<Integer, String> map) {
+	public static void myHashMap(HashMap<Integer, String> map) {
+		
+		System.out.println("HashMap");
+		map.put(3, "Three Main Str.");
+		map.put(1, "One Main Str.");
+		map.put(2, "Two Main Str.");
+		map.put(4, "Four Main Str.");
+		String text = map.get(3);
 
-		map.put(5, "Five");
-		map.put(8, "Eight");
-		map.put(6, "Six");
-		map.put(4, "Four");
-		map.put(2, "Two");
+		System.out.println("\nget keyId 3: " + text);
 
-		String text = map.get(6);
-
-		System.out.println(text);
-
-		for (Map.Entry<Integer, String> entry : map.entrySet()) {
+		for (HashMap.Entry<Integer, String> entry : map.entrySet()) {
 			int key = entry.getKey();
 			String value = entry.getValue();
 
 			System.out.println(key + ": " + value);
 		}
+		System.out.println('\n');
 	}
 
 	public static void myLinkedHashMap(Map<Integer, String> map) {
@@ -180,7 +217,6 @@ public class DevDemo {
 
 			System.out.println(key + ": " + value);
 		}
-		System.out.println('\n');
 	}
 ///////////////////////////////////
 
