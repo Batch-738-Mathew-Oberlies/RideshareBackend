@@ -43,11 +43,13 @@ public class DistanceController {
 	private UserService us;
 
 	@GetMapping // ("?userId=1&address=1 myAddress 871104")
-	public Map<String, Set<String>> findMyPeeps(@RequestParam(name = "userId") String userId,
-			@RequestParam(name = "address") String address) {
+	public Map<String, Set<String>> findMyPeeps(@RequestParam(name = "address") String address) {
+		
+//		id of driver
+		int userId = 1;
 		
 		// getting distances (will soon send back map with address/distances)
-		ArrayList<Double> distances = DistanceService.getSorted(Integer.parseInt(userId), address);
+		ArrayList<Double> distances = DistanceService.getSorted(userId, address);
 		ArrayList<String> strDistances = new ArrayList<String>();
 
 		int size = distances.size();
@@ -72,8 +74,8 @@ public class DistanceController {
 		System.out.println(strDistances);
 
 		// Error Handling if parameters missing
-		if (userId.length() == 0) {
-			errors.computeIfAbsent("userId", key -> new HashSet<>()).add("Oops, need your userId :-)");
+		if (address.length() == 0) {
+			errors.computeIfAbsent("address", key -> new HashSet<>()).add("Oops, need your address :-)");
 		}
 
 		if (errors.isEmpty()) {

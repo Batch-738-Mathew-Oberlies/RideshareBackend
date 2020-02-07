@@ -28,8 +28,7 @@ import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
-import com.google.maps.model.Unit; 
-import com.revature.beans.Coord;
+import com.google.maps.model.Unit;  
 import com.revature.services.JSONReaderService;
 
 
@@ -146,85 +145,8 @@ public class DistanceService {
 		return arrlist;
 	} 
 
-	/// Currently not-yet-used Google API's :::: ///////////////////
-	
-	// Lookups up and returns the address of an batch given its name and  location attributes
-	public static String lookupAddr(String batch) throws ApiException, InterruptedException, IOException {
-		
-		//set up key
-		String API_KEY = getGoogleMAPKey();
-		
-		GeoApiContext lookupBatch = new GeoApiContext.Builder().apiKey(API_KEY).build();
-		GeocodingResult[] results = GeocodingApi.geocode(lookupBatch, batch).await();
-
-		// converts results into usable address
-
-		String address = (results[0].formattedAddress);
-
-		return address;
-	}
+	 
  
-	// Lookups up and returns the coordinates of an batch given its name  
-	public static LatLng lookupCoord(String batch) throws ApiException, InterruptedException, IOException {
-			
-		//set up key
-		String API_KEY = getGoogleMAPKey();
-		
-		GeoApiContext lookupBatch = new GeoApiContext.Builder()
-			    .apiKey(API_KEY)
-			    .build();
-		GeocodingResult[] results =  GeocodingApi.geocode(lookupBatch,
-		  batch).await();
-				
-			//converts results into usable Coordinates
-		
-			LatLng coords = (results[0].geometry.location);
-				//System.out.println(results[0].geometry.location);
-		return coords;
-	}
-	public static LatLng lookupCoordFromFile(String name) throws ClassNotFoundException, IOException{
-		// TEMP (possibly needed later ...
-		ObjectInputStream objIn=new ObjectInputStream(new FileInputStream("Coords.dat"));
-		Coord obj;
-		LatLng xIn=null;
-		int flag=1;
-		
-		try{
-			while(flag==1){
-				Coord tempO=(Coord)objIn.readObject();
-				String s=tempO.nameBatch;
-				if(name.equals(tempO.nameBatch+",IN")){
-					xIn=new LatLng();
-					xIn.lat=tempO.lat;
-					xIn.lng=tempO.lng;
-					break;
-				}
-				
-			}
-		}
-		catch(EOFException e){
-			//System.out.println("Reached EOF. Batch Coords not found");
-			flag=0;
-		}
-		
-		return xIn;
-	}
-	
-	public static long getDriveDist(String addrOne, String addrTwo)
-			throws ApiException, InterruptedException, IOException {
-
-		String API_KEY = getGoogleMAPKey();
-		
-		GeoApiContext distCalcer = new GeoApiContext.Builder().apiKey(API_KEY).build();
-
-		DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(distCalcer);
-		DistanceMatrix result = req.origins(addrOne).destinations(addrTwo).mode(TravelMode.DRIVING)
-				.avoid(RouteRestriction.TOLLS).language("en-US").await();
-
-		long distApart = result.rows[0].elements[0].distance.inMeters;
-
-		return distApart;
-	}
  
 	
 }
