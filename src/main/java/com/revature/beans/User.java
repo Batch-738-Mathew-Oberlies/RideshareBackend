@@ -55,6 +55,7 @@ public class User implements Serializable {
 	@Size(max=30)
 	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$")
 	private String lastName;
+	@NotBlank
 	@Email
 	@Pattern(regexp="^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$")
 	private String email;
@@ -255,6 +256,86 @@ public class User implements Serializable {
 	public void setAcceptingRides(boolean isAcceptingRides) {
 		this.isAcceptingRides = isAcceptingRides;
 	}
+
+	public String gethAddress() {
+		return hAddress;
+	}
+
+
+	public void sethAddress(String hAddress) {
+		this.hAddress = hAddress;
+	}
+
+
+	public String gethCity() {
+		return hCity;
+	}
+
+
+	public void sethCity(String hCity) {
+		this.hCity = hCity;
+	}
+
+
+	public String gethZip() {
+		return hZip;
+	}
+
+
+	public void sethZip(String hZip) {
+		this.hZip = hZip;
+	}
+
+
+	public String gethState() {
+		return hState;
+	}
+
+
+	public void sethState(String hState) {
+		this.hState = hState;
+	}
+
+
+	public String getwAddress() {
+		return wAddress;
+	}
+
+
+	public void setwAddress(String wAddress) {
+		this.wAddress = wAddress;
+	}
+
+
+	public String getwCity() {
+		return wCity;
+	}
+
+
+	public void setwCity(String wCity) {
+		this.wCity = wCity;
+	}
+
+
+	public String getwZip() {
+		return wZip;
+	}
+
+
+	public void setwZip(String wZip) {
+		this.wZip = wZip;
+	}
+
+
+	public String getwState() {
+		return wState;
+	}
+
+
+	public void setwState(String wState) {
+		this.wState = wState;
+	}
+
 
 	@Override
 	public int hashCode() {

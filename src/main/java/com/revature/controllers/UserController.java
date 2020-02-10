@@ -50,6 +50,8 @@ public class UserController {
 	@Autowired
 	private UserService us;
 	
+	@Autowired
+	private BatchService bs;
 	/**
 	 * HTTP GET method (/users)
 	 * 
@@ -103,6 +105,7 @@ public class UserController {
 	@PostMapping
 	public Map<String, Set<String>> addUser(@Valid @RequestBody User user, BindingResult result) {
 		
+		System.out.println(user.isDriver());
 		 Map<String, Set<String>> errors = new HashMap<>();
 		 
 		 for (FieldError fieldError : result.getFieldErrors()) {
@@ -155,6 +158,7 @@ public class UserController {
 		    }
 
 			if (errors.isEmpty()) {
+				user.setBatch(bs.getBatchByNumber(user.getBatch().getBatchNumber()));
 		 		us.addUser(user);
 		 	}
 		    return errors;
