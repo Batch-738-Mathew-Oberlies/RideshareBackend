@@ -23,6 +23,11 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserRepository ur;
 	
+	@Override
+	public List<User> getActiveDrivers() {
+		return ur.getActiveDrivers();
+	}
+	
 	/**
 	 * Calls UserRepository's findAll method found in the JpaRepository.
 	 * 

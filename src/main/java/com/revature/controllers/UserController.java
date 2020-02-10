@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -23,10 +25,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.google.maps.errors.ApiException;
 import com.revature.Driver;
 import com.revature.beans.Batch;
 import com.revature.beans.User;
 import com.revature.services.BatchService;
+import com.revature.services.DistanceService;
 import com.revature.services.UserService;
 
 import io.swagger.annotations.Api;
@@ -52,6 +56,63 @@ public class UserController {
 	
 	@Autowired
 	private BatchService bs;
+	
+	@Autowired
+	private DistanceService ds;
+	
+	/**
+	 * HTTP GET method (/users)
+	 * 
+	 * @param isDriver represents if the user is a driver or rider.
+	 * @param username represents the user's username.
+	 * @param location represents the batch's location.
+	 * @return A list of all the users, users by is-driver, user by username and users by is-driver and location.
+	 */
+	
+	
+	/*@ApiOperation(value="Returns user drivers", tags= {"User"})
+	@GetMapping
+	public List<User> getActiveDrivers() {
+		return us.getActiveDrivers();
+	}*/
+	
+	
+	@ApiOperation(value="Returns user drivers", tags= {"User"})
+	@GetMapping("/driver/{address}")
+	public List <User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
+		//List<User> aps =  new ArrayList<User>();
+		List<String> destinationList = new ArrayList<String>();
+		String [] origins = {address};
+//		
+	    Map<String, User> topfive = new HashMap<String, User>();
+//		
+		for(User d : us.getActiveDrivers()) {
+//			
+			String add = d.gethAddress();
+			String city = d.gethCity();
+			String state = d.gethState();
+			
+			String fullAdd = add + ", " + city + ", " + state;
+			
+			destinationList.add(fullAdd);
+//			
+			topfive.put(fullAdd, d);
+//						
+	}
+//		
+//		System.out.println(destinationList);
+//		
+		String [] destinations = new String[destinationList.size()];
+////		
+	destinations = destinationList.toArray(destinations);
+//		
+	return	ds.distanceMatrix(origins, destinations);
+//		
+//		
+		//return ds.distanceMatrix();	
+		
+	}
+	
 	/**
 	 * HTTP GET method (/users)
 	 * 

@@ -47,6 +47,9 @@ public class LoginController {
 	@Autowired
 	private UserService us;
 	
+	@Autowired
+	private DistanceService ds;
+	
 	@GetMapping//("/{userName}/{passWord}")
 	public Map<String, Set<String>> login(
 							   @RequestParam(name="userName")String userName,
@@ -80,7 +83,7 @@ public class LoginController {
 	public Map<String, Set<String>> getGoogleApi() {
 		Map<String, Set<String>> info = new HashMap<>();
 		 // getting API key
-		 String newkey = DistanceService.getGoogleMAPKey();
+		 String newkey = ds.getGoogleMAPKey();
 		 info.computeIfAbsent("googleMapAPIKey", key -> new HashSet<>()).add(newkey);
 		 return info;
 	}
