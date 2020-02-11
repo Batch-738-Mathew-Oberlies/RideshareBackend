@@ -192,8 +192,11 @@ public class UserController {
 		    }
 
 			if (errors.isEmpty()) {
+				
 				user.setBatch(bs.getBatchByNumber(user.getBatch().getBatchNumber()));
 		 		us.addUser(user);
+		 		
+
 		 	}
 		    return errors;
 		
