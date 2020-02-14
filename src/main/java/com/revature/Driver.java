@@ -10,6 +10,8 @@ import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+import com.revature.services.DistanceService;
+
 
 /**
  * Driver class is the main class for this project.
@@ -21,7 +23,6 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 public class Driver {
-	
 	/**
 	 * The main method of the Driver class.
 	 * 
@@ -30,7 +31,8 @@ public class Driver {
 	 */
 	
 	public static void main(String[] args) {
-		SpringApplication.run(Driver.class, args);
+		SpringApplication.run(Driver.class, args); 
+		
 	}
 	
 	/**
@@ -61,5 +63,6 @@ public class Driver {
 			.build()
 			.apiInfo(apiInfo());
 	}
+	
 
 }
