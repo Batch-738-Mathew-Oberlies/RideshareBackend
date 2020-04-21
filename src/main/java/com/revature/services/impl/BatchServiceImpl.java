@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.revature.beans.Batch;
+import com.revature.model.Batch;
 import com.revature.repositories.BatchRepository;
 import com.revature.services.BatchService;
 

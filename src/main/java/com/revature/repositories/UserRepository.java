@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import com.revature.beans.User;
+import com.revature.model.User;
 
 /**
  * UserRepository which extends the JpaRepository.

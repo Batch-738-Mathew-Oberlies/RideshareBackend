@@ -17,7 +17,7 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
-import com.revature.beans.User;
+import com.revature.model.User;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
 

@@ -2,7 +2,7 @@ package com.revature.services;
 
 import java.util.List;
 
-import com.revature.beans.Admin;
+import com.revature.model.Admin;
 
 public interface AdminService {
 	

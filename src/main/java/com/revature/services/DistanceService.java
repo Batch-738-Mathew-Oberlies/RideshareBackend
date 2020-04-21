@@ -29,7 +29,7 @@ import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
-import com.revature.beans.User;
+import com.revature.model.User;
 import com.revature.services.JSONReaderService;
 
 

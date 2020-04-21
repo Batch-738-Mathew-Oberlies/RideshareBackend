@@ -2,7 +2,7 @@ package com.revature.services;
 
 import java.util.List;
 
-import com.revature.beans.Car;
+import com.revature.model.Car;
 
 public interface CarService {
 	

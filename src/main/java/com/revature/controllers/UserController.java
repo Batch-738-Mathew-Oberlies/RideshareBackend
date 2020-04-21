@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.maps.errors.ApiException;
 import com.revature.Driver;
-import com.revature.beans.Batch;
-import com.revature.beans.User;
+import com.revature.model.Batch;
+import com.revature.model.User;
 import com.revature.services.BatchService;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;

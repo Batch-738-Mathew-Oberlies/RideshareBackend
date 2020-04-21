@@ -1,4 +1,4 @@
-package com.revature.beans;
+package com.revature.model;
 
 import java.io.Serializable;
 
@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 
 
 import org.springframework.stereotype.Component;
+
+import com.revature.model.Batch;
 
 @Component
 @Entity

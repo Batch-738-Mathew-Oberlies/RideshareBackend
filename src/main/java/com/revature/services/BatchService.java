@@ -2,7 +2,7 @@ package com.revature.services;
 
 import java.util.List;
 
-import com.revature.beans.Batch;
+import com.revature.model.Batch;
 
 public interface BatchService {
 	
