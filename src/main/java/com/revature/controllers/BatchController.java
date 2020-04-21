@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.model.Batch;
+import com.revature.models.Batch;
 import com.revature.services.BatchService;
 
 import io.swagger.annotations.Api;

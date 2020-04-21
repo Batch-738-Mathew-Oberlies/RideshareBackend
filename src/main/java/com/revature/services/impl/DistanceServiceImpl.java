@@ -17,7 +17,7 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
-import com.revature.model.User;
+import com.revature.models.User;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
 
@@ -36,9 +36,9 @@ public class DistanceServiceImpl implements DistanceService {
 		
 		for(User d : us.getActiveDrivers()) {
 			
-			String add = d.gethAddress();
-			String city = d.gethCity();
-			String state = d.gethState();
+			String add = d.getHAddress();
+			String city = d.getHCity();
+			String state = d.getHState();
 			
 			String fullAdd = add + ", " + city + ", " + state;
 			

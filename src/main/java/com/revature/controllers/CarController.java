@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.revature.model.Car;
+import com.revature.models.Car;
 import com.revature.services.CarService;
 
 import io.swagger.annotations.Api;

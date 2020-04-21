@@ -12,8 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.revature.model.Car;
-import com.revature.model.User;
+import com.revature.models.Car;
+import com.revature.models.User;
 import com.revature.repositories.CarRepository;
 
 @RunWith(SpringRunner.class)

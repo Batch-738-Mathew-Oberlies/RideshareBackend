@@ -1,4 +1,4 @@
-package com.revature.model;
+package com.revature.models;
 
 import java.io.Serializable;
 
@@ -19,14 +19,20 @@ import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
+import com.revature.models.Batch;
 
 import org.springframework.stereotype.Component;
 
-import com.revature.model.Batch;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 
 @Component
 @Entity
 @Table(name="users")
+@Getter @NoArgsConstructor @Setter @EqualsAndHashCode @ToString
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -96,11 +102,6 @@ public class User implements Serializable {
 	@Column(name = "w_state")
 	private String wState;
 	
-	public User() {
-		super();
-	}
-
-
 	public User(int userId, @NotBlank @Size(min = 3, max = 12) @Pattern(regexp = "^\\w+\\.?\\w+$") String userName,
 			Batch batch,
 			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String firstName,
@@ -198,229 +199,4 @@ public class User implements Serializable {
 		this.wZip = wZip;
 		this.wState = wState;
 	}
-	public int getUserId() {
-		return userId;
-	}
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
-	public String getUserName() {
-		return userName;
-	}
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-	public Batch getBatch() {
-		return batch;
-	}
-	public void setBatch(Batch batch) {
-		this.batch = batch;
-	}
-	public String getFirstName() {
-		return firstName;
-	}
-	public void setFirstName(String firstName) {
-		this.firstName = firstName;
-	}
-	public String getLastName() {
-		return lastName;
-	}
-	public void setLastName(String lastName) {
-		this.lastName = lastName;
-	}
-	public String getEmail() {
-		return email;
-	}
-	public void setEmail(String email) {
-		this.email = email;
-	}
-	public String getPhoneNumber() {
-		return phoneNumber;
-	}
-	public void setPhoneNumber(String phoneNumber) {
-		this.phoneNumber = phoneNumber;
-	}
-	public boolean isDriver() {
-		return isDriver;
-	}
-	public void setDriver(boolean isDriver) {
-		this.isDriver = isDriver;
-	}
-	public boolean isActive() {
-		return isActive;
-	}
-	public void setActive(boolean isActive) {
-		this.isActive = isActive;
-	}
-	public boolean isAcceptingRides() {
-		return isAcceptingRides;
-	}
-	public void setAcceptingRides(boolean isAcceptingRides) {
-		this.isAcceptingRides = isAcceptingRides;
-	}
-
-	public String gethAddress() {
-		return hAddress;
-	}
-
-
-	public void sethAddress(String hAddress) {
-		this.hAddress = hAddress;
-	}
-
-
-	public String gethCity() {
-		return hCity;
-	}
-
-
-	public void sethCity(String hCity) {
-		this.hCity = hCity;
-	}
-
-
-	public String gethZip() {
-		return hZip;
-	}
-
-
-	public void sethZip(String hZip) {
-		this.hZip = hZip;
-	}
-
-
-	public String gethState() {
-		return hState;
-	}
-
-
-	public void sethState(String hState) {
-		this.hState = hState;
-	}
-
-
-	public String getwAddress() {
-		return wAddress;
-	}
-
-
-	public void setwAddress(String wAddress) {
-		this.wAddress = wAddress;
-	}
-
-
-	public String getwCity() {
-		return wCity;
-	}
-
-
-	public void setwCity(String wCity) {
-		this.wCity = wCity;
-	}
-
-
-	public String getwZip() {
-		return wZip;
-	}
-
-
-	public void setwZip(String wZip) {
-		this.wZip = wZip;
-	}
-
-
-	public String getwState() {
-		return wState;
-	}
-
-
-	public void setwState(String wState) {
-		this.wState = wState;
-	}
-
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((batch == null) ? 0 : batch.hashCode());
-		result = prime * result + ((email == null) ? 0 : email.hashCode());
-		result = prime * result + ((firstName == null) ? 0 : firstName.hashCode());
-		result = prime * result + ((hAddress == null) ? 0 : hAddress.hashCode());
-		result = prime * result + ((hCity == null) ? 0 : hCity.hashCode());
-		result = prime * result + ((hState == null) ? 0 : hState.hashCode());
-		result = prime * result + ((hZip == null) ? 0 : hZip.hashCode());
-		result = prime * result + (isAcceptingRides ? 1231 : 1237);
-		result = prime * result + (isActive ? 1231 : 1237);
-		result = prime * result + (isDriver ? 1231 : 1237);
-		result = prime * result + ((lastName == null) ? 0 : lastName.hashCode());
-		result = prime * result + ((phoneNumber == null) ? 0 : phoneNumber.hashCode());
-		result = prime * result + userId;
-		result = prime * result + ((userName == null) ? 0 : userName.hashCode());
-		result = prime * result + ((wAddress == null) ? 0 : wAddress.hashCode());
-		result = prime * result + ((wCity == null) ? 0 : wCity.hashCode());
-		result = prime * result + ((wState == null) ? 0 : wState.hashCode());
-		result = prime * result + ((wZip == null) ? 0 : wZip.hashCode());
-		return result;
-	}
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (batch == null) {
-			if (other.batch != null)
-				return false;
-		} else if (!batch.equals(other.batch))
-			return false;
-		if (email == null) {
-			if (other.email != null)
-				return false;
-		} else if (!email.equals(other.email))
-			return false;
-		if (firstName == null) {
-			if (other.firstName != null)
-				return false;
-		} else if (!firstName.equals(other.firstName))
-
-			return false;
-		if (isAcceptingRides != other.isAcceptingRides)
-			return false;
-		if (isActive != other.isActive)
-			return false;
-		if (isDriver != other.isDriver)
-			return false;
-		if (lastName == null) {
-			if (other.lastName != null)
-				return false;
-		} else if (!lastName.equals(other.lastName))
-			return false;
-		if (phoneNumber == null) {
-			if (other.phoneNumber != null)
-				return false;
-		} else if (!phoneNumber.equals(other.phoneNumber))
-			return false;
-		if (userId != other.userId)
-			return false;
-		if (userName == null) {
-			if (other.userName != null)
-				return false;
-		} else if (!userName.equals(other.userName))
-
-			return false;
-		return true;
-	}
-	@Override
-	public String toString() {
-		return "User [userId=" + userId + ", userName=" + userName + ", batch=" + batch + ", firstName=" + firstName
-				+ ", lastName=" + lastName + ", email=" + email + ", phoneNumber=" + phoneNumber + ", isDriver="
-				+ isDriver + ", isActive=" + isActive + ", isAcceptingRides=" + isAcceptingRides + ", hAddress="
-				+ hAddress + ", hCity=" + hCity + ", hZip=" + hZip + ", hState=" + hState + ", wAddress=" + wAddress
-				+ ", wCity=" + wCity + ", wZip=" + wZip + ", wState=" + wState + "]";
-	}
-
 }

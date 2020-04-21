@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.revature.model.Batch;
+import com.revature.models.Batch;
 import com.revature.repositories.BatchRepository;
 
 @RunWith(SpringRunner.class)

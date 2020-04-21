@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.revature.model.Car;
+import com.revature.models.Car;
 import com.revature.repositories.CarRepository;
 import com.revature.services.CarService;
 

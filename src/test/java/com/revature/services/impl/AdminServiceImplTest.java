@@ -12,7 +12,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.revature.model.Admin;
+import com.revature.models.Admin;
 import com.revature.repositories.AdminRepository;
 
 @RunWith(SpringRunner.class)

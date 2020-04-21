@@ -2,4 +2,4 @@
  * Package that contains all beans.
  */
 
-package com.revature.model;
+package com.revature.models;
