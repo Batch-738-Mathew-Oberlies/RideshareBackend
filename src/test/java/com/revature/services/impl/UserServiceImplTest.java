@@ -12,8 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.revature.beans.Batch;
-import com.revature.beans.User;
+import com.revature.models.Batch;
+import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 
 @RunWith(SpringRunner.class)

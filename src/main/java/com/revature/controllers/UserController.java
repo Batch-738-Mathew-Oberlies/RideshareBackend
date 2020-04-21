@@ -27,8 +27,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.google.maps.errors.ApiException;
 import com.revature.Driver;
-import com.revature.beans.Batch;
-import com.revature.beans.User;
+import com.revature.models.Batch;
+import com.revature.models.User;
 import com.revature.services.BatchService;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
@@ -89,9 +89,9 @@ public class UserController {
 //		
 		for(User d : us.getActiveDrivers()) {
 //			
-			String add = d.gethAddress();
-			String city = d.gethCity();
-			String state = d.gethState();
+			String add = d.getHAddress();
+			String city = d.getHCity();
+			String state = d.getHState();
 			
 			String fullAdd = add + ", " + city + ", " + state;
 			

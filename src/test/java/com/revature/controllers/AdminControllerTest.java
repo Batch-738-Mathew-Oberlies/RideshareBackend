@@ -23,7 +23,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.beans.Admin;
+import com.revature.models.Admin;
 import com.revature.services.AdminService;
 
 @RunWith(SpringRunner.class)

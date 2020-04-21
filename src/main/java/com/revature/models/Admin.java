@@ -1,4 +1,4 @@
-package com.revature.beans;
+package com.revature.models;
 
 import java.io.Serializable;
 
