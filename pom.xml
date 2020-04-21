@@ -61,9 +61,10 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.8</java.version>
 		
-		<sonar.projectKey>revaturelabs_rideshare-user-service</sonar.projectKey>
-  		<sonar.organization>revaturelabs-screenforce</sonar.organization>
+		<sonar.projectKey>Batch-738-Mathew-Oberlies_RideshareBackend</sonar.projectKey>
+  		<sonar.organization>batch-738-mathew-oberlies</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
+  		<sonar.login>960c465fd2b35a880eb21c0323f22ffac996be6b</sonar.login>
   		<sonar.coverage.exclusion>com/revature/beans/*.java</sonar.coverage.exclusion>
 	</properties>
 	
