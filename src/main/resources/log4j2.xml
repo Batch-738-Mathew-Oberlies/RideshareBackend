@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <Properties>
+        <Property name="basePath">${env:REV_RIDESHARE_LOGS}</Property>
+    </Properties>
+    <Appenders>
+        <RollingFile name="accessLogger" fileName="${basePath}/access-log.log" filePattern="${basePath}/access-log-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="businessLogger" fileName="${basePath}/business-log.log" filePattern="${basePath}/business-log-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="exceptionLogger" fileName="${basePath}/exception-log.log" filePattern="${basePath}/exception-log-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
+        <RollingFile name="performanceLogger" fileName="${basePath}/performance-log.log" filePattern="${basePath}/performance-log-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
+        <Console name="console" target="SYSTEM_OUT">
+            <PatternLayout
+                pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="accessLogger" level="all" additivity="true">
+            <AppenderRef ref="accessLogger" />
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="businessLogger" level="all" additivity="true">
+            <AppenderRef ref="businessLogger" />
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="exceptionLogger" level="all" additivity="true">
+            <AppenderRef ref="exceptionLogger" />
+            <AppenderRef ref="console" />
+        </Logger>
+        <Logger name="performanceLogger" level="all" additivity="true">
+            <AppenderRef ref="performanceLogger" />
+        </Logger>
+        <Root level="debug" additivity="false">
+        </Root>
+    </Loggers>
+</Configuration>
