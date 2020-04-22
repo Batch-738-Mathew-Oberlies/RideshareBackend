@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
 
 import org.springframework.stereotype.Component;
 
@@ -32,14 +33,15 @@ public class Batch implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
+	@Positive(message="Batch number must be positive.")
 	@Column(name="batch_number")
 	private int batchNumber;
 	
-	@NotBlank
+	@NotBlank(message="Batch location cannot be blank.")
 	@Column(name="batch_location")
 	private String batchLocation;
 	
-	public Batch(int batchNumber, @NotBlank String batchLocation) {
+	public Batch(int batchNumber, String batchLocation) {
 		super();
 		this.batchNumber = batchNumber;
 		this.batchLocation = batchLocation;
