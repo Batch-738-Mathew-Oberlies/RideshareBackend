@@ -64,7 +64,8 @@
 		<sonar.projectKey>Batch-738-Mathew-Oberlies_RideshareBackend</sonar.projectKey>
   		<sonar.organization>batch-738-mathew-oberlies</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-  		<sonar.login>960c465fd2b35a880eb21c0323f22ffac996be6b</sonar.login>
+		<sonar.coverage.exclusion>com/revature/models/*.java</sonar.coverage.exclusion>
+		<!-- login credentials moved to Jenkins build -->
 	</properties>
 	
 	<dependencies>

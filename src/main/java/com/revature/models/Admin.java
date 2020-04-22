@@ -14,11 +14,8 @@ import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Admin class that represents the admins. All admins have an id and a username.
@@ -30,7 +27,7 @@ import lombok.ToString;
 @Component
 @Entity
 @Table(name="admins")
-@Getter @NoArgsConstructor @Setter @EqualsAndHashCode @ToString
+@NoArgsConstructor @Data
 public class Admin implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
