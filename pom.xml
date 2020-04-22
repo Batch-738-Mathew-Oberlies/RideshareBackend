@@ -65,21 +65,26 @@
   		<sonar.organization>batch-738-mathew-oberlies</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
   		<sonar.login>960c465fd2b35a880eb21c0323f22ffac996be6b</sonar.login>
-  		<sonar.coverage.exclusion>com/revature/beans/*.java</sonar.coverage.exclusion>
 	</properties>
 	
 	<dependencies>
+		  <!-- https://mvnrepository.com/artifact/com.oracle/ojdbc7 -->
+		  <dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<version>12.2.0.1</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<optional>true</optional>		
 		</dependency>
 		<dependency>
-    <groupId>com.google.maps</groupId>
-    <artifactId>google-maps-services</artifactId>
-    <version>0.11.0</version>
-</dependency>
-<dependency>
+			<groupId>com.google.maps</groupId>
+			<artifactId>google-maps-services</artifactId>
+			<version>0.11.0</version>
+		</dependency>
+		<dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
         </dependency>
@@ -88,7 +93,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-				<dependency>
+		<dependency>
 			<groupId>com.github.javafaker</groupId>
 			<artifactId>javafaker</artifactId>
 			<version>0.17.2</version>
@@ -140,11 +145,7 @@
 		    <artifactId>springfox-swagger-ui</artifactId>
 		    <version>2.9.2</version>
 		</dependency> 
-		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
+		
  
 	</dependencies>
 	
