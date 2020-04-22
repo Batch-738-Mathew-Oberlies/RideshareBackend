@@ -1,22 +1,22 @@
 package com.revature.models;
 
-import lombok.*;
+import java.io.Serializable;
+
+import javax.persistence.*;
+import javax.validation.*;
+import javax.validation.constraints.*;
+
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Component
 @Entity
 @Table(name="users")
-@Getter @NoArgsConstructor @Setter @EqualsAndHashCode @ToString
+@NoArgsConstructor @Data
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id
@@ -56,7 +56,7 @@ public class User implements Serializable {
 
 	@NotBlank
 	@Column(name = "phone_number")
-	@Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$")
+	@Pattern(regexp = "^\\d{3}-\\d{3}-\\d{4}$")
 	private String phoneNumber;
 
 	@Column(name = "is_driver")
@@ -69,13 +69,13 @@ public class User implements Serializable {
 	private boolean isAcceptingRides;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@NotBlank
+	@NotNull
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name = "h_address")
 	private Address hAddress;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@NotBlank
+	@NotNull
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name = "w_address")
 	private Address wAddress;

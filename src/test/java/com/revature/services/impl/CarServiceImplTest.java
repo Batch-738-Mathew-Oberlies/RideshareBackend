@@ -1,20 +1,20 @@
 package com.revature.services.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import com.revature.models.Car;
+import com.revature.models.User;
+import com.revature.repositories.CarRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.revature.models.Car;
-import com.revature.models.User;
-import com.revature.repositories.CarRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class CarServiceImplTest {
@@ -24,35 +24,35 @@ public class CarServiceImplTest {
 	
 	@Mock
 	private CarRepository cr;
-	
+
 	@Test
 	public void testGettingCars() {
-		
+
 		List<Car> cars = new ArrayList<>();
 		cars.add(new Car());
 		cars.add(new Car());
 		when(cr.findAll()).thenReturn(cars);
-		
+
 		assertEquals(2, csi.getCars().size());
 	}
-//	
-//	@Test
-//	public void testGettingCarById() {
-//		
-//		Car expected = new Car(1, "red", 4, "Honda", "Accord", 2015, new User());
-//		when(cr.getOne(1)).thenReturn(expected);
-//		Car actual = csi.getCarById(1);
-//		
-//		assertEquals(actual, expected);
-//	}
-	
+
+	@Test
+	public void testGettingCarById() {
+
+		Car expected = new Car(1, "red", 4, "Honda", "Accord", 2015, new User());
+		when(cr.findById(1)).thenReturn(Optional.of(expected));
+		Car actual = csi.getCarById(1);
+
+		assertEquals(actual, expected);
+	}
+
 	@Test
 	public void testGettingCarByUserId() {
-		
+
 		Car expected = new Car(1, "red", 4, "Honda", "Accord", 2015, new User());
 		when(cr.getCarByUserId(1)).thenReturn(expected);
 		Car actual = csi.getCarByUserId(1);
-		
+
 		assertEquals(actual, expected);
 	}
 	

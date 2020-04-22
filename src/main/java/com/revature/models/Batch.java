@@ -10,11 +10,8 @@ import javax.validation.constraints.NotBlank;
 
 import org.springframework.stereotype.Component;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Batch class that represents a user's batch. All batches have a batch number and a location.
@@ -26,7 +23,7 @@ import lombok.ToString;
 @Component
 @Entity
 @Table(name="batches")
-@Getter @NoArgsConstructor @Setter @EqualsAndHashCode @ToString
+@NoArgsConstructor @Data
 public class Batch implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

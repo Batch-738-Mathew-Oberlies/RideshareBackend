@@ -2,25 +2,13 @@ package com.revature.models;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.springframework.stereotype.Component;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Car class that represents a user's car. All cars have an id, color, seats, make, model, year
@@ -33,7 +21,7 @@ import lombok.ToString;
 @Component
 @Entity
 @Table(name="cars")
-@Getter @NoArgsConstructor @Setter @EqualsAndHashCode @ToString
+@NoArgsConstructor @Data
 public class Car implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

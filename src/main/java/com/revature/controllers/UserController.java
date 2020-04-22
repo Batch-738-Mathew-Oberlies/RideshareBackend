@@ -9,6 +9,8 @@ import com.revature.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +58,7 @@ public class UserController {
 	public List<User> getActiveDrivers() {
 		return us.getActiveDrivers();
 	}*/
-	
+
 	@ApiOperation(value="Returns user drivers", tags= {"User"})
 	@GetMapping("/driver/{address}")
 	public List <User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
@@ -86,7 +88,6 @@ public class UserController {
 	 * @param location represents the batch's location.
 	 * @return A list of all the users, users by is-driver, user by username and users by is-driver and location.
 	 */
-	
 	@ApiOperation(value="Returns all users", tags= {"User"}, notes="Can also filter by is-driver, location and username")
 	@GetMapping
 	public List<User> getUsers(@RequestParam(name="is-driver",required=false)Boolean isDriver,
@@ -110,37 +111,34 @@ public class UserController {
 	 * @param id represents the user's id.
 	 * @return A user that matches the id.
 	 */
-	
 	@ApiOperation(value="Returns user by id", tags= {"User"})
 	@GetMapping("/{id}")
 	public User getUserById(@PathVariable("id")int id) {
 
 		return userService.getUserById(id);
 	}
-	
+
 	/**
 	 * HTTP POST method (/users)
-	 * 
+	 *
 	 * @param user represents the new User object being sent.
 	 * @return The newly created object with a 201 code.
-	 * 
+	 * <p>
 	 * Sends custom error messages when incorrect input is used
 	 */
-	
-	@ApiOperation(value="Adds a new user", tags= {"User"})
+	@ApiOperation(value = "Adds a new user", tags = {"User"})
 	@PostMapping
-	public Map<String, Set<String>> addUser(@Valid @RequestBody User user, BindingResult result) {
-		
+	public ResponseEntity<Object> addUser(@Valid @RequestBody User user, BindingResult result) {
+
 		System.out.println(user.isDriver());
-		 Map<String, Set<String>> errors = new HashMap<>();
-		 
-		 for (FieldError fieldError : result.getFieldErrors()) {
-		      String code = fieldError.getCode();
-		      String field = fieldError.getField();
-		      if (code.equals("NotBlank") || code.equals("NotNull")) {
-//		    	  
-		    	  switch (field) {
-		    	  case "userName":
+		Map<String, Set<String>> errors = new HashMap<>();
+
+		for (FieldError fieldError : result.getFieldErrors()) {
+			String code = fieldError.getCode();
+			String field = fieldError.getField();
+			if (code.equals("NotBlank") || code.equals("NotNull")) {
+				switch (field) {
+					case "userName":
 		    		  errors.computeIfAbsent(field, key -> new HashSet<>()).add("Username field required");
 		    		  break;
 		    	  case "firstName":
@@ -212,33 +210,31 @@ public class UserController {
 	              errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid Email");
 		      }
 		      //phone number custom error messages
-		      else if (code.equals("Pattern") && field.equals("phoneNumber")) {
-	              errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid Phone Number");
-		      }
-		    }
 
-			if (errors.isEmpty()) {
-
-				user.setBatch(batchService.getBatchByNumber(user.getBatch().getBatchNumber()));
-				userService.addUser(user);
-
-
+			else if (code.equals("Pattern") && field.equals("phoneNumber")) {
+				errors.computeIfAbsent(field, key -> new HashSet<>()).add("Invalid Phone Number");
 			}
-		    return errors;
-		
+		}
+
+		if (errors.isEmpty()) {
+			user.setBatch(batchService.getBatchByNumber(user.getBatch().getBatchNumber()));
+			userService.addUser(user);
+			return ResponseEntity.status(HttpStatus.CREATED).body(user);
+		}
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
+
 	}
-	
+
 	/**
 	 * HTTP PUT method (/users)
-	 * 
+	 *
 	 * @param user represents the updated User object being sent.
 	 * @return The newly updated object.
 	 */
-	
-	@ApiOperation(value="Updates user by id", tags= {"User"})
-	@PutMapping
-	public User updateUser(@Valid @RequestBody User user) {
-		//System.out.println(user);
+
+	@ApiOperation(value = "Updates user by id", tags = {"User"})
+	@PutMapping("/{id}")
+	public User updateUser(@Valid @RequestBody User user, @PathVariable String id) {
 		return userService.updateUser(user);
 	}
 	
