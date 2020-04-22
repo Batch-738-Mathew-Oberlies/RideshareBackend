@@ -4,36 +4,36 @@
   <artifactId>rideshare-user-service</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   
-      <parent>
+	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.0.0.RELEASE</version>
+		<version>2.2.6.RELEASE</version>
 	</parent>
 
 	<build>
-	<resources>
-    <resource>
-        <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-    </resource>
-</resources>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-			    	<executable>true</executable>
-			    </configuration>
+					<executable>true</executable>
+				</configuration>
 			</plugin>
 			<plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-	            <artifactId>maven-javadoc-plugin</artifactId>
-	            <configuration>
-	                <source>1.8</source>
-	                <target>1.8</target>
-	            </configuration>
-        	</plugin>
-        	<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+			<plugin>
 				<groupId>org.jacoco</groupId>
 				<artifactId>jacoco-maven-plugin</artifactId>
 				<version>0.8.4</version>
@@ -64,7 +64,8 @@
 		<sonar.projectKey>Batch-738-Mathew-Oberlies_RideshareBackend</sonar.projectKey>
   		<sonar.organization>batch-738-mathew-oberlies</sonar.organization>
   		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-  		<sonar.login>960c465fd2b35a880eb21c0323f22ffac996be6b</sonar.login>
+		<sonar.coverage.exclusion>com/revature/models/*.java</sonar.coverage.exclusion>
+		<!-- login credentials moved to Jenkins build -->
 	</properties>
 	
 	<dependencies>
@@ -122,11 +123,12 @@
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
  
+ <!-- 
 		<dependency>
     		<groupId>postgresql</groupId>
     		<artifactId>postgresql</artifactId>
     		<version>9.1-901-1.jdbc4</version>
-		</dependency>
+		</dependency>-->
  
 		<dependency> 
 		    <groupId>io.springfox</groupId>
@@ -137,16 +139,21 @@
 		<dependency>
 		    <groupId>com.googlecode.json-simple</groupId>
 		    <artifactId>json-simple</artifactId>
-		 <!--    <version>1.1.1</version> -->
+		    <version>1.1.1</version>
 		</dependency>
 		
 		<dependency>
 		    <groupId>io.springfox</groupId>
 		    <artifactId>springfox-swagger-ui</artifactId>
 		    <version>2.9.2</version>
-		</dependency> 
-		
- 
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.oracle.ojdbc</groupId>
+			<artifactId>ojdbc8</artifactId>
+			<scope>runtime</scope>
+		</dependency>
 	</dependencies>
 	
 </project>

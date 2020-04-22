@@ -12,15 +12,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
 /**
  * Car class that represents a user's car. All cars have an id, color, seats, make, model, year
@@ -33,7 +29,7 @@ import lombok.ToString;
 @Component
 @Entity
 @Table(name="cars")
-@Getter @NoArgsConstructor @Setter @EqualsAndHashCode @ToString
+@NoArgsConstructor @Data
 public class Car implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
