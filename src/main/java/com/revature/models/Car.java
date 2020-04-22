@@ -1,6 +1,7 @@
 package com.revature.models;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -15,6 +17,8 @@ import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -61,6 +65,11 @@ public class Car implements Serializable {
 	@OneToOne
 	@JoinColumn(name="user_id", unique=true)
 	private User user;
+	
+	@OneToMany
+	@JoinColumn(name="user_riders")
+	@JsonBackReference
+	private List<User> riders;
 	
 	public Car(int carId, String color, int seats, String make, String model, int year, User user) {
 		super();
