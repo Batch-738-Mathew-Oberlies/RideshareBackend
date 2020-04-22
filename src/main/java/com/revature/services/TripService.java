@@ -8,8 +8,8 @@ public interface TripService {
     public List<Trip> getTrips();
     public Trip getTripById(int id);
     public List<Trip> getTripsByDriverId(int driverId);
-    public List<Trip> getTripsByRiderId(int driverId);
+    public List<Trip> getTripsByRiderId(int riderId);
     public Trip addTrip(Trip trip);
     public Trip updateTrip(Trip trip);
-    public Trip deleteTripById(int id);
+    public String deleteTripById(int id);
 }

@@ -33,9 +33,8 @@ public class Trip implements Serializable {
     private User driver;
 
     // Riders array can be empty because we don't prepopulate them
-    @ManyToMany
+    @ManyToMany(mappedBy = "trips")
 //    @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinColumn(name = "user_id")
     @JsonBackReference
     private List<User> riders;
 

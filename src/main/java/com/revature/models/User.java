@@ -72,7 +72,7 @@ public class User implements Serializable {
 
 	@Column(name = "trips")
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-	@JoinColumn(name = "trips")
+	@JoinTable(name = "riders", joinColumns = @JoinColumn(name="rider_id"), inverseJoinColumns = @JoinColumn(name = "trip_id"))
 	@JsonManagedReference
 	private List<Trip> trips;
 
