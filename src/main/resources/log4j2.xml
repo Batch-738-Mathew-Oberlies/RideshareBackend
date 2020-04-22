@@ -36,6 +36,14 @@
                 <TimeBasedTriggeringPolicy interval="1" modulate="true" />
             </Policies>
         </RollingFile>
+        <RollingFile name="springLogger" fileName="${basePath}/spring-log.log" filePattern="${basePath}/spring-log-%d{yyyy-MM-dd}.log">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
         <Console name="console" target="SYSTEM_OUT">
             <PatternLayout
                 pattern="[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n" />
@@ -56,6 +64,10 @@
         </Logger>
         <Logger name="performanceLogger" level="all" additivity="true">
             <AppenderRef ref="performanceLogger" />
+        </Logger>
+        <Logger name="org.springframework.boot" level="error" additivity="false">
+            <AppenderRef ref="springLogger" />
+            <AppenderRef ref="console" />
         </Logger>
         <Root level="debug" additivity="false">
         </Root>
