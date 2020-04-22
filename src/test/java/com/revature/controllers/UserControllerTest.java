@@ -110,7 +110,6 @@ public class UserControllerTest {
 		user.setAcceptingRides(true);
 		users.add(user);
 		when(us.getUserByRoleAndLocation(true, "location")).thenReturn(users);
-
 		mvc.perform(get("/users?is-driver=true&location=location"))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$[0].driver").value("true"));
