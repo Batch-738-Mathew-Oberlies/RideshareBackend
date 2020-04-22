@@ -3,7 +3,7 @@ package com.revature.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.revature.beans.Admin;
+import com.revature.models.Admin;
 
 /**
  * AdminRepository which extends the JpaRepository.

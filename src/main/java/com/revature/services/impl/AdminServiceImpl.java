@@ -5,7 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.revature.beans.Admin;
+import com.revature.models.Admin;
 import com.revature.repositories.AdminRepository;
 import com.revature.services.AdminService;
 
