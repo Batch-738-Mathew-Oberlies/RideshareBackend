@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.List;
 
 @Component
 @Entity
@@ -67,6 +69,12 @@ public class User implements Serializable {
 
 	@Column(name = "is_accepting_rides")
 	private boolean isAcceptingRides;
+
+	@Column(name = "trips")
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@JoinColumn(name = "trips")
+	@JsonManagedReference
+	private List<Trip> trips;
 
 	@OneToOne(cascade = CascadeType.ALL)
 	@NotBlank
