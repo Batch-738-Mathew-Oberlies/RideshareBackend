@@ -2,15 +2,8 @@ package com.revature.models;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
+import javax.persistence.*;
+import javax.validation.constraints.*;
 
 import org.springframework.stereotype.Component;
 
@@ -43,6 +36,11 @@ public class Admin implements Serializable {
 	@Pattern(regexp="^\\w+\\.?\\w+$")
 	private String userName;
 	
+	/**
+	 * A parameterized constructor for the Admin model.
+	 * @param adminId The admin's initialized id.
+	 * @param userName The admin's username.
+	 */
 	public Admin(int adminId, String userName) {
 		super();
 		this.adminId = adminId;
