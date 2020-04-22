@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.Validator;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,9 +43,6 @@ public class UserController {
 
 	@Autowired
 	private DistanceService distanceService;
-
-	@Autowired
-	private Validator validator;
 
 	/**
 	 * HTTP GET method (/users)

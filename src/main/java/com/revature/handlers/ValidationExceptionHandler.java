@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @ControllerAdvice
-public class ValidationExceptionHanlder extends ResponseEntityExceptionHandler {
+public class ValidationExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
         Map<String, Object> body = new HashMap<>();
@@ -27,6 +27,6 @@ public class ValidationExceptionHanlder extends ResponseEntityExceptionHandler {
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
         body.put("errors", errors);
-        return new ResponseEntity<>(body, headers, status);
+        return ResponseEntity.badRequest().body(body);
     }
 }
