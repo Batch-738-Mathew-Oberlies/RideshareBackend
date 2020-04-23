@@ -1,17 +1,18 @@
 package com.revature.models;
 
-import java.io.Serializable;
-
-import javax.persistence.*;
-import javax.validation.*;
-import javax.validation.constraints.*;
-
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Component
 @Entity
@@ -69,13 +70,13 @@ public class User implements Serializable {
 	private boolean isAcceptingRides;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@NotBlank(message="Home address cannot be blank.")
+	@Valid
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name = "h_address")
 	private Address hAddress;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@NotBlank(message="Work address cannot be blank.")
+	@Valid
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name = "w_address")
 	private Address wAddress;
