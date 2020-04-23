@@ -41,7 +41,7 @@ public class Admin implements Serializable {
 	@Column(name="admin_id")
 	private int adminId;
 	
-    @NotBlank(message="Username cannot be blank.")
+	@NotBlank(message="Username cannot be blank.")
 	@Column(name="user_name")
 	@Size(min=3,max=12, message="Number of characters must be between 3 and 12.")
 	@Pattern(regexp="^\\w+\\.?\\w+$", message="Username format is incorrect.")

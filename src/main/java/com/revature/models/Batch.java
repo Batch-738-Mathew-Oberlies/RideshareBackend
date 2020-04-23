@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.stereotype.Component;
 
@@ -33,7 +33,7 @@ public class Batch implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	@Id
-	@Positive(message="Batch number must be positive.")
+	@PositiveOrZero(message="Batch number must be a nonnegative number.")
 	@Column(name="batch_number")
 	private int batchNumber;
 	
