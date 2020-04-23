@@ -17,7 +17,7 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
-import com.revature.annotations.LogExecutionTime;
+import com.revature.annotations.Timed;
 import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.services.DistanceService;
@@ -30,7 +30,7 @@ public class DistanceServiceImpl implements DistanceService {
 	private UserService us;
 
 	//TODO: REFACTOR THIS
-	@LogExecutionTime
+	@Timed
 	@Override
 	public List<User> distanceMatrix(String[] origins, String[] destinations) throws ApiException, InterruptedException, IOException {
 		Map<String, User> userDestMap = new HashMap<>();
