@@ -33,20 +33,17 @@ public class Car implements Serializable {
 	
 	private String color;
 	
-	@Positive
+	@Positive(message="Number of seats must be a positive number.")
+	@NotBlank(message="Number of car seats cannot be blank.")
 	private int seats;
 	
-	@PositiveOrZero
-	@Column(name = "available_seats")
-	private int availableSeats;
-	
-	@NotBlank
+	@NotBlank(message="Car make cannot be blank.")
 	private String make;
 	
-	@NotBlank
+	@NotBlank(message="Car model cannot be blank.")
 	private String model;
 	
-	@Positive
+	@Positive(message="Car year must be a positive number.")
 	@Column(name="car_year")
 	private int year;
 	
@@ -64,20 +61,4 @@ public class Car implements Serializable {
 		this.year = year;
 		this.user = user;
 	}
-
-	public Car(int carId, String color, @Positive int seats, @Positive int availableSeats, @NotBlank String make,
-			@NotBlank String model, @Positive int year, User user) {
-		super();
-		this.carId = carId;
-		this.color = color;
-		this.seats = seats;
-		this.availableSeats = availableSeats;
-		this.make = make;
-		this.model = model;
-		this.year = year;
-		this.user = user;
-	}
-	
-	
 }
-

@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -37,10 +38,10 @@ public class Admin implements Serializable {
 	@Column(name="admin_id")
 	private int adminId;
 	
-	@NotBlank
+	@NotBlank(message="Username cannot be blank.")
 	@Column(name="user_name")
-	@Size(min=3,max=12)
-	@Pattern(regexp="^\\w+\\.?\\w+$")
+	@Size(min=3,max=12, message="Number of characters must be between 3 and 12.")
+	@Pattern(regexp="^\\w+\\.?\\w+$", message="Username format is incorrect.")
 	private String userName;
 	
 	public Admin(int adminId, String userName) {

@@ -25,10 +25,10 @@ public class User implements Serializable {
 	private int userId;
 
 	@Valid
-	@NotBlank
+	@NotBlank(message="Username cannot be blank.")
 	@Column(name="user_name")
-	@Size(min=3,max=12)
-	@Pattern(regexp="^\\w+\\.?\\w+$")
+	@Size(min=3,max=12, message="Number of characters must be between 3 and 12.")
+	@Pattern(regexp="^\\w+\\.?\\w+$", message="Username format is incorrect.")
 	private String userName;
 
 	@ManyToOne
@@ -36,27 +36,27 @@ public class User implements Serializable {
 	private Batch batch;
 	
 	@Valid
-	@NotBlank
+	@NotBlank(message="First name cannot be blank.")
 	@Column(name="first_name")
-	@Size(max=30)
-	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$")
+	@Size(max=30, message= "Number of characters cannot be larger than 30.")
+	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$", message="First name format is incorrect")
 	private String firstName;
 	
 	@Valid
-	@NotBlank
+	@NotBlank(message="Last name cannot be blank.")
 	@Column(name="last_name")
-	@Size(max=30)
-	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$")
+	@Size(max=30, message="Number of characters cannot be larger than 30.")
+	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$", message="Last name format is incorrect")
 	private String lastName;
 
-	@NotBlank
-	@Email
-	@Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$")
+	@NotBlank(message="Email cannot be blank.")
+	@Email(message="Email format is incorrect.")
+	@Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$", message="Email format is incorrect.")
 	private String email;
 
-	@NotBlank
+	@NotBlank(message="Phone number cannot be blank.")
 	@Column(name = "phone_number")
-	@Pattern(regexp = "^\\d{3}-\\d{3}-\\d{4}$")
+	@Pattern(regexp = "^\\d{3}-\\d{3}-\\d{4}$", message="Phone number format is incorrect.")
 	private String phoneNumber;
 
 	@Column(name = "is_driver")
@@ -69,24 +69,19 @@ public class User implements Serializable {
 	private boolean isAcceptingRides;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@NotNull
+	@NotBlank(message="Home address cannot be blank.")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name = "h_address")
 	private Address hAddress;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@NotNull
+	@NotBlank(message="Work address cannot be blank.")
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name = "w_address")
 	private Address wAddress;
 
 
-	public User(int userId, @NotBlank @Size(min = 3, max = 12) @Pattern(regexp = "^\\w+\\.?\\w+$") String userName,
-				Batch batch,
-				@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String firstName,
-				@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String lastName,
-				@Email @Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$") String email,
-				@NotBlank @Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$") String phoneNumber,
+	public User(int userId, String userName, Batch batch, String firstName, String lastName, String email, String phoneNumber,
 				boolean isDriver, boolean isActive, boolean isAcceptingRides) {
 		super();
 		this.userId = userId;
@@ -101,12 +96,7 @@ public class User implements Serializable {
 		this.isAcceptingRides = isAcceptingRides;
 	}
 
-	public User(@NotBlank @Size(min = 3, max = 12) @Pattern(regexp = "^\\w+\\.?\\w+$") String userName, Batch batch,
-			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String firstName,
-			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String lastName,
-			@Email @Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$") String email,
-			@NotBlank @Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$") String phoneNumber,
-			boolean isDriver, boolean isActive, boolean isAcceptingRides) {
+	public User(String userName, Batch batch, String firstName, String lastName, String email, String phoneNumber, boolean isDriver, boolean isActive, boolean isAcceptingRides) {
 		super();
 		this.userName = userName;
 		this.batch = batch;
@@ -119,12 +109,7 @@ public class User implements Serializable {
 		this.isAcceptingRides = isAcceptingRides;
 	}
 
-	public User(int userId, @NotBlank @Size(min = 3, max = 12) @Pattern(regexp = "^\\w+\\.?\\w+$") String userName,
-			Batch batch,
-			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String firstName,
-			@NotBlank @Size(max = 30) @Pattern(regexp = "^[a-zA-Z]+-?[a-zA-Z]+ ?[a-zA-Z]+-?[a-zA-Z]+$") String lastName,
-			@Email @Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$") String email,
-			@NotBlank @Pattern(regexp = "^\\(?([0-9]{3})\\)?[-.\\s]?([0-9]{3})[-.\\s]?([0-9]{4})$") String phoneNumber) {
+	public User(int userId, String userName, Batch batch, String firstName, String lastName, String email, String phoneNumber) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -135,8 +120,8 @@ public class User implements Serializable {
 		this.phoneNumber = phoneNumber;
 	}
 
-	public User(int userId, @NotBlank String userName, Batch batch, @NotBlank String firstName,
-				@NotBlank String lastName, @Email String email, @NotBlank String phoneNumber, Address hAddress, Address wAddress) {
+	public User(int userId, String userName, Batch batch, String firstName,
+				String lastName, String email, String phoneNumber, Address hAddress, Address wAddress) {
 		super();
 		this.userId = userId;
 		this.userName = userName;
@@ -149,8 +134,8 @@ public class User implements Serializable {
 		this.wAddress = wAddress;
 	}
 
-	public User(int userId, @NotBlank String userName, Batch batch, @NotBlank String firstName,
-				@NotBlank String lastName, @Email String email, @NotBlank String phoneNumber, boolean isDriver,
+	public User(int userId, String userName, Batch batch, String firstName,
+				String lastName, String email, String phoneNumber, boolean isDriver,
 				boolean isActive, boolean isAcceptingRides, Address hAddress, Address wAddress) {
 		super();
 		this.userId = userId;
