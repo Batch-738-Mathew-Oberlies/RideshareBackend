@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -40,4 +41,7 @@ public class Trip implements Serializable {
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address destination;
+    
+    @NotNull
+    private LocalDateTime date;
 }
