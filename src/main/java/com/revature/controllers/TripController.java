@@ -45,7 +45,7 @@ public class TripController {
     @ApiOperation(value = "Return trip by ID", tags = {"Trip"})
     @GetMapping("/{id}")
     public ResponseEntity<Trip> getTripById(@PathVariable("id") int id) {
-        Optional<Trip> trip = Optional.ofNullable(tripService.getTripById(id));
+        Optional<Trip> trip = tripService.getTripById(id);
 
         if (trip.isPresent()) return ResponseEntity.ok(trip.get());
 
@@ -92,12 +92,11 @@ public class TripController {
     @ApiOperation(value = "Adds a new trip")
     @PostMapping
     public ResponseEntity<Trip> addTrip(@Valid @RequestBody Trip trip) {
-        int oldId = trip.getTripId();
-        int newId = tripService.addTrip(trip).getTripId();
+        Optional<Trip> newTrip = tripService.getTripById(trip.getTripId());
 
-        if (newId != oldId) return ResponseEntity.status(201).body(trip);
+        if (newTrip.isPresent()) return ResponseEntity.badRequest().build();
 
-        return ResponseEntity.badRequest().build();
+        return ResponseEntity.status(201).body(tripService.addTrip(trip));
     }
 
     /**
@@ -109,17 +108,19 @@ public class TripController {
     @ApiOperation(value = "Updates a trip by ID", tags = {"Trip"})
     @PutMapping
     public ResponseEntity<Trip> updateTrip(@Valid @RequestBody Trip trip) {
-        int oldId = trip.getTripId();
-        int newId = tripService.addTrip(trip).getTripId();
+        Optional<Trip> existingTrip = tripService.getTripById(trip.getTripId());
 
-        // Accept and return 201 (Created) if IDs match, since we're updating an existing record
-        if (newId == oldId) return ResponseEntity.status(201).body(trip);
+        if (existingTrip.isPresent()) {
+            tripService.addTrip(trip);
+
+            return ResponseEntity.status(201).body(trip);
+        }
 
         return ResponseEntity.badRequest().build();
     }
 
     /**
-     * HTTP DELETE method (/cars/{id})
+     * HTTP DELETE method (/trips/{id})
      *
      * @param id represents the Trip's ID.
      * @return A string that says which Trip was deleted.
@@ -127,7 +128,7 @@ public class TripController {
     @ApiOperation(value = "Deletes a trip by ID", tags = {"Trip"})
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteTripById(@PathVariable("id") int id) {
-        Optional<Trip> trip = Optional.ofNullable(tripService.getTripById(id));
+        Optional<Trip> trip = tripService.getTripById(id);
 
         if (trip.isPresent()) {
             String message = tripService.deleteTripById(id);

@@ -1,7 +1,7 @@
 package com.revature.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -13,11 +13,11 @@ import java.util.List;
 @Component
 @Entity
 @Table(name = "trips")
-@Getter @NoArgsConstructor @AllArgsConstructor @Setter @EqualsAndHashCode @ToString
+@NoArgsConstructor @Data
 public class Trip implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "trips_id")
+    @Column(name = "trip_id")
     private int tripId;
 
     @NotNull
@@ -26,7 +26,6 @@ public class Trip implements Serializable {
     @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonBackReference
     private User driver;
 
     // Riders array can be empty because we don't prepopulate them
@@ -39,9 +38,14 @@ public class Trip implements Serializable {
 
     @NotNull
     @ManyToOne
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "departure_id")
+    private Address departure;
+
+    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "destination_id")
     private Address destination;
     
     @NotNull
-    private LocalDateTime date;
+    private LocalDateTime tripDate;
 }

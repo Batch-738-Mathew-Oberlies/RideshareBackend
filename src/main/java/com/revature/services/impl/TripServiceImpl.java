@@ -1,6 +1,7 @@
 package com.revature.services.impl;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,8 +21,8 @@ public class TripServiceImpl implements TripService {
 	}
 
 	@Override
-	public Trip getTripById(int id) {
-		return tripRepository.findById(id).get();
+	public Optional<Trip> getTripById(int id) {
+		return tripRepository.findById(id);
 	}
 
 	@Override
@@ -31,12 +32,7 @@ public class TripServiceImpl implements TripService {
 
 	@Override
 	public List<Trip> getTripsByRiderId(int riderId) {
-		List<Integer> tripIds = tripRepository.getTripsByRiderId(riderId);
-		List<Trip> trips = null;
-		for (int r : tripIds) {
-			trips.add(tripRepository.findById(r).get());
-		}
-		return trips;
+		return tripRepository.getTripsByRiderId(riderId);
 	}
 
 	@Override
