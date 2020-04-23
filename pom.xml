@@ -63,7 +63,7 @@
 		<sonar.projectKey>Batch-738-Mathew-Oberlies_RideshareBackend</sonar.projectKey>
 		<sonar.organization>batch-738-mathew-oberlies</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
-    <sonar.coverage.exclusion>com/revature/models/*.java</sonar.coverage.exclusion>
+		<sonar.coverage.exclusion>com/revature/models/*.java</sonar.coverage.exclusion>
 	</properties>
 
 	<dependencies>
