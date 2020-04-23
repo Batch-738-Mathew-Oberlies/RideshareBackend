@@ -73,7 +73,7 @@ public class User implements Serializable {
 	@Column(name = "trips")
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "riders", joinColumns = @JoinColumn(name="rider_id"), inverseJoinColumns = @JoinColumn(name = "trip_id"))
-	@JsonManagedReference
+//	@JsonManagedReference
 	private List<Trip> trips;
 
 	@OneToOne(cascade = CascadeType.ALL)

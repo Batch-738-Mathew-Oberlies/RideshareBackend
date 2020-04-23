@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import com.revature.models.Trip;
+import com.revature.services.TripService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/trips")
@@ -26,8 +28,12 @@ public class TripController {
      */
     @ApiOperation(value = "Return all trips", tags = {"Trip"})
     @GetMapping
-    public List<Trip> getTrips() {
-        return tripService.getTrips();
+    public ResponseEntity<List<Trip>> getTrips() {
+        List<Trip> trips = tripService.getTrips();
+
+        if (trips.size() != 0) return ResponseEntity.ok(trips);
+
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -38,8 +44,12 @@ public class TripController {
      */
     @ApiOperation(value = "Return trip by ID", tags = {"Trip"})
     @GetMapping("/{id}")
-    public Trip getTripById(@PathVariable("id") int id) {
-        return tripService.getTripById(id);
+    public ResponseEntity<Trip> getTripById(@PathVariable("id") int id) {
+        Optional<Trip> trip = Optional.ofNullable(tripService.getTripById(id));
+
+        if (trip.isPresent()) return ResponseEntity.ok(trip.get());
+
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -50,8 +60,12 @@ public class TripController {
      */
     @ApiOperation(value = "Returns trips by driver ID", tags = {"Driver", "Trip"})
     @GetMapping("/driver/{driverId}")
-    public List<Trip> getTripsByDriverId(@PathVariable("driverId") int driverId) {
-        return tripService.getTripsByDriverId(driverId);
+    public ResponseEntity<List<Trip>> getTripsByDriverId(@PathVariable("driverId") int driverId) {
+        List<Trip> trips = tripService.getTripsByDriverId(driverId);
+
+        if (trips.size() != 0) return ResponseEntity.ok(trips);
+
+        return ResponseEntity.noContent().build();
     }
 
     /**
@@ -62,19 +76,30 @@ public class TripController {
      */
     @ApiOperation(value = "Returns trips by rider ID", tags = {"Rider", "Trip"})
     @GetMapping("/rider/{riderId}")
-    public List<Trip> getTripsByRiderId(@PathVariable("riderId") int riderId) {
-        return tripService.getTripsByRiderId(riderId);
+    public ResponseEntity<List<Trip>> getTripsByRiderId(@PathVariable("riderId") int riderId) {
+        List<Trip> trips = tripService.getTripsByRiderId(riderId);
+
+        if (trips.size() != 0) return ResponseEntity.ok(trips);
+
+        return ResponseEntity.noContent().build();
     }
 
     /**
      * HTTP POST method (/trips)
      * @param trip represents the new Trip object being sent.
-     * @return The newly created object with a 201 code.
+     * @return The newly created object along with a 201 code.
      */
     @ApiOperation(value = "Adds a new trip")
     @PostMapping
     public ResponseEntity<Trip> addTrip(@Valid @RequestBody Trip trip) {
-        return new ResponseEntity<Trip>(tripService.addTrip(trip), HttpStatus.CREATED);
+        int oldId = trip.getTripId();
+        int newId = tripService.addTrip(trip).getTripId();
+
+        if (newId != oldId) return ResponseEntity.status(201).body(trip);
+
+        return ResponseEntity.badRequest().build();
+
+//        return new ResponseEntity<Trip>(tripService.addTrip(trip), HttpStatus.CREATED);
     }
 
     /**
@@ -84,9 +109,17 @@ public class TripController {
      * @return The newly updated Trip object.
      */
     @ApiOperation(value = "Updates a trip by ID", tags = {"Trip"})
-    @PutMapping("/{id}")
-    public Trip updateTrip(@Valid @RequestBody Trip trip) {
-        return tripService.updateTrip(trip);
+    @PutMapping
+    public ResponseEntity<Trip> updateTrip(@Valid @RequestBody Trip trip) {
+        int oldId = trip.getTripId();
+        int newId = tripService.addTrip(trip).getTripId();
+
+        // Accept and return 201 (Created) if IDs match, since we're updating an existing record
+        if (newId == oldId) return ResponseEntity.status(201).body(trip);
+
+        return ResponseEntity.badRequest().build();
+
+//        return tripService.updateTrip(trip);
     }
 
     /**
@@ -96,8 +129,18 @@ public class TripController {
      * @return A string that says which Trip was deleted.
      */
     @ApiOperation(value = "Deletes a trip by ID", tags = {"Trip"})
-    @DeleteMapping
-    public String deleteTripById(@PathVariable("id") int id) {
-        return tripService.deleteTripById(id);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteTripById(@PathVariable("id") int id) {
+        Optional<Trip> trip = Optional.ofNullable(tripService.getTripById(id));
+
+        if (trip.isPresent()) {
+            String message = tripService.deleteTripById(id);
+
+            return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
+        }
+
+        return ResponseEntity.notFound().build();
+
+//        return tripService.deleteTripById(id);
     }
 }

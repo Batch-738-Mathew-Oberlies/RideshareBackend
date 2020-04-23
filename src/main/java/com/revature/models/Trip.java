@@ -1,8 +1,9 @@
 package com.revature.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.sun.crypto.provider.HmacPKCS12PBESHA1;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
@@ -15,7 +16,7 @@ import java.util.List;
 @Component
 @Entity
 @Table(name = "trips")
-@Getter @NoArgsConstructor @Setter @EqualsAndHashCode @ToString
+@Getter @NoArgsConstructor @AllArgsConstructor @Setter @EqualsAndHashCode @ToString
 public class Trip implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,17 +34,16 @@ public class Trip implements Serializable {
     private User driver;
 
     // Riders array can be empty because we don't prepopulate them
-    @ManyToMany(mappedBy = "trips")
+    @ManyToMany
 //    @LazyCollection(LazyCollectionOption.FALSE)
-    @JsonBackReference
+    @JoinTable(name = "riders", joinColumns = @JoinColumn(name = "trip_id"), inverseJoinColumns = @JoinColumn(name = "rider_id"))
     private List<User> riders;
 
     @NotNull
     private int availableSeats;
 
     @NotNull
-    private Car vehicle;
-
-    @NotNull
+    @ManyToOne
+    @JoinColumn(name = "address_id")
     private Address destination;
 }
