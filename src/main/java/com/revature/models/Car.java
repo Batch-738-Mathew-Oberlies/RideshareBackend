@@ -41,16 +41,17 @@ public class Car implements Serializable {
 	
 	private String color;
 	
-	@Positive
+	@Positive(message="Number of seats must be a positive number.")
+	@NotBlank(message="Number of car seats cannot be blank.")
 	private int seats;
 	
-	@NotBlank
+	@NotBlank(message="Car make cannot be blank.")
 	private String make;
 	
-	@NotBlank
+	@NotBlank(message="Car model cannot be blank.")
 	private String model;
 	
-	@Positive
+	@Positive(message="Car year must be a positive number.")
 	@Column(name="car_year")
 	private int year;
 	
