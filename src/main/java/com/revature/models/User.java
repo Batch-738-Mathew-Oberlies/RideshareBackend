@@ -1,20 +1,16 @@
 package com.revature.models;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.Valid;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.util.List;
-import javax.validation.constraints.*;
-
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.stereotype.Component;
 
 @Component
 @Entity
@@ -74,7 +70,6 @@ public class User implements Serializable {
 	@Column(name = "trips")
 	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
 	@JoinTable(name = "riders", joinColumns = @JoinColumn(name="rider_id"), inverseJoinColumns = @JoinColumn(name = "trip_id"))
-//	@JsonManagedReference
 	private List<Trip> trips;
 
 	@OneToOne(cascade = CascadeType.ALL)

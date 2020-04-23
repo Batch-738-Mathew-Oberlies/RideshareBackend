@@ -98,8 +98,6 @@ public class TripController {
         if (newId != oldId) return ResponseEntity.status(201).body(trip);
 
         return ResponseEntity.badRequest().build();
-
-//        return new ResponseEntity<Trip>(tripService.addTrip(trip), HttpStatus.CREATED);
     }
 
     /**
@@ -118,8 +116,6 @@ public class TripController {
         if (newId == oldId) return ResponseEntity.status(201).body(trip);
 
         return ResponseEntity.badRequest().build();
-
-//        return tripService.updateTrip(trip);
     }
 
     /**
@@ -140,7 +136,5 @@ public class TripController {
         }
 
         return ResponseEntity.notFound().build();
-
-//        return tripService.deleteTripById(id);
     }
 }

@@ -1,11 +1,7 @@
 package com.revature.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
@@ -28,14 +24,12 @@ public class Trip implements Serializable {
 
     @NotNull
     @ManyToOne
-//    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinColumn(name = "user_id")
     @JsonBackReference
     private User driver;
 
     // Riders array can be empty because we don't prepopulate them
     @ManyToMany
-//    @LazyCollection(LazyCollectionOption.FALSE)
     @JoinTable(name = "riders", joinColumns = @JoinColumn(name = "trip_id"), inverseJoinColumns = @JoinColumn(name = "rider_id"))
     private List<User> riders;
 
