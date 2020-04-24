@@ -1,14 +1,19 @@
 package com.revature.services;
 
-import java.util.List;
-
 import com.revature.models.Admin;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface AdminService {
-	
-	public List<Admin> getAdmins();
-	public Admin getAdminById(int id);
-	public Admin createAdmin(Admin admin);
-	public Admin updateAdmin(Admin admin);
-	public String deleteAdminById(int id);
+
+    List<Admin> getAdmins();
+
+    Optional<Admin> getAdminById(int id);
+
+    Admin createAdmin(Admin admin);
+
+    Admin updateAdmin(Admin admin);
+
+    String deleteAdminById(int id);
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -37,8 +38,11 @@ public class AdminServiceImplTest {
 	public void testGettingAdminById() {
 		Admin expected = new Admin(1, "username");
 		when(ar.findById(1)).thenReturn(Optional.of(expected));
-		Admin actual = asi.getAdminById(1);
-		assertEquals(expected, actual);
+		Optional<Admin> actual = asi.getAdminById(1);
+		if (actual.isPresent())
+			assertEquals(expected, actual.get());
+		else
+			fail();
 	}
 
 	@Test

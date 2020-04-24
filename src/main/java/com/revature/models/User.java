@@ -153,4 +153,22 @@ public class User implements Serializable {
 		this.wAddress = wAddress;
 
 	}
+
+	public User(UserDTO userDTO) {
+		super();
+		if (userDTO != null) {
+			this.userId = userDTO.getUserId();
+			this.userName = userDTO.getUserName();
+			this.batch = new Batch(userDTO.getBatch());
+			this.firstName = userDTO.getFirstName();
+			this.lastName = userDTO.getLastName();
+			this.email = userDTO.getEmail();
+			this.phoneNumber = userDTO.getPhoneNumber();
+			this.isDriver = userDTO.isDriver();
+			this.isActive = userDTO.isActive();
+			this.isAcceptingRides = userDTO.isAcceptingRides();
+			this.hAddress = new Address(userDTO.getHAddress());
+			this.wAddress = new Address(userDTO.getWAddress());
+		}
+	}
 }
