@@ -3,6 +3,7 @@ package com.revature.aspects;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.ServletInputStream;
@@ -13,6 +14,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import com.revature.services.LoggerService;
@@ -40,16 +42,21 @@ public class LoggingAspect {
 	 * 2) request bodies except for sensitive locations (Login)
 	 * 3) exceptions thrown by a controller
 	 */
+	@SuppressWarnings("rawtypes")
 	@Around("within(com.revature.controllers..*)")
 	public Object logControllers(ProceedingJoinPoint jp) throws Throwable {
 		if(request == null)return jp.proceed();
 		Object result = null;
+		boolean sensitive = false;
+		String payload = "";
+		if(jp.getTarget().toString().matches(".*Login.*"))sensitive = true;
 		//Log all requests
 		String requestMessage = String.format("IP: %s made a %s request to %s at %s", request.getRemoteAddr() ,request.getMethod(), request.getRequestURI(), new Date());
 		loggerService.getAccess().trace(requestMessage);
 		//Log payload on non-sensitive requests
-		if(!jp.getTarget().toString().matches(".*Login.*")) {
-			String body = String.format("%s invoked %s with payload %s", jp.getTarget(), jp.getSignature(), getPayload());
+		if(!sensitive) {
+			payload = getPayload();
+			String body = String.format("%s invoked %s with payload %s", jp.getTarget(), jp.getSignature(), payload);
 			loggerService.getAccess().trace(body);
 		}
 		try {
@@ -61,6 +68,21 @@ public class LoggingAspect {
 			response.setStatus(500);
 			//TODO comment out throw e on production to block stack trace.
 			throw e;
+		}finally {
+			//Log Response
+			if(!sensitive) {
+				String body = "";
+				int status = response.getStatus();
+				HttpStatus statusDescription = HttpStatus.resolve(status);
+				if(result instanceof ArrayList) {
+					body = ((ArrayList) result).toString();
+				}else if (result != null){
+					body = result.toString();
+				}
+				String responseMessage = String.format("Responded with status: %s and response: %s for %s request to %s by %s", 
+						statusDescription, body, request.getMethod(), request.getRequestURI(), request.getRemoteAddr());
+				loggerService.getAccess().trace(responseMessage);
+			}
 		}
 		return result;
 	}
@@ -106,4 +128,10 @@ public class LoggingAspect {
 		}
 		return builder.toString();
 	}
+//	private String getResponse(@SuppressWarnings("rawtypes") ResponseEntity responseEntity) {
+//		String responseString = responseEntity.getBody().toString();
+//		int start = responseString.indexOf('{');
+//		int end = responseString.lastIndexOf('}') + 1;
+//		return responseString.substring(start, end);
+//	}
 }
