@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -36,11 +37,13 @@ public class Trip implements Serializable {
     @NotNull
     private int availableSeats;
 
+    @Valid
     @NotNull
     @ManyToOne
     @JoinColumn(name = "departure_id")
     private Address departure;
 
+    @Valid
     @NotNull
     @ManyToOne
     @JoinColumn(name = "destination_id")

@@ -32,6 +32,6 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
 	 * @param id
 	 * @return Check {@link com.revature.services.impl.TripServiceImpl}
 	 */
-	@Query(value = "select t.TRIP_ID, t.AVAILABLE_SEATS, t.NAME, t.DEPARTURE_ID, t.DESTINATION_ID, t.USER_ID, t.TRIP_DATE from trips t join riders r on t.TRIP_ID = r.TRIP_ID where RIDER_ID = :id", nativeQuery = true)
+	@Query(value = "select * from trips t join Riders r on t.TRIP_ID = r.TRIP_ID where RIDER_ID = :id", nativeQuery = true)
 	List<Trip> getTripsByRiderId(int id);
 }
