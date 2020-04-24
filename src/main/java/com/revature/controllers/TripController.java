@@ -110,11 +110,7 @@ public class TripController {
     public ResponseEntity<Trip> updateTrip(@Valid @RequestBody Trip trip) {
         Optional<Trip> existingTrip = tripService.getTripById(trip.getTripId());
 
-        if (existingTrip.isPresent()) {
-            tripService.addTrip(trip);
-
-            return ResponseEntity.status(201).body(trip);
-        }
+        if (existingTrip.isPresent()) return ResponseEntity.status(201).body(tripService.updateTrip(trip));
 
         return ResponseEntity.badRequest().build();
     }

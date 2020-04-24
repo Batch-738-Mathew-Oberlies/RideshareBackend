@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TripService {
-    public List<Trip> getTrips();
-    public Optional<Trip> getTripById(int id);
-    public List<Trip> getTripsByDriverId(int driverId);
-    public List<Trip> getTripsByRiderId(int riderId);
-    public Trip addTrip(Trip trip);
-    public Trip updateTrip(Trip trip);
-    public String deleteTripById(int id);
+    List<Trip> getTrips();
+    Optional<Trip> getTripById(int id);
+    List<Trip> getTripsByDriverId(int driverId);
+    List<Trip> getTripsByRiderId(int riderId);
+    Trip addTrip(Trip trip);
+    Trip updateTrip(Trip trip);
+    String deleteTripById(int id);
 }
