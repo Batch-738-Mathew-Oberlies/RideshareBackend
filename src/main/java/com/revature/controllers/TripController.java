@@ -40,35 +40,13 @@ public class TripController {
 	@ApiOperation(value = "Return all trips", tags = {"Trip"})
 	@GetMapping
 	public ResponseEntity<List<TripDTO>> getTrips(
-			@RequestParam(name = "riderId", required = false) Integer riderId,
-			@RequestParam(name = "driverId", required = false) Integer driverId,
 			@RequestParam(name = "offset", required = false) Integer offset
 			) {
 		List<TripDTO> trips = null;
-		if( riderId == null && driverId == null) {
-			if (offset != null) {
-				trips = tripService.getTripsDTO(offset);
-			}else {
-				trips = tripService.getTripsDTO();
-			}
-		}else if (riderId != null && driverId != null) {
-			if (offset != null) {
-				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId, offset);
-			}else {
-				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId);
-			}
-		}else if(driverId != null) {
-			if (offset != null) {
-				trips = tripService.getTripsByDriverIdDTO(driverId, offset);
-			}else {
-				trips = tripService.getTripsByDriverIdDTO(driverId);
-			}
-		}else{
-			if (offset != null) {
-				trips = tripService.getTripsByRiderIdDTO(riderId, offset);
-			}else {
-				trips = tripService.getTripsByRiderIdDTO(riderId);
-			}
+		if (offset != null) {
+			trips = tripService.getTripsDTO(offset);
+		}else {
+			trips = tripService.getTripsDTO();
 		}
 		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
 
@@ -120,6 +98,50 @@ public class TripController {
 		if (existingTrip.isPresent()) return ResponseEntity.status(201).body(new TripDTO(tripService.updateTrip(trip)));
 
 		return ResponseEntity.badRequest().build();
+	}
+
+	/**
+	 * HTTP DELETE method (/trips/{id})
+	 *
+	 * @param id represents the Trip's ID.
+	 * @return A string that says which Trip was deleted.
+	 */
+	@ApiOperation(value = "Deletes a trip by ID", tags = {"Trip"})
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteTripById(@PathVariable("id") int id) {
+		Optional<Trip> trip = tripService.getTripById(id);
+
+		if (trip.isPresent()) {
+			String message = tripService.deleteTripById(id);
+
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
+		}
+
+		return ResponseEntity.notFound().build();
+	}
+
+	/**
+	 * HTTP GET method (/trips/rider/)
+	 * 
+	 * @param riderId
+	 * @param offset
+	 * @return A list of trips matching the rider's ID.
+	 */
+	@ApiOperation(value = "Return all trips", tags = {"Trip"})
+	@GetMapping("/rider")
+	public ResponseEntity<List<TripDTO>> getTripsByRider(
+			@RequestParam(name = "riderId", required = false) Integer riderId,
+			@RequestParam(name = "offset", required = false) Integer offset
+			){
+		List<TripDTO> trips = null;
+		if (offset != null) {
+			trips = tripService.getTripsByRiderIdDTO(riderId, offset);
+		}else {
+			trips = tripService.getTripsByRiderIdDTO(riderId);
+		}
+		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
+
+		return ResponseEntity.noContent().build();
 	}
 
 	/**
@@ -186,22 +208,52 @@ public class TripController {
 	}
 
 	/**
-	 * HTTP DELETE method (/trips/{id})
-	 *
-	 * @param id represents the Trip's ID.
-	 * @return A string that says which Trip was deleted.
+	 * HTTP GET method (/trips/driver)
+	 * 
+	 * @param driverId
+	 * @param offset
+	 * @return A list of trips matching the driver's ID.
 	 */
-	@ApiOperation(value = "Deletes a trip by ID", tags = {"Trip"})
-	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteTripById(@PathVariable("id") int id) {
-		Optional<Trip> trip = tripService.getTripById(id);
-
-		if (trip.isPresent()) {
-			String message = tripService.deleteTripById(id);
-
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
+	@ApiOperation(value = "Return all trips matching a driver's ID", tags = {"Trip", "Driver"})
+	@GetMapping("/driver")
+	public ResponseEntity<List<TripDTO>> getTripsByDriver(
+			@RequestParam(name = "driverId") Integer driverId,
+			@RequestParam(name = "offset", required = false) Integer offset
+			) {
+		List<TripDTO> trips = null;
+		if (offset != null) {
+			trips = tripService.getTripsByDriverIdDTO(driverId, offset);
+		}else {
+			trips = tripService.getTripsByDriverIdDTO(driverId);
 		}
+		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
 
-		return ResponseEntity.notFound().build();
+		return ResponseEntity.noContent().build();
+	}
+
+	/**
+	 * HTTP GET method (/trips/driver/rider)
+	 * 
+	 * @param driverId
+	 * @param riderId
+	 * @param offset
+	 * @return A list of trips matching the driver's ID and a rider's ID.
+	 */
+	@ApiOperation(value = "Return all trips matching a driver's ID and a rider's ID", tags = {"Trip", "Driver", "Rider"})
+	@GetMapping("/driver/rider")
+	public ResponseEntity<List<TripDTO>> getTripsByDriverRider(
+			@RequestParam(name = "driverId") Integer driverId,
+			@RequestParam(name = "riderId") Integer riderId,
+			@RequestParam(name = "offset", required = false) Integer offset
+			) {
+		List<TripDTO> trips = null;
+		if (offset != null) {
+			trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId, offset);
+		}else {
+			trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId);
+		}
+		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
+
+		return ResponseEntity.noContent().build();
 	}
 }
