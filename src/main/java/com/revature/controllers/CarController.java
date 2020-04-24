@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * CarController takes care of handling our requests to /cars.
@@ -27,35 +28,32 @@ import java.util.List;
 @CrossOrigin
 @Api(tags= {"Car"})
 public class CarController {
-	
+
 	@Autowired
-	private CarService cs;
+	private CarService carService;
 	
 	/**
 	 * HTTP GET method (/cars)
 	 * 
 	 * @return A list of all the cars.
 	 */
-	
 	@ApiOperation(value="Returns all cars", tags= {"Car"})
 	@GetMapping
 	public List<Car> getCars() {
-		
-		return cs.getCars();
+		return carService.getCars();
 	}
-	
+
 	/**
 	 * HTTP GET method (/cars/{number})
-	 * 
+	 *
 	 * @param id represents the car's id.
 	 * @return A car that matches the id.
 	 */
-	
-	@ApiOperation(value="Returns car by id", tags= {"Car"})
+	@ApiOperation(value = "Returns car by id", tags = {"Car"})
 	@GetMapping("/{id}")
-	public Car getCarById(@PathVariable("id")int id) {
-		
-		return cs.getCarById(id);
+	public ResponseEntity<Car> getCarById(@PathVariable("id") int id) {
+		Optional<Car> car = carService.getCarById(id);
+		return car.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	/**
@@ -67,9 +65,8 @@ public class CarController {
 	
 	@ApiOperation(value="Returns car by user id", tags= {"Car"})
 	@GetMapping("/users/{userId}")
-	public Car getCarByUserId(@PathVariable("userId")int userId) {
-		
-		return cs.getCarByUserId(userId);
+	public Car getCarByUserId(@PathVariable("userId") int userId) {
+		return carService.getCarByUserId(userId);
 	}
 
 	/**
@@ -78,12 +75,11 @@ public class CarController {
 	 * @param carDTO represents the new Car object being sent.
 	 * @return The newly created object with a 201 code.
 	 */
-
 	@ApiOperation(value = "Adds a new car", tags = {"Car"})
 	@PostMapping
 	public ResponseEntity<Car> addCar(@Valid @RequestBody CarDTO carDTO) {
 		Car car = new Car(carDTO);
-		return new ResponseEntity<>(cs.addCar(car), HttpStatus.CREATED);
+		return new ResponseEntity<>(carService.addCar(car), HttpStatus.CREATED);
 	}
 
 	/**
@@ -92,12 +88,11 @@ public class CarController {
 	 * @param carDTO represents the updated Car object being sent.
 	 * @return The newly updated object.
 	 */
-
 	@ApiOperation(value = "Updates car by id", tags = {"Car"})
 	@PutMapping("/{id}")
 	public Car updateCar(@Valid @RequestBody CarDTO carDTO) {
 		Car car = new Car(carDTO);
-		return cs.updateCar(car);
+		return carService.updateCar(car);
 	}
 	
 	/**
@@ -106,11 +101,9 @@ public class CarController {
 	 * @param id represents the car's id.
 	 * @return A string that says which car was deleted.
 	 */
-	
 	@ApiOperation(value="Deletes car by id", tags= {"Car"})
 	@DeleteMapping("/{id}")
-	public String deleteCarById(@PathVariable("id")int id) {
-		
-		return cs.deleteCarById(id);
+	public String deleteCarById(@PathVariable("id") int id) {
+		return carService.deleteCarById(id);
 	}
 }

@@ -1,15 +1,5 @@
 package com.revature.services.impl;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.DistanceMatrixApiRequest;
 import com.google.maps.GeoApiContext;
@@ -22,12 +12,17 @@ import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.IOException;
+import java.util.*;
 
 @Service
 public class DistanceServiceImpl implements DistanceService {
 
 	@Autowired
-	private UserService us;
+	private UserService userService;
 
 	//TODO: REFACTOR THIS
 	@Timed
@@ -35,7 +30,7 @@ public class DistanceServiceImpl implements DistanceService {
 	public List<User> distanceMatrix(String[] origins, String[] destinations) throws ApiException, InterruptedException, IOException {
 		Map<String, User> userDestMap = new HashMap<>();
 		List<String> destinationList = new ArrayList<>();
-		for (User d : us.getActiveDrivers()) {
+		for (User d : userService.getActiveDrivers()) {
 			Address homeAddress = d.getHAddress();
 			String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
 			destinationList.add(fullAdd);

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * BatchController takes care of handling our requests to /batches.
@@ -27,9 +28,9 @@ import java.util.List;
 @CrossOrigin
 @Api(tags= {"Batch"})
 public class BatchController {
-	
+
 	@Autowired
-	private BatchService bs;
+	private BatchService batchService;
 	
 	/**
 	 * HTTP GET method (/batches)
@@ -37,31 +38,29 @@ public class BatchController {
 	 * @param location represents the batch location.
 	 * @return A list of all the batches or batches by the location.
 	 */
-	
 	@ApiOperation(value="Returns all batches", tags= {"Batch"}, notes="Can also filter by location")
 	@GetMapping
 	public List<Batch> getBatches(@RequestParam(name="location",required=false)String location) {
-		
+
 		if (location != null) {
-			
-			return bs.getBatchByLocation(location);
+
+			return batchService.getBatchByLocation(location);
 		}
-		
-		return bs.getBatches();
+
+		return batchService.getBatches();
 	}
-	
+
 	/**
 	 * HTTP GET method (/batches/{number})
-	 * 
-	 * @param number represents the batch number.
+	 *
+	 * @param id represents the batch number.
 	 * @return A batch that matches the number.
 	 */
-	
-	@ApiOperation(value="Returns batch by number", tags= {"Batch"})
-	@GetMapping("/{number}")
-	public Batch getBatchByNumber(@PathVariable("number")int number) {
-		
-		return bs.getBatchByNumber(number);
+	@ApiOperation(value = "Returns batch by number", tags = {"Batch"})
+	@GetMapping("/{id}")
+	public ResponseEntity<Batch> getBatchByNumber(@PathVariable("id") int id) {
+		Optional<Batch> batch = batchService.getBatchByNumber(id);
+		return batch.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	/**
@@ -70,12 +69,11 @@ public class BatchController {
 	 * @param batchDTO represents the new Batch object being sent.
 	 * @return The newly created object with a 201 code.
 	 */
-
 	@ApiOperation(value = "Adds a new batch", tags = {"Batch"})
 	@PostMapping
 	public ResponseEntity<Batch> addBatch(@Valid @RequestBody BatchDTO batchDTO) {
 		Batch batch = new Batch(batchDTO);
-		return new ResponseEntity<>(bs.addBatch(batch), HttpStatus.CREATED);
+		return new ResponseEntity<>(batchService.addBatch(batch), HttpStatus.CREATED);
 	}
 
 	/**
@@ -84,12 +82,11 @@ public class BatchController {
 	 * @param batchDTO represents the updated Batch object being sent.
 	 * @return The newly updated object.
 	 */
-
 	@ApiOperation(value = "Updates batch by number", tags = {"Batch"})
-	@PutMapping("/{number}")
+	@PutMapping("/{id}")
 	public Batch updateBatch(@Valid @RequestBody BatchDTO batchDTO) {
 		Batch batch = new Batch(batchDTO);
-		return bs.updateBatch(batch);
+		return batchService.updateBatch(batch);
 	}
 	
 	/**
@@ -98,11 +95,10 @@ public class BatchController {
 	 * @param number represents the batch number.
 	 * @return A string that says which batch was deleted.
 	 */
-	
-	@ApiOperation(value="Deletes batch by number", tags= {"Batch"})
-	@DeleteMapping("/{number}")
-	public String deleteBatchByNumber(@PathVariable("number")int number) {
-		
-		return bs.deleteBatchByNumber(number);
+	@ApiOperation(value = "Deletes batch by number", tags = {"Batch"})
+	@DeleteMapping("/{id}")
+	public String deleteBatchByNumber(@PathVariable("number") int number) {
+
+		return batchService.deleteBatchByNumber(number);
 	}
 }

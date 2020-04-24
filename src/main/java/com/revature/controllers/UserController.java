@@ -4,7 +4,6 @@ import com.google.maps.errors.ApiException;
 import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.models.UserDTO;
-import com.revature.services.BatchService;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
 import io.swagger.annotations.Api;
@@ -16,10 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * UserController takes care of handling our requests to /users.
@@ -40,45 +36,25 @@ public class UserController {
 	private UserService userService;
 
 	@Autowired
-	private BatchService batchService;
-
-	@Autowired
 	private DistanceService distanceService;
 
-	/**
-	 * HTTP GET method (/users)
-	 *
-	 * @param isDriver represents if the user is a driver or rider.
-	 * @param username represents the user's username.
-	 * @param location represents the batch's location.
-	 * @return A list of all the users, users by is-driver, user by username and users by is-driver and location.
-	 */
-
-
-	/*@ApiOperation(value="Returns user drivers", tags= {"User"})
-	@GetMapping
-	public List<User> getActiveDrivers() {
-		return us.getActiveDrivers();
-	}*/
 	@ApiOperation(value="Returns user drivers", tags= {"User"})
 	@GetMapping("/driver/{address}")
 	public List <User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
-		//List<User> aps =  new ArrayList<User>();
-		System.out.println(address);
-		List<String> destinationList = new ArrayList<>();
-		String[] origins = {address};
-		Map<String, User> topfive = new HashMap<>();
-		for (User d : userService.getActiveDrivers()) {
-			Address homeAddress = d.getHAddress();
-			String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
-			destinationList.add(fullAdd);
-			topfive.put(fullAdd, d);
-		}
-		//System.out.println(destinationList);
+        //TODO: Log this instead of System.out
+        System.out.println(address);
+        List<String> destinationList = new ArrayList<>();
+        String[] origins = {address};
+        Map<String, User> topfive = new HashMap<>();
+        for (User d : userService.getActiveDrivers()) {
+            Address homeAddress = d.getHAddress();
+            String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
+            destinationList.add(fullAdd);
+            topfive.put(fullAdd, d);
+        }
 		String[] destinations = new String[destinationList.size()];
 		destinations = destinationList.toArray(destinations);
 		return distanceService.distanceMatrix(origins, destinations);
-		//return ds.distanceMatrix();
 	}
 	
 	/**
@@ -105,18 +81,18 @@ public class UserController {
 
 		return userService.getUsers();
 	}
-	
+
 	/**
 	 * HTTP GET (users/{id})
-	 * 
+	 *
 	 * @param id represents the user's id.
 	 * @return A user that matches the id.
 	 */
-	@ApiOperation(value="Returns user by id", tags= {"User"})
+	@ApiOperation(value = "Returns user by id", tags = {"User"})
 	@GetMapping("/{id}")
-	public User getUserById(@PathVariable("id")int id) {
-
-		return userService.getUserById(id);
+	public ResponseEntity<User> getUserById(@PathVariable("id") int id) {
+		Optional<User> user = userService.getUserById(id);
+		return user.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	/**
@@ -130,10 +106,11 @@ public class UserController {
 	@ApiOperation(value = "Adds a new user", tags = {"User"})
 	@PostMapping
 	public ResponseEntity<User> addUser(@Valid @RequestBody UserDTO userDTO) {
-		User user = new User(userDTO);
-		System.out.println(user.isDriver());
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
-	}
+        User user = new User(userDTO);
+        //TODO: Log this instead of System.out
+        System.out.println(user.isDriver());
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
+    }
 
 	/**
 	 * HTTP PUT method (/users)
@@ -141,7 +118,6 @@ public class UserController {
 	 * @param userDTO represents the updated User object being sent.
 	 * @return The newly updated object.
 	 */
-
 	@ApiOperation(value = "Updates user by id", tags = {"User"})
 	@PutMapping("/{id}")
 	public User updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable String id) {
@@ -155,7 +131,6 @@ public class UserController {
 	 * @param id represents the user's id.
 	 * @return A string that says which user was deleted.
 	 */
-	
 	@ApiOperation(value="Deletes user by id", tags= {"User"})
 	@DeleteMapping("/{id}")
 	public String deleteUserById(@PathVariable("id")int id) {

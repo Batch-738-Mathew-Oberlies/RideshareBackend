@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * AdminController takes care of handling our requests to /admins.
@@ -27,21 +28,20 @@ import java.util.List;
 @CrossOrigin
 @Api(tags= {"Admin"})
 public class AdminController {
-	
+
 	@Autowired
-	private AdminService as;
+	private AdminService adminService;
 
 	/**
 	 * HTTP GET method (/admins)
 	 *
 	 * @return A list of all the admins.
 	 */
-	
 	@ApiOperation(value="Returns all admins", tags= {"Admin"})
 	@GetMapping
 	public List<Admin> getAdmins() {
-		
-		return as.getAdmins();
+
+		return adminService.getAdmins();
 	}
 
 	/**
@@ -50,12 +50,11 @@ public class AdminController {
 	 * @param id represents the admin's id.
 	 * @return An admin that matches the id.
 	 */
-	
-	@ApiOperation(value="Returns admin by id", tags= {"Admin"})
+	@ApiOperation(value = "Returns admin by id", tags = {"Admin"})
 	@GetMapping("/{id}")
-	public Admin getAdminById(@PathVariable("id")int id) {
-		
-		return as.getAdminById(id);
+	public ResponseEntity<Admin> getAdminById(@PathVariable("id") int id) {
+		Optional<Admin> admin = adminService.getAdminById(id);
+		return admin.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	/**
@@ -64,12 +63,11 @@ public class AdminController {
 	 * @param adminDTO represents the new Admin object being sent.
 	 * @return The newly created object with a 201 code.
 	 */
-
 	@ApiOperation(value = "Adds a new admin", tags = {"Admin"})
 	@PostMapping
 	public ResponseEntity<Admin> createAdmin(@Valid @RequestBody AdminDTO adminDTO) {
 		Admin admin = new Admin(adminDTO);
-		return new ResponseEntity<>(as.createAdmin(admin), HttpStatus.CREATED);
+		return new ResponseEntity<>(adminService.createAdmin(admin), HttpStatus.CREATED);
 	}
 
 	/**
@@ -78,12 +76,11 @@ public class AdminController {
 	 * @param adminDTO represents the updated Admin object being sent.
 	 * @return The newly updated object.
 	 */
-
 	@ApiOperation(value = "Updates admin by id", tags = {"Admin"})
 	@PutMapping("/{id}")
 	public Admin updateAdmin(@Valid @RequestBody AdminDTO adminDTO) {
 		Admin admin = new Admin(adminDTO);
-		return as.updateAdmin(admin);
+		return adminService.updateAdmin(admin);
 	}
 
 	/**
@@ -92,11 +89,10 @@ public class AdminController {
 	 * @param id represents the admin's id.
 	 * @return A string that says which admin was deleted.
 	 */
-	
 	@ApiOperation(value="Deletes an admin by id", tags= {"Admin"})
 	@DeleteMapping("/{id}")
-	public String deleteAdmin(@PathVariable("id")int id) {
-		
-		return as.deleteAdminById(id);
+	public String deleteAdmin(@PathVariable("id") int id) {
+
+		return adminService.deleteAdminById(id);
 	}
 }
