@@ -123,14 +123,14 @@ public class TripController {
 	}
 
 	/**
-	 * HTTP POST method (/trips/join)
+	 * HTTP POST method (/trips/rider)
 	 * 
 	 * @param tripId represents the id of the trip the person is joining
 	 * @param rider represents the User joining the trip.
 	 * @return The newly updated Trip object.
 	 */
 	@ApiOperation(value = "Adds a user to a trip", tags = {"Rider", "Trip"})
-	@PostMapping("/join")
+	@PostMapping("/rider")
 	public ResponseEntity<TripDTO> updateTripRider(
 			@RequestParam(name = "tripId") Integer tripId,
 			@RequestParam(name = "riderId") Integer riderId
@@ -153,14 +153,14 @@ public class TripController {
 	}
 	
 	/**
-	 * HTTP DELETE method (/trips/leave)
+	 * HTTP DELETE method (/trips/rider)
 	 * 
 	 * @param tripId represents the id of the trip the person is joining
 	 * @param rider represents the User joining the trip.
 	 * @return The newly updated Trip object.
 	 */
 	@ApiOperation(value = "Removes a user from a trip", tags = {"Rider", "Trip"})
-	@DeleteMapping("/leave")
+	@DeleteMapping("/rider")
 	public ResponseEntity<TripDTO> deleteTripRider(
 			@RequestParam(name = "tripId") Integer tripId,
 			@RequestParam(name = "riderId") Integer riderId
