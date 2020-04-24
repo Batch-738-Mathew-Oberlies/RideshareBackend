@@ -67,7 +67,7 @@ public class LoggingAspect {
 	/**
 	 * Sets up performance checking on all methods with the annotation LogExecutionTime
 	 */
-	@Around("@annotation(com.revature.annotations.LogExecutionTime)")
+	@Around("@annotation(com.revature.annotations.Timed)")
 	public Object logTime(ProceedingJoinPoint jp) throws Throwable {
 		long startTime = System.currentTimeMillis();
 		Object result = jp.proceed();
