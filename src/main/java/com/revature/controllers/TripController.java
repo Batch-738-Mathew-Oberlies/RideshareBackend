@@ -1,6 +1,5 @@
 package com.revature.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,24 +32,51 @@ public class TripController {
 	/**
 	 * HTTP GET method (/trips)
 	 *
+	 * @param riderId Optional: The id of a rider
+	 * @param driverId Optional: The id of a driver
+	 * @param offset Optional: How many entries to skip over
 	 * @return A list of all the trips.
 	 */
 	@ApiOperation(value = "Return all trips", tags = {"Trip"})
 	@GetMapping
-	public ResponseEntity<List<TripDTO>> getTrips() {
-		List<Trip> tripsRaw = tripService.getTrips();
-		List<TripDTO> trips = new ArrayList<>();
-		for (Trip trip : tripsRaw) {
-			trips.add(new TripDTO(trip));
+	public ResponseEntity<List<TripDTO>> getTrips(
+			@RequestParam(name = "riderId", required = false) Integer riderId,
+			@RequestParam(name = "driverId", required = false) Integer driverId,
+			@RequestParam(name = "offset", required = false) Integer offset
+			) {
+		List<TripDTO> trips = null;
+		if( riderId == null && driverId == null) {
+			if (offset != null) {
+				trips = tripService.getTripsDTO(offset);
+			}else {
+				trips = tripService.getTripsDTO();
+			}
+		}else if (riderId != null && driverId != null) {
+			if (offset != null) {
+				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId, offset);
+			}else {
+				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId);
+			}
+		}else if(driverId != null) {
+			if (offset != null) {
+				trips = tripService.getTripsByDriverIdDTO(driverId, offset);
+			}else {
+				trips = tripService.getTripsByDriverIdDTO(driverId);
+			}
+		}else{
+			if (offset != null) {
+				trips = tripService.getTripsByRiderIdDTO(riderId, offset);
+			}else {
+				trips = tripService.getTripsByRiderIdDTO(riderId);
+			}
 		}
-
-		if (!trips.isEmpty()) return ResponseEntity.ok(trips);
+		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
 
 		return ResponseEntity.noContent().build();
 	}
 
 	/**
-	 * HTTP GET method (/trips/{number})
+	 * HTTP GET method (/trips/{tripId})
 	 *
 	 * @param id represent the trip's ID.
 	 * @return A trip that matches the ID.
@@ -61,46 +87,6 @@ public class TripController {
 		Optional<Trip> trip = tripService.getTripById(id);
 
 		if (trip.isPresent()) return ResponseEntity.ok(new TripDTO(trip.get()));
-
-		return ResponseEntity.noContent().build();
-	}
-
-	/**
-	 * HTTP GET method (/trips/driver/{driveId})
-	 *
-	 * @param driverId represents the driver's ID.
-	 * @return A list of trips matching the driver's ID.
-	 */
-	@ApiOperation(value = "Returns trips by driver ID", tags = {"Driver", "Trip"})
-	@GetMapping("/driver/{driverId}")
-	public ResponseEntity<List<TripDTO>> getTripsByDriverId(@PathVariable("driverId") int driverId) {
-		List<Trip> tripsRaw = tripService.getTripsByDriverId(driverId);
-		List<TripDTO> trips = new ArrayList<>();
-		for (Trip trip : tripsRaw) {
-			trips.add(new TripDTO(trip));
-		}
-
-		if (!trips.isEmpty()) return ResponseEntity.ok(trips);
-
-		return ResponseEntity.noContent().build();
-	}
-
-	/**
-	 * HTTP GET method (/trips/rider/{riderId})
-	 *
-	 * @param riderId represents the rider's ID.
-	 * @return A list of trips matching the rider's ID.
-	 */
-	@ApiOperation(value = "Returns trips by rider ID", tags = {"Rider", "Trip"})
-	@GetMapping("/rider/{riderId}")
-	public ResponseEntity<List<TripDTO>> getTripsByRiderId(@PathVariable("riderId") int riderId) {
-		List<Trip> tripsRaw = tripService.getTripsByRiderId(riderId);
-		List<TripDTO> trips = new ArrayList<>();
-		for (Trip trip : tripsRaw) {
-			trips.add(new TripDTO(trip));
-		}
-
-		if (!trips.isEmpty()) return ResponseEntity.ok(trips);
 
 		return ResponseEntity.noContent().build();
 	}
@@ -135,17 +121,20 @@ public class TripController {
 
 		return ResponseEntity.badRequest().build();
 	}
-	
+
 	/**
-	 * HTTP POST method (/trips/{tripId}/rider)
+	 * HTTP POST method (/trips/join)
 	 * 
 	 * @param tripId represents the id of the trip the person is joining
 	 * @param rider represents the User joining the trip.
 	 * @return The newly updated Trip object.
 	 */
 	@ApiOperation(value = "Adds a user to a trip", tags = {"Rider", "Trip"})
-	@PostMapping("/{tripId}/{riderId}")
-	public ResponseEntity<TripDTO> updateTripRider(@PathVariable("tripId") int tripId, @PathVariable("riderId") int riderId){
+	@PostMapping("/join")
+	public ResponseEntity<TripDTO> updateTripRider(
+			@RequestParam(name = "tripId") Integer tripId,
+			@RequestParam(name = "riderId") Integer riderId
+			){
 		Optional<Trip> existingTrip = tripService.getTripById(tripId);
 		Optional<User> existingUser = userService.getUserById(riderId);
 		
@@ -158,23 +147,24 @@ public class TripController {
 			trip.setAvailableSeats(numberOfSeats);
 			tripService.updateTrip(trip);
 			return ResponseEntity.accepted().body(new TripDTO(trip));
-		}else if(!existingTrip.isPresent()) {
-			return ResponseEntity.notFound().build();
 		}else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			return ResponseEntity.notFound().build();
 		}
 	}
 	
 	/**
-	 * HTTP DELETE method (/trips/{tripId}/rider)
+	 * HTTP DELETE method (/trips/leave)
 	 * 
 	 * @param tripId represents the id of the trip the person is joining
 	 * @param rider represents the User joining the trip.
 	 * @return The newly updated Trip object.
 	 */
 	@ApiOperation(value = "Removes a user from a trip", tags = {"Rider", "Trip"})
-	@DeleteMapping("/{tripId}/{riderId}")
-	public ResponseEntity<TripDTO> deleteTripRider(@PathVariable("tripId") int tripId, @PathVariable("riderId") int riderId){
+	@DeleteMapping("/leave")
+	public ResponseEntity<TripDTO> deleteTripRider(
+			@RequestParam(name = "tripId") Integer tripId,
+			@RequestParam(name = "riderId") Integer riderId
+			){
 		Optional<Trip> existingTrip = tripService.getTripById(tripId);
 		Optional<User> existingUser = userService.getUserById(riderId);
 		
@@ -190,10 +180,8 @@ public class TripController {
 			}else {
 				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
 			}
-		}else if(!existingTrip.isPresent()) {
-			return ResponseEntity.notFound().build();
 		}else {
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			return ResponseEntity.notFound().build();
 		}
 	}
 

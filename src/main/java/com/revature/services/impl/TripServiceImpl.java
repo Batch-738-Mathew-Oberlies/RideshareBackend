@@ -1,14 +1,16 @@
 package com.revature.services.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.revature.models.Trip;
+import com.revature.models.TripDTO;
 import com.revature.repositories.TripRepository;
 import com.revature.services.TripService;
-import org.springframework.stereotype.Service;
 
 @Service
 public class TripServiceImpl implements TripService {
@@ -18,6 +20,26 @@ public class TripServiceImpl implements TripService {
 	@Override
 	public List<Trip> getTrips() {
 		return tripRepository.findAll();
+	}
+	
+	@Override
+	public List<TripDTO> getTripsDTO(){
+		List<Trip> tripsRaw = this.getTrips();
+		List<TripDTO> trips = new ArrayList<>();
+		for (Trip trip : tripsRaw) {
+			trips.add(new TripDTO(trip));
+		}
+		return trips;
+	}
+	
+	@Override
+	public List<TripDTO> getTripsDTO(int offset){
+		List<Trip> tripsRaw = this.getTrips();
+		List<TripDTO> trips = new ArrayList<>();
+		for (Trip trip : tripsRaw) {
+			trips.add(new TripDTO(trip));
+		}
+		return trips;
 	}
 
 	@Override
@@ -31,8 +53,73 @@ public class TripServiceImpl implements TripService {
 	}
 
 	@Override
+	public List<TripDTO> getTripsByDriverIdDTO(int driverId){
+		List<Trip> tripsRaw = this.getTripsByDriverId(driverId);
+		List<TripDTO> trips = new ArrayList<>();
+		for (Trip trip : tripsRaw) {
+			trips.add(new TripDTO(trip));
+		}
+		return trips;
+	}
+	
+	@Override
+	public List<TripDTO> getTripsByDriverIdDTO(int driverId, int offset){
+		List<Trip> tripsRaw = this.getTripsByDriverId(driverId);
+		List<TripDTO> trips = new ArrayList<>();
+		for (Trip trip : tripsRaw) {
+			trips.add(new TripDTO(trip));
+		}
+		return trips;
+	}
+
+	@Override
 	public List<Trip> getTripsByRiderId(int riderId) {
 		return tripRepository.getTripsByRiderId(riderId);
+	}
+
+	@Override
+	public List<TripDTO> getTripsByRiderIdDTO(int riderId){
+		List<Trip> tripsRaw = this.getTripsByRiderId(riderId);
+		List<TripDTO> trips = new ArrayList<>();
+		for (Trip trip : tripsRaw) {
+			trips.add(new TripDTO(trip));
+		}
+		return trips;
+	}
+	
+	@Override
+	public List<TripDTO> getTripsByRiderIdDTO(int riderId, int offset){
+		List<Trip> tripsRaw = this.getTripsByRiderId(riderId);
+		List<TripDTO> trips = new ArrayList<>();
+		for (Trip trip : tripsRaw) {
+			trips.add(new TripDTO(trip));
+		}
+		return trips;
+	}
+
+	@Override
+	public List<Trip> getTripsByDriverIdAndByRiderId(int driverId, int riderId) {
+		return tripRepository.getTripsByDriverIdAndByRiderId(driverId, riderId);
+	}
+
+	@Override
+	public List<TripDTO> getTripsByDriverIdAndByRiderIdDTO(int driverId, int riderId){
+		List<Trip> tripsRaw = this.getTripsByDriverIdAndByRiderId(driverId, riderId);
+		List<TripDTO> trips = new ArrayList<>();
+		for (Trip trip : tripsRaw) {
+			trips.add(new TripDTO(trip));
+		}
+		return trips;
+	}
+	
+	@Override
+	public List<TripDTO> getTripsByDriverIdAndByRiderIdDTO(int driverId, int riderId, int offset){
+		List<Trip> tripsRaw = this.getTripsByDriverIdAndByRiderId(driverId, riderId);
+		List<TripDTO> trips = new ArrayList<>();
+		for (Trip trip : tripsRaw) {
+			trips.add(new TripDTO(trip));
+		}
+		return trips;
 	}
 
 	@Override
