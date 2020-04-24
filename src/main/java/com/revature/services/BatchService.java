@@ -1,15 +1,21 @@
 package com.revature.services;
 
-import java.util.List;
-
 import com.revature.models.Batch;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface BatchService {
-	
-	public List<Batch> getBatches();
-	public Batch getBatchByNumber(int id);
-	public List<Batch> getBatchByLocation(String location);
-	public Batch addBatch(Batch batch);
-	public Batch updateBatch(Batch batch);
-	public String deleteBatchByNumber(int number);
+
+    List<Batch> getBatches();
+
+    Optional<Batch> getBatchByNumber(int id);
+
+    List<Batch> getBatchByLocation(String location);
+
+    Batch addBatch(Batch batch);
+
+    Batch updateBatch(Batch batch);
+
+    String deleteBatchByNumber(int number);
 }

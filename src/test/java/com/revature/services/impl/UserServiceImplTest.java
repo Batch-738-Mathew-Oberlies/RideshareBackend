@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -41,9 +42,11 @@ public class UserServiceImplTest {
 
 		User expected = new User(1, "userName", new Batch(), "adonis", "cabreja", "adonis@gmail.com", "123-456-789");
 		when(ur.findById(1)).thenReturn(Optional.of(expected));
-		User actual = usi.getUserById(1);
-
-		assertEquals(expected, actual);
+		Optional<User> actual = usi.getUserById(1);
+		if (actual.isPresent())
+			assertEquals(expected, actual.get());
+		else
+			fail();
 	}
 
 	@Test

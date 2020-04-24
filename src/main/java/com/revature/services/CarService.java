@@ -1,15 +1,21 @@
 package com.revature.services;
 
-import java.util.List;
-
 import com.revature.models.Car;
 
+import java.util.List;
+import java.util.Optional;
+
 public interface CarService {
-	
-	public List<Car> getCars();
-	public Car getCarById(int id);
-	public Car getCarByUserId(int userId);
-	public Car addCar(Car car);
-	public Car updateCar(Car car);
-	public String deleteCarById(int id);
+
+	List<Car> getCars();
+
+	Optional<Car> getCarById(int id);
+
+	Car getCarByUserId(int userId);
+
+	Car addCar(Car car);
+
+	Car updateCar(Car car);
+
+	String deleteCarById(int id);
 }

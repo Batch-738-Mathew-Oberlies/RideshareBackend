@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -40,9 +41,11 @@ public class BatchServiceImplTest {
 
 		Batch expected = new Batch(123, "location");
 		when(br.findById(123)).thenReturn(Optional.of(expected));
-		Batch actual = bsi.getBatchByNumber(123);
-
-		assertEquals(expected, actual);
+		Optional<Batch> actual = bsi.getBatchByNumber(123);
+		if (actual.isPresent())
+			assertEquals(expected, actual.get());
+		else
+			fail();
 	}
 
 	@Test

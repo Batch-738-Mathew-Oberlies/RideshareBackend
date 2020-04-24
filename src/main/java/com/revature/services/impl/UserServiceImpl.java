@@ -1,13 +1,13 @@
 package com.revature.services.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.revature.models.User;
 import com.revature.repositories.UserRepository;
 import com.revature.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 /**
  * UserServiceImpl handles any additional services that need to be made before calling the
@@ -19,13 +19,13 @@ import com.revature.services.UserService;
 
 @Service
 public class UserServiceImpl implements UserService {
-	
+
 	@Autowired
-	private UserRepository ur;
+	private UserRepository userRepository;
 	
 	@Override
 	public List<User> getActiveDrivers() {
-		return ur.getActiveDrivers();
+		return userRepository.getActiveDrivers();
 	}
 	
 	/**
@@ -33,22 +33,20 @@ public class UserServiceImpl implements UserService {
 	 * 
 	 * @return A list of all the users.
 	 */
-	
 	@Override
 	public List<User> getUsers() {
-		return ur.findAll();
+		return userRepository.findAll();
 	}
 
 	/**
 	 * Calls UserRepository's getOne method found in the JpaRepository.
-	 * 
+	 *
 	 * @param id represents the user's id.
 	 * @return A user that matches the id.
 	 */
-	
 	@Override
-	public User getUserById(int id) {
-		return ur.findById(id).get();
+	public Optional<User> getUserById(int id) {
+		return userRepository.findById(id);
 	}
 	
 	/**
@@ -57,10 +55,9 @@ public class UserServiceImpl implements UserService {
 	 * @param username represents the user's username.
 	 * @return A user that matches the username.
 	 */
-	
 	@Override
 	public List<User> getUserByUsername(String username) {
-		return ur.getUserByUsername(username);
+		return userRepository.getUserByUsername(username);
 	}
 	
 	/**
@@ -69,10 +66,9 @@ public class UserServiceImpl implements UserService {
 	 * @param isDriver represents if the user is a driver or rider.
 	 * @return A list of users by role.
 	 */
-	
 	@Override
 	public List<User> getUserByRole(boolean isDriver) {
-		return ur.getUserByRole(isDriver);
+		return userRepository.getUserByRole(isDriver);
 	}
 	
 	/**
@@ -82,10 +78,9 @@ public class UserServiceImpl implements UserService {
 	 * @param location represents the batch location.
 	 * @return A list of users by isDriver and location.
 	 */
-	
 	@Override
 	public List<User> getUserByRoleAndLocation(boolean isDriver, String location) {
-		return ur.getUserByRoleAndLocation(isDriver, location);
+		return userRepository.getUserByRoleAndLocation(isDriver, location);
 	}
 	
 	/**
@@ -94,10 +89,9 @@ public class UserServiceImpl implements UserService {
 	 * @param user represents the new User object being sent.
 	 * @return The newly created object.
 	 */
-	
 	@Override
 	public User addUser(User user) {
-		return ur.save(user);
+		return userRepository.save(user);
 	}
 
 	/**
@@ -106,10 +100,9 @@ public class UserServiceImpl implements UserService {
 	 * @param user represents the updated User object being sent.
 	 * @return The newly updated object.
 	 */
-	
 	@Override
 	public User updateUser(User user) {
-		return ur.save(user);
+		return userRepository.save(user);
 	}
 
 	/**
@@ -118,10 +111,9 @@ public class UserServiceImpl implements UserService {
 	 * @param id represents the user's id.
 	 * @return A string that says which user was deleted.
 	 */
-	
 	@Override
 	public String deleteUserById(int id) {
-		ur.deleteById(id);
+		userRepository.deleteById(id);
 		return "User with id: " + id + " was deleted.";
 	}
 

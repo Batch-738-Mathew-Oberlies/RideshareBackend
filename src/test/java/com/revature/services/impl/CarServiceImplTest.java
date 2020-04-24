@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
@@ -41,9 +42,11 @@ public class CarServiceImplTest {
 
 		Car expected = new Car(1, "red", 4, "Honda", "Accord", 2015, new User());
 		when(cr.findById(1)).thenReturn(Optional.of(expected));
-		Car actual = csi.getCarById(1);
-
-		assertEquals(actual, expected);
+		Optional<Car> actual = csi.getCarById(1);
+		if (actual.isPresent())
+			assertEquals(actual.get(), expected);
+		else
+			fail();
 	}
 
 	@Test
