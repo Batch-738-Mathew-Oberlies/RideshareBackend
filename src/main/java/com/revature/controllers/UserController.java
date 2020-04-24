@@ -3,6 +3,7 @@ package com.revature.controllers;
 import com.google.maps.errors.ApiException;
 import com.revature.models.Address;
 import com.revature.models.User;
+import com.revature.models.UserDTO;
 import com.revature.services.BatchService;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
@@ -121,14 +122,15 @@ public class UserController {
 	/**
 	 * HTTP POST method (/users)
 	 *
-	 * @param user represents the new User object being sent.
+	 * @param userDTO represents the new User object being sent.
 	 * @return The newly created object with a 201 code.
 	 * <p>
 	 * Sends custom error messages when incorrect input is used
 	 */
 	@ApiOperation(value = "Adds a new user", tags = {"User"})
 	@PostMapping
-	public ResponseEntity<User> addUser(@Valid @RequestBody User user) {
+	public ResponseEntity<User> addUser(@Valid @RequestBody UserDTO userDTO) {
+		User user = new User(userDTO);
 		System.out.println(user.isDriver());
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
 	}
@@ -136,13 +138,14 @@ public class UserController {
 	/**
 	 * HTTP PUT method (/users)
 	 *
-	 * @param user represents the updated User object being sent.
+	 * @param userDTO represents the updated User object being sent.
 	 * @return The newly updated object.
 	 */
 
 	@ApiOperation(value = "Updates user by id", tags = {"User"})
 	@PutMapping("/{id}")
-	public User updateUser(@Valid @RequestBody User user, @PathVariable String id) {
+	public User updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable String id) {
+		User user = new User(userDTO);
 		return userService.updateUser(user);
 	}
 	

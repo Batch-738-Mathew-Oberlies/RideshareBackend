@@ -1,27 +1,17 @@
 package com.revature.controllers;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
+import com.revature.models.Car;
+import com.revature.models.CarDTO;
+import com.revature.services.CarService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.revature.models.Car;
-import com.revature.services.CarService;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * CarController takes care of handling our requests to /cars.
@@ -81,32 +71,32 @@ public class CarController {
 		
 		return cs.getCarByUserId(userId);
 	}
-	
+
 	/**
 	 * HTTP POST method (/cars)
-	 * 
-	 * @param car represents the new Car object being sent.
+	 *
+	 * @param carDTO represents the new Car object being sent.
 	 * @return The newly created object with a 201 code.
 	 */
-	
-	@ApiOperation(value="Adds a new car", tags= {"Car"})
+
+	@ApiOperation(value = "Adds a new car", tags = {"Car"})
 	@PostMapping
-	public ResponseEntity<Car> addCar(@Valid @RequestBody Car car) {
-		
+	public ResponseEntity<Car> addCar(@Valid @RequestBody CarDTO carDTO) {
+		Car car = new Car(carDTO);
 		return new ResponseEntity<>(cs.addCar(car), HttpStatus.CREATED);
 	}
-	
+
 	/**
 	 * HTTP PUT method (/cars)
-	 * 
-	 * @param car represents the updated Car object being sent.
+	 *
+	 * @param carDTO represents the updated Car object being sent.
 	 * @return The newly updated object.
 	 */
-	
-	@ApiOperation(value="Updates car by id", tags= {"Car"})
+
+	@ApiOperation(value = "Updates car by id", tags = {"Car"})
 	@PutMapping("/{id}")
-	public Car updateCar(@Valid @RequestBody Car car) {
-		
+	public Car updateCar(@Valid @RequestBody CarDTO carDTO) {
+		Car car = new Car(carDTO);
 		return cs.updateCar(car);
 	}
 	

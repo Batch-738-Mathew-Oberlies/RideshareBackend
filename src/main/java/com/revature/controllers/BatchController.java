@@ -1,28 +1,17 @@
 package com.revature.controllers;
 
-import java.util.List;
-
-import javax.validation.Valid;
-
+import com.revature.models.Batch;
+import com.revature.models.BatchDTO;
+import com.revature.services.BatchService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.revature.models.Batch;
-import com.revature.services.BatchService;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.validation.Valid;
+import java.util.List;
 
 /**
  * BatchController takes care of handling our requests to /batches.
@@ -74,32 +63,32 @@ public class BatchController {
 		
 		return bs.getBatchByNumber(number);
 	}
-	
+
 	/**
 	 * HTTP POST method (/batches)
-	 * 
-	 * @param batch represents the new Batch object being sent.
+	 *
+	 * @param batchDTO represents the new Batch object being sent.
 	 * @return The newly created object with a 201 code.
 	 */
-	
-	@ApiOperation(value="Adds a new batch", tags= {"Batch"})
+
+	@ApiOperation(value = "Adds a new batch", tags = {"Batch"})
 	@PostMapping
-	public ResponseEntity<Batch> addBatch(@Valid @RequestBody Batch batch) {
-		
+	public ResponseEntity<Batch> addBatch(@Valid @RequestBody BatchDTO batchDTO) {
+		Batch batch = new Batch(batchDTO);
 		return new ResponseEntity<>(bs.addBatch(batch), HttpStatus.CREATED);
 	}
-	
+
 	/**
 	 * HTTP PUT method (/batches)
-	 * 
-	 * @param batch represents the updated Batch object being sent.
+	 *
+	 * @param batchDTO represents the updated Batch object being sent.
 	 * @return The newly updated object.
 	 */
-	
-	@ApiOperation(value="Updates batch by number", tags= {"Batch"})
+
+	@ApiOperation(value = "Updates batch by number", tags = {"Batch"})
 	@PutMapping("/{number}")
-	public Batch updateBatch(@Valid @RequestBody Batch batch) {
-		
+	public Batch updateBatch(@Valid @RequestBody BatchDTO batchDTO) {
+		Batch batch = new Batch(batchDTO);
 		return bs.updateBatch(batch);
 	}
 	

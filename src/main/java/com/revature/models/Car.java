@@ -39,25 +39,24 @@ public class Car implements Serializable {
 	private String make;
 	
 	@NotBlank(message="Car model cannot be blank.")
-	private String model;
-	
-	@Positive(message="Car year must be a positive number.")
-	@Column(name="car_year")
-	private int year;
-	
-	@OneToOne
-	@JoinColumn(name="user_id", unique=true)
-	private User user;
-	
-	public Car(int carId, String color, int seats, String make, String model, int year, User user) {
-		super();
-		this.carId = carId;
-		this.color = color;
-		this.seats = seats;
-		this.make = make;
-		this.model = model;
-		this.year = year;
-		this.user = user;
-	}
+    private String model;
+
+    @Positive(message = "Car year must be a positive number.")
+    @Column(name = "car_year")
+    private int year;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", unique = true)
+    private User user;
+
+    public Car(CarDTO carDTO) {
+        this.carId = carDTO.getCarId();
+        this.color = carDTO.getColor();
+        this.seats = carDTO.getSeats();
+        this.make = carDTO.getMake();
+        this.model = carDTO.getModel();
+        this.year = carDTO.getYear();
+        this.user = new User(carDTO.getUser());
+    }
 }
 

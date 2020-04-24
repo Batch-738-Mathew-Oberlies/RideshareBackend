@@ -1,6 +1,8 @@
 package com.revature.models;
 
-import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,11 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
-
-import org.springframework.stereotype.Component;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.io.Serializable;
 
 /**
  * Batch class that represents a user's batch. All batches have a batch number and a location.
@@ -26,21 +24,19 @@ import lombok.NoArgsConstructor;
 @Table(name="batches")
 @NoArgsConstructor @Data
 public class Batch implements Serializable {
-	
 	private static final long serialVersionUID = 1L;
-	
+
 	@Id
-	@PositiveOrZero(message="Batch number must be a nonnegative number.")
-	@Column(name="batch_number")
+	@PositiveOrZero(message = "Batch number must be a nonnegative number.")
+	@Column(name = "batch_number")
 	private int batchNumber;
-	
-	@NotBlank(message="Batch location cannot be blank.")
-	@Column(name="batch_location")
+
+	@NotBlank(message = "Batch location cannot be blank.")
+	@Column(name = "batch_location")
 	private String batchLocation;
-	
-	public Batch(int batchNumber, String batchLocation) {
-		super();
-		this.batchNumber = batchNumber;
-		this.batchLocation = batchLocation;
+
+	public Batch(BatchDTO batchDTO) {
+		this.batchNumber = batchDTO.getBatchNumber();
+		this.batchLocation = batchDTO.getBatchLocation();
 	}
 }
