@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import com.revature.models.Trip;
 import com.revature.models.TripDTO;
 import com.revature.models.User;
-import com.revature.models.UserDTO;
 import com.revature.services.TripService;
 import com.revature.services.UserService;
 
@@ -145,10 +144,10 @@ public class TripController {
 	 * @return The newly updated Trip object.
 	 */
 	@ApiOperation(value = "Adds a user to a trip", tags = {"Rider", "Trip"})
-	@PostMapping("/{tripId}/rider")
-	public ResponseEntity<TripDTO> updateTripRider(@PathVariable("tripId") int tripId, @Valid @RequestBody UserDTO rider){
+	@PostMapping("/{tripId}/{riderId}")
+	public ResponseEntity<TripDTO> updateTripRider(@PathVariable("tripId") int tripId, @PathVariable("riderId") int riderId){
 		Optional<Trip> existingTrip = tripService.getTripById(tripId);
-		Optional<User> existingUser = userService.getUserById(rider.getUserId());
+		Optional<User> existingUser = userService.getUserById(riderId);
 		
 		if(existingTrip.isPresent() && existingUser.isPresent()) {
 			Trip trip = existingTrip.get();
@@ -174,10 +173,10 @@ public class TripController {
 	 * @return The newly updated Trip object.
 	 */
 	@ApiOperation(value = "Removes a user from a trip", tags = {"Rider", "Trip"})
-	@DeleteMapping("/{tripId}/rider")
-	public ResponseEntity<TripDTO> deleteTripRider(@PathVariable("tripId") int tripId, @Valid @RequestBody UserDTO rider){
+	@DeleteMapping("/{tripId}/{riderId}")
+	public ResponseEntity<TripDTO> deleteTripRider(@PathVariable("tripId") int tripId, @PathVariable("riderId") int riderId){
 		Optional<Trip> existingTrip = tripService.getTripById(tripId);
-		Optional<User> existingUser = userService.getUserById(rider.getUserId());
+		Optional<User> existingUser = userService.getUserById(riderId);
 		
 		if(existingTrip.isPresent() && existingUser.isPresent()) {
 			Trip trip = existingTrip.get();
