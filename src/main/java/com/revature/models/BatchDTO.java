@@ -6,11 +6,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class BatchDTO {
-    private int batchNumber;
-    private String batchLocation;
+	private int batchNumber;
+	private String batchLocation;
 
-    public BatchDTO(Batch batch) {
-        this.batchNumber = batch.getBatchNumber();
-        this.batchLocation = batch.getBatchLocation();
-    }
+	public BatchDTO(Batch batch) {
+		super();
+		if (batch != null) {
+			this.batchNumber = batch.getBatchNumber();
+			this.batchLocation = batch.getBatchLocation();
+		}
+	}
 }

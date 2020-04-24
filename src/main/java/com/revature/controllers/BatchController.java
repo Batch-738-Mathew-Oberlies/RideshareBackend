@@ -41,12 +41,9 @@ public class BatchController {
 	@ApiOperation(value="Returns all batches", tags= {"Batch"}, notes="Can also filter by location")
 	@GetMapping
 	public List<Batch> getBatches(@RequestParam(name="location",required=false)String location) {
-
 		if (location != null) {
-
 			return batchService.getBatchByLocation(location);
 		}
-
 		return batchService.getBatches();
 	}
 
@@ -60,7 +57,8 @@ public class BatchController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Batch> getBatchByNumber(@PathVariable("id") int id) {
 		Optional<Batch> batch = batchService.getBatchByNumber(id);
-		return batch.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
+		return batch.map(value -> ResponseEntity.ok().body(value))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	/**
@@ -88,16 +86,16 @@ public class BatchController {
 		Batch batch = new Batch(batchDTO);
 		return batchService.updateBatch(batch);
 	}
-	
+
 	/**
 	 * HTTP DELETE method (/batches/{id})
-	 * 
+	 *
 	 * @param number represents the batch number.
 	 * @return A string that says which batch was deleted.
 	 */
 	@ApiOperation(value = "Deletes batch by number", tags = {"Batch"})
 	@DeleteMapping("/{id}")
-	public String deleteBatchByNumber(@PathVariable("number") int number) {
+	public String deleteBatchByNumber(@PathVariable("id") int number) {
 
 		return batchService.deleteBatchByNumber(number);
 	}

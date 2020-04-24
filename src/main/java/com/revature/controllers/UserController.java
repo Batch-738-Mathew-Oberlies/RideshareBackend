@@ -41,17 +41,17 @@ public class UserController {
 	@ApiOperation(value="Returns user drivers", tags= {"User"})
 	@GetMapping("/driver/{address}")
 	public List <User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
-        //TODO: Log this instead of System.out
-        System.out.println(address);
-        List<String> destinationList = new ArrayList<>();
-        String[] origins = {address};
-        Map<String, User> topfive = new HashMap<>();
-        for (User d : userService.getActiveDrivers()) {
-            Address homeAddress = d.getHAddress();
-            String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
-            destinationList.add(fullAdd);
-            topfive.put(fullAdd, d);
-        }
+		//TODO: Log this instead of System.out
+		System.out.println(address);
+		List<String> destinationList = new ArrayList<>();
+		String[] origins = {address};
+		Map<String, User> topfive = new HashMap<>();
+		for (User d : userService.getActiveDrivers()) {
+			Address homeAddress = d.getHAddress();
+			String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
+			destinationList.add(fullAdd);
+			topfive.put(fullAdd, d);
+		}
 		String[] destinations = new String[destinationList.size()];
 		destinations = destinationList.toArray(destinations);
 		return distanceService.distanceMatrix(origins, destinations);
@@ -92,7 +92,8 @@ public class UserController {
 	@GetMapping("/{id}")
 	public ResponseEntity<User> getUserById(@PathVariable("id") int id) {
 		Optional<User> user = userService.getUserById(id);
-		return user.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
+		return user.map(value -> ResponseEntity.ok().body(value))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	/**
@@ -106,11 +107,11 @@ public class UserController {
 	@ApiOperation(value = "Adds a new user", tags = {"User"})
 	@PostMapping
 	public ResponseEntity<User> addUser(@Valid @RequestBody UserDTO userDTO) {
-        User user = new User(userDTO);
-        //TODO: Log this instead of System.out
-        System.out.println(user.isDriver());
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
-    }
+		User user = new User(userDTO);
+		//TODO: Log this instead of System.out
+		System.out.println(user.isDriver());
+		return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
+	}
 
 	/**
 	 * HTTP PUT method (/users)

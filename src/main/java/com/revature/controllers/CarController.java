@@ -53,7 +53,8 @@ public class CarController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Car> getCarById(@PathVariable("id") int id) {
 		Optional<Car> car = carService.getCarById(id);
-		return car.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
+		return car.map(value -> ResponseEntity.ok().body(value))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
 	/**

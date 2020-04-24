@@ -54,7 +54,8 @@ public class AdminController {
 	@GetMapping("/{id}")
 	public ResponseEntity<Admin> getAdminById(@PathVariable("id") int id) {
 		Optional<Admin> admin = adminService.getAdminById(id);
-		return admin.map(value -> ResponseEntity.ok().body(value)).orElseGet(() -> ResponseEntity.notFound().build());
+		return admin.map(value -> ResponseEntity.ok().body(value))
+				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 
 	/**

@@ -43,7 +43,10 @@ public class Admin implements Serializable {
 	}
 
 	public Admin(AdminDTO adminDTO) {
-		this.adminId = adminDTO.getAdminId();
-		this.userName = adminDTO.getUserName();
+		super();
+		if (adminDTO != null) {
+			this.adminId = adminDTO.getAdminId();
+			this.userName = adminDTO.getUserName();
+		}
 	}
 }

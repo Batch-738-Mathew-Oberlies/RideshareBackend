@@ -1,5 +1,6 @@
 package com.revature.models;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -21,8 +22,10 @@ import java.io.Serializable;
 
 @Component
 @Entity
-@Table(name="batches")
-@NoArgsConstructor @Data
+@Table(name = "batches")
+@NoArgsConstructor
+@Data
+@AllArgsConstructor
 public class Batch implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -36,7 +39,10 @@ public class Batch implements Serializable {
 	private String batchLocation;
 
 	public Batch(BatchDTO batchDTO) {
-		this.batchNumber = batchDTO.getBatchNumber();
-		this.batchLocation = batchDTO.getBatchLocation();
+		super();
+		if (batchDTO != null) {
+			this.batchNumber = batchDTO.getBatchNumber();
+			this.batchLocation = batchDTO.getBatchLocation();
+		}
 	}
 }
