@@ -1,6 +1,7 @@
 package com.revature.models;
 
-import lombok.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
@@ -69,13 +70,13 @@ public class User implements Serializable {
 	private boolean isAcceptingRides;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@NotBlank(message="Home address cannot be blank.")
+	@Valid
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name = "h_address")
 	private Address hAddress;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@NotBlank(message="Work address cannot be blank.")
+	@Valid
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name = "w_address")
 	private Address wAddress;

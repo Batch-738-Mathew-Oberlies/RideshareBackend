@@ -1,5 +1,15 @@
 package com.revature.services.impl;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.google.maps.DistanceMatrixApi;
 import com.google.maps.DistanceMatrixApiRequest;
 import com.google.maps.GeoApiContext;
@@ -7,15 +17,11 @@ import com.google.maps.errors.ApiException;
 import com.google.maps.model.DistanceMatrix;
 import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
+import com.revature.annotations.Timed;
 import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.*;
 
 @Service
 public class DistanceServiceImpl implements DistanceService {
@@ -24,6 +30,7 @@ public class DistanceServiceImpl implements DistanceService {
 	private UserService us;
 
 	//TODO: REFACTOR THIS
+	@Timed
 	@Override
 	public List<User> distanceMatrix(String[] origins, String[] destinations) throws ApiException, InterruptedException, IOException {
 		Map<String, User> userDestMap = new HashMap<>();

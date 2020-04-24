@@ -1,30 +1,13 @@
 package com.revature.models;
 
-import java.io.Serializable;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
-
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Positive;
+import java.io.Serializable;
 
 /**
  * Car class that represents a user's car. All cars have an id, color, seats, make, model, year
@@ -49,7 +32,7 @@ public class Car implements Serializable {
 	
 	private String color;
 	
-	@Positive
+	@Positive(message="Number of seats must be a positive number.")
 	private int seats;
 	
 	@PositiveOrZero
@@ -85,20 +68,4 @@ public class Car implements Serializable {
 		this.year = year;
 		this.user = user;
 	}
-
-	public Car(int carId, String color, @Positive int seats, @Positive int availableSeats, @NotBlank String make,
-			@NotBlank String model, @Positive int year, User user) {
-		super();
-		this.carId = carId;
-		this.color = color;
-		this.seats = seats;
-		this.availableSeats = availableSeats;
-		this.make = make;
-		this.model = model;
-		this.year = year;
-		this.user = user;
-	}
-	
-	
 }
-
