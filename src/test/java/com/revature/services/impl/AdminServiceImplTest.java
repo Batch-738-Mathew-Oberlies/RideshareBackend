@@ -12,8 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.revature.models.Admin;
-import com.revature.repositories.AdminRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class AdminServiceImplTest {
@@ -34,6 +39,15 @@ public class AdminServiceImplTest {
 		
 		assertEquals(2, asi.getAdmins().size());
 
+	@Test
+	public void testGettingAdminById() {
+		Admin expected = new Admin(1, "username");
+		when(ar.findById(1)).thenReturn(Optional.of(expected));
+		Optional<Admin> actual = asi.getAdminById(1);
+		if (actual.isPresent())
+			assertEquals(expected, actual.get());
+		else
+			fail();
 	}
 //	
 //	@Test

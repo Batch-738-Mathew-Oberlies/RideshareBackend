@@ -53,8 +53,8 @@ public class UserControllerTest {
 		user.setDriver(true);
 		user.setActive(true);
 		user.setAcceptingRides(true);
-		when(us.getUserById(1)).thenReturn(user);
-		
+		when(us.getUserById(1)).thenReturn(java.util.Optional.of(user));
+
 		mvc.perform(get("/users/{id}", 1))
 		   .andExpect(status().isOk())
 		   .andExpect(jsonPath("$.userId").value(1));
@@ -108,7 +108,10 @@ public class UserControllerTest {
 	public void testAddingUser() throws Exception {
 		
 		Batch batch = new Batch(111, "address");
-		User user = new User(1, "userName", batch, "adonis", "cabreja", "adonis@gmail.com", "123-456-789");
+		User user = new User(1, "userName", batch, "adonis", "cabreja", "adonis@gmail.com", "123-456-7890");
+		Address h = new Address(0, "123 Fake Street", "Youngsville", "MI", "12123");
+		user.setHAddress(h);
+		user.setWAddress(h);
 		user.setDriver(true);
 		user.setActive(true);
 		user.setAcceptingRides(true);
@@ -124,8 +127,10 @@ public class UserControllerTest {
 	public void testUpdatingUser() throws Exception {
 		
 		Batch batch = new Batch(111, "address");
-		User user = new User(1, "userName", batch, "adonis", "cabreja", "adonis@gmail.com", "123-456-789");
-		
+		User user = new User(1, "userName", batch, "adonis", "cabreja", "adonis@gmail.com", "123-456-7890");
+		Address h = new Address(0, "123 Fake Street", "Youngsville", "MI", "12123");
+		user.setHAddress(h);
+		user.setWAddress(h);
 		when(us.updateUser(user)).thenReturn(user);
 		
 		mvc.perform(put("/users/{id}", 1).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(user)))

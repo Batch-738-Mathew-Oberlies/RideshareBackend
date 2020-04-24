@@ -12,8 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.revature.models.Batch;
-import com.revature.repositories.BatchRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class BatchServiceImplTest {
@@ -34,17 +39,19 @@ public class BatchServiceImplTest {
 		
 		assertEquals(2, bsi.getBatches().size());
 	}
-//	
-//	@Test
-//	public void testGettingBatchByNumber() {
-//		
-//		Batch expected = new Batch(123, "location");
-//		when(br.findById(123).get()).thenReturn(expected);
-//		Batch actual = bsi.getBatchByNumber(123);
-//		
-//		assertEquals(expected, actual);
-//	}
-	
+
+	@Test
+	public void testGettingBatchByNumber() {
+
+		Batch expected = new Batch(123, "location");
+		when(br.findById(123)).thenReturn(Optional.of(expected));
+		Optional<Batch> actual = bsi.getBatchByNumber(123);
+		if (actual.isPresent())
+			assertEquals(expected, actual.get());
+		else
+			fail();
+	}
+
 	@Test
 	public void testGettingBatchesByLocation() {
 		

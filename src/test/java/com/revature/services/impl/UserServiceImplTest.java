@@ -12,9 +12,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.revature.models.Batch;
-import com.revature.models.User;
-import com.revature.repositories.UserRepository;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
+import static org.mockito.Mockito.when;
 
 @RunWith(SpringRunner.class)
 public class UserServiceImplTest {
@@ -35,17 +39,19 @@ public class UserServiceImplTest {
 		
 		assertEquals(2, usi.getUsers().size());
 	}
-//	
-//	@Test
-//	public void testGettingUserById() {
-//		
-//		User expected = new User(1, "userName", new Batch(), "adonis", "cabreja", "adonis@gmail.com", "123-456-789");
-//		when(ur.getOne(1)).thenReturn(expected);
-//		User actual = usi.getUserById(1);
-//		
-//		assertEquals(expected, actual);
-//	}
-	
+
+	@Test
+	public void testGettingUserById() {
+
+		User expected = new User(1, "userName", new Batch(), "adonis", "cabreja", "adonis@gmail.com", "123-456-789");
+		when(ur.findById(1)).thenReturn(Optional.of(expected));
+		Optional<User> actual = usi.getUserById(1);
+		if (actual.isPresent())
+			assertEquals(expected, actual.get());
+		else
+			fail();
+	}
+
 	@Test
 	public void testGettingUserByUsername() {
 		
