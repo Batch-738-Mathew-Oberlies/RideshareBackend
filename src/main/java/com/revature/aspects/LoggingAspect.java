@@ -128,10 +128,4 @@ public class LoggingAspect {
 		}
 		return builder.toString();
 	}
-//	private String getResponse(@SuppressWarnings("rawtypes") ResponseEntity responseEntity) {
-//		String responseString = responseEntity.getBody().toString();
-//		int start = responseString.indexOf('{');
-//		int end = responseString.lastIndexOf('}') + 1;
-//		return responseString.substring(start, end);
-//	}
 }
