@@ -211,6 +211,7 @@ public class TripController {
 	 * HTTP GET method (/trips/driver)
 	 * 
 	 * @param driverId
+	 * @param riderId Optional: if included filters only the trips that also had that rider
 	 * @param offset
 	 * @return A list of trips matching the driver's ID.
 	 */
@@ -218,39 +219,22 @@ public class TripController {
 	@GetMapping("/driver")
 	public ResponseEntity<List<TripDTO>> getTripsByDriver(
 			@RequestParam(name = "driverId") Integer driverId,
+			@RequestParam(name = "riderId", required = false) Integer riderId,
 			@RequestParam(name = "offset", required = false) Integer offset
 			) {
 		List<TripDTO> trips = null;
-		if (offset != null) {
-			trips = tripService.getTripsByDriverIdDTO(driverId, offset);
+		if (riderId == null) {
+			if (offset != null) {
+				trips = tripService.getTripsByDriverIdDTO(driverId, offset);
+			}else {
+				trips = tripService.getTripsByDriverIdDTO(driverId);
+			}
 		}else {
-			trips = tripService.getTripsByDriverIdDTO(driverId);
-		}
-		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
-
-		return ResponseEntity.noContent().build();
-	}
-
-	/**
-	 * HTTP GET method (/trips/driver/rider)
-	 * 
-	 * @param driverId
-	 * @param riderId
-	 * @param offset
-	 * @return A list of trips matching the driver's ID and a rider's ID.
-	 */
-	@ApiOperation(value = "Return all trips matching a driver's ID and a rider's ID", tags = {"Trip", "Driver", "Rider"})
-	@GetMapping("/driver/rider")
-	public ResponseEntity<List<TripDTO>> getTripsByDriverRider(
-			@RequestParam(name = "driverId") Integer driverId,
-			@RequestParam(name = "riderId") Integer riderId,
-			@RequestParam(name = "offset", required = false) Integer offset
-			) {
-		List<TripDTO> trips = null;
-		if (offset != null) {
-			trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId, offset);
-		}else {
-			trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId);
+			if (offset != null) {
+				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId, offset);
+			}else {
+				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId);
+			}
 		}
 		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
 
