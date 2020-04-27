@@ -27,7 +27,7 @@ public class DistanceServiceImpl implements DistanceService {
 	//TODO: REFACTOR THIS
 	@Timed
 	@Override
-	public List<User> distanceMatrix(String[] origins, String[] destinations) throws ApiException, InterruptedException, IOException {
+	public List<User> distanceMatrix(String[] origins) throws ApiException, InterruptedException, IOException {
 		Map<String, User> userDestMap = new HashMap<>();
 		List<String> destinationList = new ArrayList<>();
 		for (User d : userService.getActiveDrivers()) {
@@ -36,11 +36,9 @@ public class DistanceServiceImpl implements DistanceService {
 			destinationList.add(fullAdd);
 			userDestMap.put(fullAdd, d);
 		}
-		//System.out.println(destinationList);
-		destinations = new String[destinationList.size()];
-		destinations = destinationList.toArray(destinations);
+		String[] destinations = destinationList.toArray(new String[0]);
 		GeoApiContext context = new GeoApiContext.Builder().apiKey(getGoogleMAPKey()).build();
-		List<Double> arrlist = new ArrayList<Double>();
+		List<Double> arrList = new ArrayList<>();
 		DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(context);
 		DistanceMatrix t = req.origins(origins).destinations(destinations).mode(TravelMode.DRIVING).units(Unit.IMPERIAL)
 				.await();
@@ -49,7 +47,7 @@ public class DistanceServiceImpl implements DistanceService {
 			for (int j = 0; j < destinations.length; j++) {
 				try {
 					System.out.println((j + 1) + "): " + t.rows[i].elements[j].distance.inMeters + " meters");
-					arrlist.add((double) t.rows[i].elements[j].distance.inMeters);
+					arrList.add((double) t.rows[i].elements[j].distance.inMeters);
 					unsortMap.put((double) t.rows[i].elements[j].distance.inMeters, destinations[j]);
 					System.out.println((double) t.rows[i].elements[j].distance.inMeters);
 				} catch (Exception e) {
@@ -57,16 +55,13 @@ public class DistanceServiceImpl implements DistanceService {
 				}
 			}
 		}
-//		LinkedHashMap<String, Double> sortedMap = new LinkedHashMap<>();
-//		unsortMap.entrySet().stream().sorted(Map.Entry.comparingByValue())
-//                .forEachOrdered(x -> sortedMap.put(x.getKey(), x.getValue()));
 		System.out.println("-");
-		Collections.sort(arrlist);
-		System.out.println(arrlist);
+		Collections.sort(arrList);
+		System.out.println(arrList);
 		List<String> destList = new ArrayList<>();
-		arrlist.removeIf(r -> (arrlist.indexOf(r) > 4));
-		Double[] arrArray = new Double[arrlist.size()];
-		arrArray = arrlist.toArray(arrArray);
+		arrList.removeIf(r -> (arrList.indexOf(r) > 4));
+		Double[] arrArray = new Double[arrList.size()];
+		arrArray = arrList.toArray(arrArray);
 		System.out.println(arrArray);
 		for (int c = 0; c < arrArray.length; c++) {
 			String destination = unsortMap.get(arrArray[c]);
@@ -75,7 +70,7 @@ public class DistanceServiceImpl implements DistanceService {
 		System.out.println(destList);
 		String[] destArray = new String[destList.size()];
 		destArray = destList.toArray(destArray);
-		List<User> userList = new ArrayList<User>();
+		List<User> userList = new ArrayList<>();
 		for (int x = 0; x < destArray.length; x++) {
 			User a = userDestMap.get(destArray[x]);
 			System.out.println(a);
@@ -84,16 +79,40 @@ public class DistanceServiceImpl implements DistanceService {
 		}
 		return userList;
 	}
-	
+
+	/**
+	 * Computes the x closest distances between origins and destinations
+	 *
+	 * @param distanceMatrix
+	 * @param top            The number of results you want
+	 * @return The set of pairs of indices of origins to destinations
+	 */
+	private Map<Integer, Integer> computeClosest(DistanceMatrix distanceMatrix, int top) {
+		Map<Integer, Integer> indexMap = new HashMap<>();
+		Map<Long, Map.Entry<Integer, Integer>> distanceMap = new HashMap<>();
+		List<Long> list = new LinkedList<>();
+		for (int x = 0; x < distanceMatrix.rows.length; x++) {
+			for (int y = 0; y < distanceMatrix.rows[x].elements.length; y++) {
+				long distance = distanceMatrix.rows[x].elements[y].distance.inMeters;
+				//Store only the closest top values based on this number
+				for (int z = 0; z < top; z++) {
+					//Compare distance to entry in list and if shorter store in list
+				}
+
+			}
+		}
+		return indexMap;
+	}
+
 	public String getGoogleMAPKey() {
-        Map<String, String> env = System.getenv();
-        for (Map.Entry <String, String> entry: env.entrySet()) {
-            if(entry.getKey().equals("googleMapAPIKey")) {
-                return entry.getValue();
-            }
-        }
-        return null;
-    }
+		Map<String, String> env = System.getenv();
+		for (Map.Entry<String, String> entry : env.entrySet()) {
+			if (entry.getKey().equals("googleMapAPIKey")) {
+				return entry.getValue();
+			}
+		}
+		return null;
+	}
 	
 	
 	
