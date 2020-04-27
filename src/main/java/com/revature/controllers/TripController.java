@@ -24,10 +24,14 @@ import io.swagger.annotations.ApiOperation;
 @CrossOrigin
 @Api(tags = {"Trips"})
 public class TripController {
-	@Autowired
 	private TripService tripService;
-	@Autowired
 	private UserService userService;
+	@Autowired
+	public TripController(TripService tripService, UserService userService) {
+		super();
+		this.tripService = tripService;
+		this.userService = userService;
+	}
 
 	/**
 	 * HTTP GET method (/trips)
@@ -76,12 +80,12 @@ public class TripController {
 	 */
 	@ApiOperation(value = "Adds a new trip")
 	@PostMapping
-	public ResponseEntity<TripDTO> addTrip(@Valid @RequestBody Trip trip) {
-		Optional<Trip> newTrip = tripService.getTripById(trip.getTripId());
+	public ResponseEntity<TripDTO> addTrip(@Valid @RequestBody TripDTO tripDTO) {
+		Optional<Trip> newTrip = tripService.getTripById(tripDTO.getTripId());
 
 		if (newTrip.isPresent()) return ResponseEntity.badRequest().build();
 
-		return ResponseEntity.status(201).body(new TripDTO(tripService.addTrip(trip)));
+		return ResponseEntity.status(201).body(new TripDTO(tripService.addTrip(new Trip(tripDTO))));
 	}
 
 	/**
@@ -92,10 +96,10 @@ public class TripController {
 	 */
 	@ApiOperation(value = "Updates a trip by ID", tags = {"Trip"})
 	@PutMapping
-	public ResponseEntity<TripDTO> updateTrip(@Valid @RequestBody Trip trip) {
-		Optional<Trip> existingTrip = tripService.getTripById(trip.getTripId());
+	public ResponseEntity<TripDTO> updateTrip(@Valid @RequestBody TripDTO tripDTO) {
+		Optional<Trip> existingTrip = tripService.getTripById(tripDTO.getTripId());
 
-		if (existingTrip.isPresent()) return ResponseEntity.status(201).body(new TripDTO(tripService.updateTrip(trip)));
+		if (existingTrip.isPresent()) return ResponseEntity.status(201).body(new TripDTO(tripService.updateTrip(new Trip(tripDTO))));
 
 		return ResponseEntity.badRequest().build();
 	}
