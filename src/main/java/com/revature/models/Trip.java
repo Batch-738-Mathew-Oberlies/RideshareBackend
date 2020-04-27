@@ -45,7 +45,7 @@ public class Trip implements Serializable {
 
     @Valid
     @NotNull
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "destination_id")
     private Address destination;
     
