@@ -32,6 +32,7 @@ public class TripServiceImpl implements TripService {
 		return trips;
 	}
 	
+	//TODO add pagination support
 	@Override
 	public List<TripDTO> getTripsDTO(int offset){
 		List<Trip> tripsRaw = this.getTrips();
@@ -62,6 +63,7 @@ public class TripServiceImpl implements TripService {
 		return trips;
 	}
 	
+	//TODO add pagination support
 	@Override
 	public List<TripDTO> getTripsByDriverIdDTO(int driverId, int offset){
 		List<Trip> tripsRaw = this.getTripsByDriverId(driverId);
@@ -87,6 +89,7 @@ public class TripServiceImpl implements TripService {
 		return trips;
 	}
 	
+	//TODO add pagination support
 	@Override
 	public List<TripDTO> getTripsByRiderIdDTO(int riderId, int offset){
 		List<Trip> tripsRaw = this.getTripsByRiderId(riderId);
@@ -112,6 +115,7 @@ public class TripServiceImpl implements TripService {
 		return trips;
 	}
 	
+	//TODO add pagination support
 	@Override
 	public List<TripDTO> getTripsByDriverIdAndByRiderIdDTO(int driverId, int riderId, int offset){
 		List<Trip> tripsRaw = this.getTripsByDriverIdAndByRiderId(driverId, riderId);

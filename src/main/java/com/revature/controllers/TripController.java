@@ -134,7 +134,7 @@ public class TripController {
 	@ApiOperation(value = "Return all trips", tags = {"Trip"})
 	@GetMapping("/rider")
 	public ResponseEntity<List<TripDTO>> getTripsByRider(
-			@RequestParam(name = "riderId", required = false) Integer riderId,
+			@RequestParam(name = "riderId") Integer riderId,
 			@RequestParam(name = "offset", required = false) Integer offset
 			){
 		List<TripDTO> trips = null;
