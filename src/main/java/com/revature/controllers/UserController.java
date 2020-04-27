@@ -1,7 +1,6 @@
 package com.revature.controllers;
 
 import com.google.maps.errors.ApiException;
-import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.models.UserDTO;
 import com.revature.services.DistanceService;
@@ -15,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  * UserController takes care of handling our requests to /users.
@@ -45,16 +46,7 @@ public class UserController {
 		System.out.println(address);
 		List<String> destinationList = new ArrayList<>();
 		String[] origins = {address};
-		Map<String, User> topfive = new HashMap<>();
-		for (User d : userService.getActiveDrivers()) {
-			Address homeAddress = d.getHAddress();
-			String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
-			destinationList.add(fullAdd);
-			topfive.put(fullAdd, d);
-		}
-		String[] destinations = new String[destinationList.size()];
-		destinations = destinationList.toArray(destinations);
-		return distanceService.distanceMatrix(origins, destinations);
+		return distanceService.distanceMatrix(origins);
 	}
 	
 	/**
