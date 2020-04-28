@@ -16,7 +16,9 @@ import java.util.List;
 @Table(name = "trips")
 @NoArgsConstructor @Data
 public class Trip implements Serializable {
-    @Id
+	private static final long serialVersionUID = 2388220076246087232L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "trip_id")
     private int tripId;
@@ -51,4 +53,15 @@ public class Trip implements Serializable {
     
     @NotNull
     private LocalDateTime tripDate;
+    
+    public Trip(TripDTO trip) {
+		this.tripId = trip.getTripId();
+		this.name = trip.getName();
+		this.driver = trip.getDriver();
+		this.riders = trip.getRiders();
+		this.availableSeats = trip.getAvailableSeats();
+		this.departure = trip.getDeparture();
+		this.destination = trip.getDestination();
+		this.tripDate = trip.getTripDate();
+    }
 }
