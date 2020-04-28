@@ -1,137 +1,247 @@
 package com.revature.controllers;
 
-import com.revature.models.Trip;
-import com.revature.services.TripService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import com.revature.models.Trip;
+import com.revature.models.TripDTO;
+import com.revature.models.User;
+import com.revature.services.TripService;
+import com.revature.services.UserService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 @RestController
 @RequestMapping("/trips")
 @CrossOrigin
 @Api(tags = {"Trips"})
 public class TripController {
-    @Autowired
-    private TripService tripService;
+	private TripService tripService;
+	private UserService userService;
+	@Autowired
+	public TripController(TripService tripService, UserService userService) {
+		super();
+		this.tripService = tripService;
+		this.userService = userService;
+	}
 
-    /**
-     * HTTP GET method (/trips)
-     *
-     * @return A list of all the trips.
-     */
-    @ApiOperation(value = "Return all trips", tags = {"Trip"})
-    @GetMapping
-    public ResponseEntity<List<Trip>> getTrips() {
-        List<Trip> trips = tripService.getTrips();
+	/**
+	 * HTTP GET method (/trips)
+	 *
+	 * @param riderId Optional: The id of a rider
+	 * @param driverId Optional: The id of a driver
+	 * @param offset Optional: How many entries to skip over
+	 * @return A list of all the trips.
+	 */
+	@ApiOperation(value = "Return all trips", tags = {"Trip"})
+	@GetMapping
+	public ResponseEntity<List<TripDTO>> getTrips(
+			@RequestParam(name = "offset", required = false) Integer offset
+			) {
+		List<TripDTO> trips = null;
+		if (offset != null) {
+			trips = tripService.getTripsDTO(offset);
+		}else {
+			trips = tripService.getTripsDTO();
+		}
+		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
 
-        if (trips.size() != 0) return ResponseEntity.ok(trips);
+		return ResponseEntity.noContent().build();
+	}
 
-        return ResponseEntity.noContent().build();
-    }
+	/**
+	 * HTTP GET method (/trips/{tripId})
+	 *
+	 * @param id represent the trip's ID.
+	 * @return A trip that matches the ID.
+	 */
+	@ApiOperation(value = "Return trip by ID", tags = {"Trip"})
+	@GetMapping("/{id}")
+	public ResponseEntity<TripDTO> getTripById(@PathVariable("id") int id) {
+		Optional<Trip> trip = tripService.getTripById(id);
 
-    /**
-     * HTTP GET method (/trips/{number})
-     *
-     * @param id represent the trip's ID.
-     * @return A trip that matches the ID.
-     */
-    @ApiOperation(value = "Return trip by ID", tags = {"Trip"})
-    @GetMapping("/{id}")
-    public ResponseEntity<Trip> getTripById(@PathVariable("id") int id) {
-        Optional<Trip> trip = tripService.getTripById(id);
+		if (trip.isPresent()) return ResponseEntity.ok(new TripDTO(trip.get()));
 
-        if (trip.isPresent()) return ResponseEntity.ok(trip.get());
+		return ResponseEntity.noContent().build();
+	}
 
-        return ResponseEntity.noContent().build();
-    }
+	/**
+	 * HTTP POST method (/trips)
+	 * @param trip represents the new Trip object being sent.
+	 * @return The newly created object along with a 201 code.
+	 */
+	@ApiOperation(value = "Adds a new trip")
+	@PostMapping
+	public ResponseEntity<TripDTO> addTrip(@Valid @RequestBody TripDTO tripDTO) {
+		Optional<Trip> newTrip = tripService.getTripById(tripDTO.getTripId());
 
-    /**
-     * HTTP GET method (/trips/driver/{driveId})
-     *
-     * @param driverId represents the driver's ID.
-     * @return A list of trips matching the driver's ID.
-     */
-    @ApiOperation(value = "Returns trips by driver ID", tags = {"Driver", "Trip"})
-    @GetMapping("/driver/{driverId}")
-    public ResponseEntity<List<Trip>> getTripsByDriverId(@PathVariable("driverId") int driverId) {
-        List<Trip> trips = tripService.getTripsByDriverId(driverId);
+		if (newTrip.isPresent()) return ResponseEntity.badRequest().build();
 
-        if (trips.size() != 0) return ResponseEntity.ok(trips);
+		return ResponseEntity.status(201).body(new TripDTO(tripService.addTrip(new Trip(tripDTO))));
+	}
 
-        return ResponseEntity.noContent().build();
-    }
+	/**
+	 * HTTP PUT method (/trips)
+	 *
+	 * @param trip represent the updated Trip object being sent.
+	 * @return The newly updated Trip object.
+	 */
+	@ApiOperation(value = "Updates a trip by ID", tags = {"Trip"})
+	@PutMapping
+	public ResponseEntity<TripDTO> updateTrip(@Valid @RequestBody TripDTO tripDTO) {
+		Optional<Trip> existingTrip = tripService.getTripById(tripDTO.getTripId());
 
-    /**
-     * HTTP GET method (/trips/rider/{riderId})
-     *
-     * @param riderId represents the rider's ID.
-     * @return A list of trips matching the rider's ID.
-     */
-    @ApiOperation(value = "Returns trips by rider ID", tags = {"Rider", "Trip"})
-    @GetMapping("/rider/{riderId}")
-    public ResponseEntity<List<Trip>> getTripsByRiderId(@PathVariable("riderId") int riderId) {
-        List<Trip> trips = tripService.getTripsByRiderId(riderId);
+		if (existingTrip.isPresent()) return ResponseEntity.status(201).body(new TripDTO(tripService.updateTrip(new Trip(tripDTO))));
 
-        if (trips.size() != 0) return ResponseEntity.ok(trips);
+		return ResponseEntity.badRequest().build();
+	}
 
-        return ResponseEntity.noContent().build();
-    }
+	/**
+	 * HTTP DELETE method (/trips/{id})
+	 *
+	 * @param id represents the Trip's ID.
+	 * @return A string that says which Trip was deleted.
+	 */
+	@ApiOperation(value = "Deletes a trip by ID", tags = {"Trip"})
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteTripById(@PathVariable("id") int id) {
+		Optional<Trip> trip = tripService.getTripById(id);
 
-    /**
-     * HTTP POST method (/trips)
-     * @param trip represents the new Trip object being sent.
-     * @return The newly created object along with a 201 code.
-     */
-    @ApiOperation(value = "Adds a new trip")
-    @PostMapping
-    public ResponseEntity<Trip> addTrip(@Valid @RequestBody Trip trip) {
-        Optional<Trip> newTrip = tripService.getTripById(trip.getTripId());
+		if (trip.isPresent()) {
+			String message = tripService.deleteTripById(id);
 
-        if (newTrip.isPresent()) return ResponseEntity.badRequest().build();
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
+		}
 
-        return ResponseEntity.status(201).body(tripService.addTrip(trip));
-    }
+		return ResponseEntity.notFound().build();
+	}
 
-    /**
-     * HTTP PUT method (/trips)
-     *
-     * @param trip represent the updated Trip object being sent.
-     * @return The newly updated Trip object.
-     */
-    @ApiOperation(value = "Updates a trip by ID", tags = {"Trip"})
-    @PutMapping
-    public ResponseEntity<Trip> updateTrip(@Valid @RequestBody Trip trip) {
-        Optional<Trip> existingTrip = tripService.getTripById(trip.getTripId());
+	/**
+	 * HTTP GET method (/trips/rider/)
+	 * 
+	 * @param riderId
+	 * @param offset
+	 * @return A list of trips matching the rider's ID.
+	 */
+	@ApiOperation(value = "Return all trips", tags = {"Trip"})
+	@GetMapping("/rider")
+	public ResponseEntity<List<TripDTO>> getTripsByRider(
+			@RequestParam(name = "riderId") Integer riderId,
+			@RequestParam(name = "offset", required = false) Integer offset
+			){
+		List<TripDTO> trips = null;
+		if (offset != null) {
+			trips = tripService.getTripsByRiderIdDTO(riderId, offset);
+		}else {
+			trips = tripService.getTripsByRiderIdDTO(riderId);
+		}
+		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
 
-        if (existingTrip.isPresent()) return ResponseEntity.status(201).body(tripService.updateTrip(trip));
+		return ResponseEntity.noContent().build();
+	}
 
-        return ResponseEntity.badRequest().build();
-    }
+	/**
+	 * HTTP POST method (/trips/rider)
+	 * 
+	 * @param tripId represents the id of the trip the person is joining
+	 * @param rider represents the User joining the trip.
+	 * @return The newly updated Trip object.
+	 */
+	@ApiOperation(value = "Adds a user to a trip", tags = {"Rider", "Trip"})
+	@PostMapping("/rider")
+	public ResponseEntity<TripDTO> updateTripRider(
+			@RequestParam(name = "tripId") Integer tripId,
+			@RequestParam(name = "riderId") Integer riderId
+			){
+		Optional<Trip> existingTrip = tripService.getTripById(tripId);
+		Optional<User> existingUser = userService.getUserById(riderId);
+		
+		if(existingTrip.isPresent() && existingUser.isPresent()) {
+			Trip trip = existingTrip.get();
+			List<User> riders = trip.getRiders();
+			riders.add(existingUser.get());
+			int numberOfSeats = trip.getAvailableSeats() - 1;
+			if(numberOfSeats < 0)return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			trip.setAvailableSeats(numberOfSeats);
+			tripService.updateTrip(trip);
+			return ResponseEntity.accepted().body(new TripDTO(trip));
+		}else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+	
+	/**
+	 * HTTP DELETE method (/trips/rider)
+	 * 
+	 * @param tripId represents the id of the trip the person is joining
+	 * @param rider represents the User joining the trip.
+	 * @return The newly updated Trip object.
+	 */
+	@ApiOperation(value = "Removes a user from a trip", tags = {"Rider", "Trip"})
+	@DeleteMapping("/rider")
+	public ResponseEntity<TripDTO> deleteTripRider(
+			@RequestParam(name = "tripId") Integer tripId,
+			@RequestParam(name = "riderId") Integer riderId
+			){
+		Optional<Trip> existingTrip = tripService.getTripById(tripId);
+		Optional<User> existingUser = userService.getUserById(riderId);
+		
+		if(existingTrip.isPresent() && existingUser.isPresent()) {
+			Trip trip = existingTrip.get();
+			List<User> riders = trip.getRiders();
+			int riderLength = riders.size();
+			riders.remove(existingUser.get());
+			if(riders.size() < riderLength) {
+				trip.setAvailableSeats(trip.getAvailableSeats() + 1);
+				tripService.updateTrip(trip);
+				return ResponseEntity.accepted().body(new TripDTO(trip));
+			}else {
+				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
+			}
+		}else {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
-    /**
-     * HTTP DELETE method (/trips/{id})
-     *
-     * @param id represents the Trip's ID.
-     * @return A string that says which Trip was deleted.
-     */
-    @ApiOperation(value = "Deletes a trip by ID", tags = {"Trip"})
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteTripById(@PathVariable("id") int id) {
-        Optional<Trip> trip = tripService.getTripById(id);
+	/**
+	 * HTTP GET method (/trips/driver)
+	 * 
+	 * @param driverId
+	 * @param riderId Optional: if included filters only the trips that also had that rider
+	 * @param offset
+	 * @return A list of trips matching the driver's ID.
+	 */
+	@ApiOperation(value = "Return all trips matching a driver's ID", tags = {"Trip", "Driver"})
+	@GetMapping("/driver")
+	public ResponseEntity<List<TripDTO>> getTripsByDriver(
+			@RequestParam(name = "driverId") Integer driverId,
+			@RequestParam(name = "riderId", required = false) Integer riderId,
+			@RequestParam(name = "offset", required = false) Integer offset
+			) {
+		List<TripDTO> trips = null;
+		if (riderId == null) {
+			if (offset != null) {
+				trips = tripService.getTripsByDriverIdDTO(driverId, offset);
+			}else {
+				trips = tripService.getTripsByDriverIdDTO(driverId);
+			}
+		}else {
+			if (offset != null) {
+				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId, offset);
+			}else {
+				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId);
+			}
+		}
+		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
 
-        if (trip.isPresent()) {
-            String message = tripService.deleteTripById(id);
-
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
-        }
-
-        return ResponseEntity.notFound().build();
-    }
+		return ResponseEntity.noContent().build();
+	}
 }
