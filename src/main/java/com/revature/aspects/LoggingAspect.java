@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Enumeration;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +15,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -26,15 +28,19 @@ public class LoggingAspect {
 	private LoggerService loggerService;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
+	private Environment environment;
 	@Autowired
-	public LoggingAspect(LoggerService loggerService) {
-		super();
+	public void setLoggerService(LoggerService loggerService) {
 		this.loggerService = loggerService;
 	}
 	@Autowired(required = false)
 	public void setRequest(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
+	}
+	@Autowired
+	public void setEnvironment(Environment environment) {
+		this.environment = environment;
 	}
 	/**
 	 * Automatic logging of:
@@ -50,13 +56,14 @@ public class LoggingAspect {
 		boolean sensitive = false;
 		String payload = "";
 		if(jp.getTarget().toString().matches(".*Login.*"))sensitive = true;
+		String parameters = buildRequestParameterSetring(); 
 		//Log all requests
-		String requestMessage = String.format("IP: %s made a %s request to %s at %s", request.getRemoteAddr() ,request.getMethod(), request.getRequestURI(), new Date());
+		String requestMessage = String.format("IP: %s made a %s request with parameters %s to %s at %s", request.getRemoteAddr() ,request.getMethod(), parameters, request.getRequestURI(), new Date());
 		loggerService.getAccess().trace(requestMessage);
 		//Log payload on non-sensitive requests
 		if(!sensitive) {
 			payload = getPayload();
-			String body = String.format("%s invoked %s with payload %s", jp.getTarget(), jp.getSignature(), payload);
+			String body = String.format("%s invoked %s with parameters %s and payload %s", jp.getTarget(), jp.getSignature(), parameters, payload);
 			loggerService.getAccess().trace(body);
 		}
 		try {
@@ -66,8 +73,10 @@ public class LoggingAspect {
 			String controlLog = jp.getTarget() + " invoked " + jp.getSignature() + " throwing: " + e;
 			loggerService.getException().warn(controlLog, e);
 			response.setStatus(500);
-			//TODO comment out throw e on production to block stack trace.
-			throw e;
+			// To make this condition work your production application.properties needs to include "rideshare-prod=true"
+			if(!environment.containsProperty("rideshare-prod")) {
+				throw e;
+			}
 		}finally {
 			//Log Response
 			if(!sensitive) {
@@ -126,6 +135,20 @@ public class LoggingAspect {
 		} catch (IOException e) {
 			loggerService.getException().warn("LoggingAspect failed to get request body", e);
 		}
+		return builder.toString();
+	}
+	private String buildRequestParameterSetring() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("[");
+		Enumeration<String> parameterNames = request.getParameterNames();
+		while(parameterNames.hasMoreElements()) {
+			String parameterName = parameterNames.nextElement().toString();
+			builder.append(String.format("%s: %s", parameterName, request.getParameter(parameterName)));
+			if(parameterNames.hasMoreElements()) {
+				builder.append(", ");
+			}
+		}
+		builder.append("]");
 		return builder.toString();
 	}
 }
