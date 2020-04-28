@@ -34,4 +34,14 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
 	 */
 	@Query(value = "select * from trips t join Riders r on t.TRIP_ID = r.TRIP_ID where RIDER_ID = :id", nativeQuery = true)
 	List<Trip> getTripsByRiderId(int id);
+
+	/**
+	 * Retrieves trips by rider and driver
+	 * 
+	 * @param riderId
+	 * @param driverId
+	 * @return Check {@link com.revature.services.impl.TripServiceImpl}
+	 */
+	@Query(value = "select * from trips t join Riders r on t.TRIP_ID = r.TRIP_ID where r.RIDER_ID = :riderId and t.USER_ID = :driverId", nativeQuery = true)
+	List<Trip> getTripsByDriverIdAndByRiderId(int driverId, int riderId);
 }
