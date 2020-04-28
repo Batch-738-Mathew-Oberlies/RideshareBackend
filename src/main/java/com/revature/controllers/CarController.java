@@ -2,7 +2,11 @@ package com.revature.controllers;
 
 import com.revature.models.Car;
 import com.revature.models.CarDTO;
+import com.revature.models.CarTripDTO;
+import com.revature.models.Trip;
 import com.revature.services.CarService;
+import com.revature.services.TripService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +36,9 @@ public class CarController {
 	@Autowired
 	private CarService carService;
 	
+	@Autowired
+	private TripService tripService;
+	
 	/**
 	 * HTTP GET method (/cars)
 	 * 
@@ -43,6 +50,28 @@ public class CarController {
 		return carService.getCars();
 	}
 
+
+	/**
+	 * HTTP GET method (/trips/user/{number})
+	 *
+	 * @param id represents the user's id.
+	 * @return A CarTripDTO that matches the user id.
+	 */
+	@ApiOperation(value = "Returns the car and the current trip given the userid", tags = {"Car"})
+	@GetMapping("/trips/user/{id}")
+	public ResponseEntity<CarTripDTO> getCarTripByUserId(@PathVariable("id") int uid) {
+		
+		//Get Trip and Car by user/driver id
+		Trip currentTrip = tripService.getCurrentTripByDriverId(uid);
+		Car currentCar = carService.getCarByUserId(uid);
+		
+		//Create new CarTripDTO
+		CarTripDTO ctdto = new CarTripDTO(currentCar, currentTrip);
+		
+		//Send DTO in response
+		return ResponseEntity.status(HttpStatus.OK).body(ctdto);
+	}
+	
 	/**
 	 * HTTP GET method (/cars/{number})
 	 *
@@ -57,6 +86,9 @@ public class CarController {
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
+	
+	
+	
 	/**
 	 * HTTP GET method (/cars/users/{userId})
 	 * 
@@ -67,7 +99,10 @@ public class CarController {
 	@ApiOperation(value="Returns car by user id", tags= {"Car"})
 	@GetMapping("/users/{userId}")
 	public Car getCarByUserId(@PathVariable("userId") int userId) {
-		return carService.getCarByUserId(userId);
+		// Get the car ID
+		Car car = carService.getCarByUserId(userId);
+		
+		return car;
 	}
 
 	/**

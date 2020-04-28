@@ -6,10 +6,10 @@ import lombok.*;
 @NoArgsConstructor
 public class CarTripDTO {
 
-	private CarDTO car;
-	private TripDTO currentTrip;
+	private Car car;
+	private Trip currentTrip;
 	
-	public CarTripDTO(CarDTO car, TripDTO currentTrip) {
+	public CarTripDTO(Car car, Trip currentTrip) {
 		super();
 		this.car = car;
 		this.currentTrip = currentTrip;

@@ -1,6 +1,7 @@
 package com.revature.models;
 
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,7 @@ import java.util.List;
 @Component
 @Entity
 @Table(name = "trips")
-@NoArgsConstructor @Data
+@NoArgsConstructor @Data @Getter
 public class Trip implements Serializable {
 	private static final long serialVersionUID = 2388220076246087232L;
 
@@ -54,6 +55,10 @@ public class Trip implements Serializable {
     @NotNull
     private LocalDateTime tripDate;
     
+    @NotNull
+    @Column(name="trip_status")
+    private TripStatus tripStatus;
+    
     public Trip(TripDTO trip) {
 		this.tripId = trip.getTripId();
 		this.name = trip.getName();
@@ -63,5 +68,6 @@ public class Trip implements Serializable {
 		this.departure = trip.getDeparture();
 		this.destination = trip.getDestination();
 		this.tripDate = trip.getTripDate();
+		this.tripStatus = trip.getTripStatus();
     }
 }

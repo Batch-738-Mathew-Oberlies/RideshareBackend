@@ -1,6 +1,8 @@
 package com.revature.services.impl;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -9,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.revature.models.Trip;
 import com.revature.models.TripDTO;
+import com.revature.models.TripStatus;
 import com.revature.repositories.TripRepository;
 import com.revature.services.TripService;
 
@@ -51,6 +54,32 @@ public class TripServiceImpl implements TripService {
 	@Override
 	public List<Trip> getTripsByDriverId(int driverId) {
 		return tripRepository.getTripsByDriverId(driverId);
+	}
+	
+	/**
+	 * This method gets the "CURRENT" trip from a sorted ArrayList by tripDate
+	 */
+	@Override
+	public Trip getCurrentTripByDriverId(int driverId) {
+		
+		List<Trip> trips = tripRepository.getTripsByDriverId(driverId);
+		
+		List<Trip> currentTrips = new ArrayList<Trip>();
+		
+		trips.forEach((t)->{
+			if(t.getTripStatus() == TripStatus.CURRENT) {
+				currentTrips.add(t);
+			}
+		});
+		
+		Collections.sort(currentTrips, new Comparator<Trip>() {
+			  public int compare(Trip t1, Trip t2) {
+			      return t1.getTripDate().compareTo(t2.getTripDate());
+			  }
+		});
+		
+		return currentTrips.get(0);
+		
 	}
 
 	@Override
