@@ -4,11 +4,23 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.revature.models.Trip;
 import com.revature.models.TripDTO;
@@ -22,6 +34,7 @@ import io.swagger.annotations.ApiOperation;
 @RestController
 @RequestMapping("/trips")
 @CrossOrigin
+@Validated
 @Api(tags = {"Trips"})
 public class TripController {
 	private TripService tripService;
@@ -44,7 +57,9 @@ public class TripController {
 	@ApiOperation(value = "Return all trips", tags = {"Trip"})
 	@GetMapping
 	public ResponseEntity<List<TripDTO>> getTrips(
-			@RequestParam(name = "offset", required = false) Integer offset
+			@PositiveOrZero
+			@RequestParam(name = "offset", required = false) 
+			Integer offset
 			) {
 		List<TripDTO> trips = null;
 		if (offset != null) {
@@ -65,7 +80,10 @@ public class TripController {
 	 */
 	@ApiOperation(value = "Return trip by ID", tags = {"Trip"})
 	@GetMapping("/{id}")
-	public ResponseEntity<TripDTO> getTripById(@PathVariable("id") int id) {
+	public ResponseEntity<TripDTO> getTripById(
+			@Positive
+			@PathVariable("id") 
+			int id) {
 		Optional<Trip> trip = tripService.getTripById(id);
 
 		if (trip.isPresent()) return ResponseEntity.ok(new TripDTO(trip.get()));
@@ -112,7 +130,10 @@ public class TripController {
 	 */
 	@ApiOperation(value = "Deletes a trip by ID", tags = {"Trip"})
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> deleteTripById(@PathVariable("id") int id) {
+	public ResponseEntity<String> deleteTripById(
+			@Positive
+			@PathVariable("id") 
+			int id) {
 		Optional<Trip> trip = tripService.getTripById(id);
 
 		if (trip.isPresent()) {
@@ -134,8 +155,13 @@ public class TripController {
 	@ApiOperation(value = "Return all trips", tags = {"Trip"})
 	@GetMapping("/rider")
 	public ResponseEntity<List<TripDTO>> getTripsByRider(
-			@RequestParam(name = "riderId") Integer riderId,
-			@RequestParam(name = "offset", required = false) Integer offset
+			@Positive
+			@RequestParam(name = "riderId") 
+			Integer riderId,
+
+			@Positive
+			@RequestParam(name = "offset", required = false) 
+			Integer offset
 			){
 		List<TripDTO> trips = null;
 		if (offset != null) {
@@ -158,8 +184,13 @@ public class TripController {
 	@ApiOperation(value = "Adds a user to a trip", tags = {"Rider", "Trip"})
 	@PostMapping("/rider")
 	public ResponseEntity<TripDTO> updateTripRider(
-			@RequestParam(name = "tripId") Integer tripId,
-			@RequestParam(name = "riderId") Integer riderId
+			@Positive
+			@RequestParam(name = "tripId") 
+			Integer tripId,
+
+			@Positive
+			@RequestParam(name = "riderId") 
+			Integer riderId
 			){
 		Optional<Trip> existingTrip = tripService.getTripById(tripId);
 		Optional<User> existingUser = userService.getUserById(riderId);
@@ -188,8 +219,13 @@ public class TripController {
 	@ApiOperation(value = "Removes a user from a trip", tags = {"Rider", "Trip"})
 	@DeleteMapping("/rider")
 	public ResponseEntity<TripDTO> deleteTripRider(
-			@RequestParam(name = "tripId") Integer tripId,
-			@RequestParam(name = "riderId") Integer riderId
+			@Positive
+			@RequestParam(name = "tripId") 
+			Integer tripId,
+			
+			@Positive
+			@RequestParam(name = "riderId") 
+			Integer riderId
 			){
 		Optional<Trip> existingTrip = tripService.getTripById(tripId);
 		Optional<User> existingUser = userService.getUserById(riderId);
@@ -222,9 +258,17 @@ public class TripController {
 	@ApiOperation(value = "Return all trips matching a driver's ID", tags = {"Trip", "Driver"})
 	@GetMapping("/driver")
 	public ResponseEntity<List<TripDTO>> getTripsByDriver(
-			@RequestParam(name = "driverId") Integer driverId,
-			@RequestParam(name = "riderId", required = false) Integer riderId,
-			@RequestParam(name = "offset", required = false) Integer offset
+			@Positive
+			@RequestParam(name = "driverId") 
+			Integer driverId,
+
+			@Positive
+			@RequestParam(name = "riderId", required = false) 
+			Integer riderId,
+			
+			@PositiveOrZero
+			@RequestParam(name = "offset", required = false) 
+			Integer offset
 			) {
 		List<TripDTO> trips = null;
 		if (riderId == null) {

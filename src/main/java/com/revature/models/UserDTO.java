@@ -16,7 +16,7 @@ public class UserDTO {
 	private int userId;
 	@NotBlank(message="Username cannot be blank.")
 	@Size(min=3,max=12, message="Number of characters must be between 3 and 12.")
-	@Pattern(regexp="^\\w+\\.?\\w+$", message="Username format is incorrect.")
+	@Pattern(regexp="[a-zA-Z0-9]", message="Username may only have letters and numbers.")
 	private String userName;
 	@Valid
 	@NotNull

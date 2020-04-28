@@ -1,21 +1,40 @@
 package com.revature.controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.google.maps.errors.ApiException;
 import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.models.UserDTO;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * UserController takes care of handling our requests to /users.
@@ -29,6 +48,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin
+@Validated
 @Api(tags = {"User"})
 public class UserController {
 
@@ -41,8 +61,6 @@ public class UserController {
 	@ApiOperation(value="Returns user drivers", tags= {"User"})
 	@GetMapping("/driver/{address}")
 	public List <User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
-		//TODO: Log this instead of System.out
-		System.out.println(address);
 		List<String> destinationList = new ArrayList<>();
 		String[] origins = {address};
 		Map<String, User> topfive = new HashMap<>();
@@ -67,9 +85,18 @@ public class UserController {
 	 */
 	@ApiOperation(value="Returns all users", tags= {"User"}, notes="Can also filter by is-driver, location and username")
 	@GetMapping
-	public List<User> getUsers(@RequestParam(name="is-driver",required=false)Boolean isDriver,
-							   @RequestParam(name="username",required=false)String username,
-							   @RequestParam(name="location", required=false)String location) {
+	public List<User> getUsers(
+			@RequestParam(name="is-driver", required=false)
+			Boolean isDriver,
+
+			@Pattern(regexp="[a-zA-Z0-9]", message="Username may only have letters and numbers.")
+			@RequestParam(name="username", required=false)
+			String username,
+
+			@Pattern(regexp = "[a-zA-Z0-9 ,]+", message = "Batch location may only contain letters, numbers, spaces, and commas")
+			@RequestParam(name="location", required=false)
+			String location
+		) {
 
 		if (isDriver != null && location != null) {
 			return userService.getUserByRoleAndLocation(isDriver.booleanValue(), location);
@@ -108,8 +135,6 @@ public class UserController {
 	@PostMapping
 	public ResponseEntity<User> addUser(@Valid @RequestBody UserDTO userDTO) {
 		User user = new User(userDTO);
-		//TODO: Log this instead of System.out
-		System.out.println(user.isDriver());
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
 	}
 
@@ -134,7 +159,10 @@ public class UserController {
 	 */
 	@ApiOperation(value="Deletes user by id", tags= {"User"})
 	@DeleteMapping("/{id}")
-	public String deleteUserById(@PathVariable("id")int id) {
+	public String deleteUserById(
+			@Positive
+			@PathVariable("id")
+			int id) {
 
 		return userService.deleteUserById(id);
 	}

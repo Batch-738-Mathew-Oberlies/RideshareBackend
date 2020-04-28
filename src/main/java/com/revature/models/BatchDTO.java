@@ -12,7 +12,7 @@ public class BatchDTO {
 	private int batchNumber;
 
 	@NotBlank(message = "Batch location cannot be blank.")
-	@Pattern(regexp = "[a-zA-Z0-9 ,]+", message = "Batch names may only contain letters, numbers, spaces, and commas")
+	@Pattern(regexp = "[a-zA-Z0-9 ,]+", message = "Batch location may only contain letters, numbers, spaces, and commas")
 	private String batchLocation;
 
 	public BatchDTO(Batch batch) {
