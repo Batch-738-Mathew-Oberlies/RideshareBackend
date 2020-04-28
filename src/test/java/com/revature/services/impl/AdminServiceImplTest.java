@@ -1,10 +1,10 @@
 package com.revature.services.impl;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,13 +12,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
+import com.revature.models.Admin;
+import com.revature.repositories.AdminRepository;
 
 @RunWith(SpringRunner.class)
 public class AdminServiceImplTest {
@@ -38,6 +33,7 @@ public class AdminServiceImplTest {
 		when(ar.findAll()).thenReturn(admins);
 		
 		assertEquals(2, asi.getAdmins().size());
+	}
 
 	@Test
 	public void testGettingAdminById() {
