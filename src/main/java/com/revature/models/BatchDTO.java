@@ -1,5 +1,8 @@
 package com.revature.models;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -7,6 +10,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class BatchDTO {
 	private int batchNumber;
+
+	@NotBlank(message = "Batch location cannot be blank.")
+	@Pattern(regexp = "[a-zA-Z0-9 ,]+", message = "Batch names may only contain letters, numbers, spaces, and commas")
 	private String batchLocation;
 
 	public BatchDTO(Batch batch) {

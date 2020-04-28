@@ -1,18 +1,25 @@
 package com.revature.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import java.io.Serializable;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.validation.Valid;
+
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.stereotype.Component;
 
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Component
 @Entity
@@ -25,39 +32,22 @@ public class User implements Serializable {
 	@Column(name="user_id")
 	private int userId;
 
-	@Valid
-	@NotBlank(message="Username cannot be blank.")
 	@Column(name="user_name")
-	@Size(min=3,max=12, message="Number of characters must be between 3 and 12.")
-	@Pattern(regexp="^\\w+\\.?\\w+$", message="Username format is incorrect.")
 	private String userName;
 
 	@ManyToOne
 	@JoinColumn(name="batch_number")
 	private Batch batch;
 	
-	@Valid
-	@NotBlank(message="First name cannot be blank.")
 	@Column(name="first_name")
-	@Size(max=30, message= "Number of characters cannot be larger than 30.")
-	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$", message="First name format is incorrect")
 	private String firstName;
 	
-	@Valid
-	@NotBlank(message="Last name cannot be blank.")
 	@Column(name="last_name")
-	@Size(max=30, message="Number of characters cannot be larger than 30.")
-	@Pattern(regexp="^[a-zA-Z\\u00C0-\\u017F]+[- ]?[a-zA-Z\\u00C0-\\u017F]+$", message="Last name format is incorrect")
 	private String lastName;
 
-	@NotBlank(message="Email cannot be blank.")
-	@Email(message="Email format is incorrect.")
-	@Pattern(regexp = "^\\w+\\.?\\w+@\\w+\\.[a-zA-Z]{2,4}$", message="Email format is incorrect.")
 	private String email;
 
-	@NotBlank(message="Phone number cannot be blank.")
 	@Column(name = "phone_number")
-	@Pattern(regexp = "^\\d{3}-\\d{3}-\\d{4}$", message="Phone number format is incorrect.")
 	private String phoneNumber;
 
 	@Column(name = "is_driver")

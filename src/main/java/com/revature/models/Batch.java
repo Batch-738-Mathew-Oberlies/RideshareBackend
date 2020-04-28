@@ -1,17 +1,18 @@
 package com.revature.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
-import java.io.Serializable;
+
+import org.springframework.stereotype.Component;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Batch class that represents a user's batch. All batches have a batch number and a location.
@@ -34,7 +35,6 @@ public class Batch implements Serializable {
 	@Column(name = "batch_number")
 	private int batchNumber;
 
-	@NotBlank(message = "Batch location cannot be blank.")
 	@Column(name = "batch_location")
 	private String batchLocation;
 
