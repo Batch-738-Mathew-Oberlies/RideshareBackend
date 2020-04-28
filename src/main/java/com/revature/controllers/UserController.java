@@ -89,10 +89,12 @@ public class UserController {
 			@RequestParam(name="is-driver", required=false)
 			Boolean isDriver,
 
+			//Prevents SQL and HTML injection by blocking <> and ;.
 			@Pattern(regexp="[a-zA-Z0-9]", message="Username may only have letters and numbers.")
 			@RequestParam(name="username", required=false)
 			String username,
 
+			//Prevents SQL and HTML injection by blocking <> and ;. Long term we will want to refactor as this long irregular string pushes RESTs requirements
 			@Pattern(regexp = "[a-zA-Z0-9 ,]+", message = "Batch location may only contain letters, numbers, spaces, and commas")
 			@RequestParam(name="location", required=false)
 			String location
@@ -117,7 +119,10 @@ public class UserController {
 	 */
 	@ApiOperation(value = "Returns user by id", tags = {"User"})
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable("id") int id) {
+	public ResponseEntity<User> getUserById(
+			@Positive
+			@PathVariable("id") 
+			int id) {
 		Optional<User> user = userService.getUserById(id);
 		return user.map(value -> ResponseEntity.ok().body(value))
 				.orElseGet(() -> ResponseEntity.notFound().build());

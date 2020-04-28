@@ -57,6 +57,7 @@ public class BatchController {
 	@ApiOperation(value="Returns all batches", tags= {"Batch"}, notes="Can also filter by location")
 	@GetMapping
 	public List<Batch> getBatches(
+			//Prevents SQL and HTML injection by blocking <> and ;. Long term we will want to refactor as this long irregular string pushes RESTs requirements
 			@Pattern(regexp = "[a-zA-Z0-9 ,]+", message = "Batch location may only contain letters, numbers, spaces, and commas") 
 			@RequestParam(name="location",required=false) 
 			String location

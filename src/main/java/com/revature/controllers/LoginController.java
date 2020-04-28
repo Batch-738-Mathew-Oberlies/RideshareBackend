@@ -42,6 +42,7 @@ public class LoginController {
 	@GetMapping
 	public Map<String, Set<String>> login(
 			@NotNull
+			//Prevents SQL and HTML injection by blocking <> and ;.
 			@Pattern(regexp="[a-zA-Z0-9]", message="Username may only have letters and numbers.")
 			@RequestParam(name = "userName") String userName,
 			@RequestParam(name = "passWord") String passWord) {
