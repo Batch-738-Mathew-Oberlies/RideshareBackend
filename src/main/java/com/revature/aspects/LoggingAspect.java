@@ -73,8 +73,12 @@ public class LoggingAspect {
 			String controlLog = jp.getTarget() + " invoked " + jp.getSignature() + " throwing: " + e;
 			loggerService.getException().warn(controlLog, e);
 			response.setStatus(500);
-			// To make this condition work your production application.properties needs to include "rideshare-prod=true"
-			if(!environment.containsProperty("rideshare-prod")) {
+			// To make this condition work your production application.properties needs to include "spring.profiles.active=prod"
+			boolean prod = false;
+			for (String profile : environment.getActiveProfiles()) {
+				if(profile.equals("prod"))prod = true;
+			}
+			if(!prod) {
 				throw e;
 			}
 		}finally {
