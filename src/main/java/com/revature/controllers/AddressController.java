@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -37,13 +38,15 @@ public class AddressController {
 	@GetMapping
 	public ResponseEntity<List<AddressDTO>> getAddresses(){
 		List<AddressDTO> dtos = addressService.findAllDTO();
-		if(dtos.isEmpty())return ResponseEntity.notFound().build();
+		if(dtos.isEmpty())return ResponseEntity.noContent().build();
 		return ResponseEntity.ok(dtos);
 	}
 	
 	@ApiOperation(value = "Add a new address", tags = {"Address"})
 	@PostMapping
 	public ResponseEntity<AddressDTO> addAddress(@Valid @RequestBody AddressDTO addressDTO){
+		Optional<Address> foundAddress = addressService.getAddressById(addressDTO.getId());
+		if(foundAddress.isPresent())return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		Address address = addressService.addAddress(new Address(addressDTO));
 		if (address == null) {
 			return ResponseEntity.status(HttpStatus.CONFLICT).build();
