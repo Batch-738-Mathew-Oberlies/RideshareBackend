@@ -1,15 +1,27 @@
 package com.revature.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
-
-import javax.persistence.*;
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import org.springframework.stereotype.Component;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Component
 @Entity
@@ -54,14 +66,18 @@ public class Trip implements Serializable {
     @NotNull
     private LocalDateTime tripDate;
     
-    public Trip(TripDTO trip) {
-		this.tripId = trip.getTripId();
-		this.name = trip.getName();
-		this.driver = trip.getDriver();
-		this.riders = trip.getRiders();
-		this.availableSeats = trip.getAvailableSeats();
-		this.departure = trip.getDeparture();
-		this.destination = trip.getDestination();
-		this.tripDate = trip.getTripDate();
+    public Trip(TripDTO tripDTO) {
+    	super();
+    	if (tripDTO != null) {
+    		this.tripId = tripDTO.getTripId();
+    		this.name = tripDTO.getName();
+    		this.driver = new User(tripDTO.getDriver());
+    		this.riders = tripDTO.getRiders();
+    		this.availableSeats = tripDTO.getAvailableSeats();
+    		this.departure = new Address(tripDTO.getDeparture());
+    		this.destination = new Address(tripDTO.getDestination());
+    		this.tripDate = tripDTO.getTripDate();
+    	}
+		
     }
 }

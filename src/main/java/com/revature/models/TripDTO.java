@@ -10,21 +10,24 @@ import lombok.NoArgsConstructor;
 public class TripDTO {
 	private int tripId;
 	private String name;
-	private User driver;
+	private UserDTO driver;
 	private List<User> riders;
 	private int availableSeats;
-	private Address departure;
-	private Address destination;
+	private AddressDTO departure;
+	private AddressDTO destination;
 	private LocalDateTime tripDate;
 	
-	public TripDTO(Trip trip) {
-		this.tripId = trip.getTripId();
-		this.name = trip.getName();
-		this.driver = trip.getDriver();
-		this.riders = trip.getRiders();
-		this.availableSeats = trip.getAvailableSeats();
-		this.departure = trip.getDeparture();
-		this.destination = trip.getDestination();
-		this.tripDate = trip.getTripDate();
+	public TripDTO(Trip tripDTO) {
+		super();
+    	if (tripDTO != null) {
+    		this.tripId = tripDTO.getTripId();
+    		this.name = tripDTO.getName();
+    		this.driver = new UserDTO(tripDTO.getDriver());
+    		this.riders = tripDTO.getRiders();
+    		this.availableSeats = tripDTO.getAvailableSeats();
+    		this.departure = new AddressDTO(tripDTO.getDeparture());
+    		this.destination = new AddressDTO(tripDTO.getDestination());
+    		this.tripDate = tripDTO.getTripDate();
+    	}
 	}
 }
