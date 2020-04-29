@@ -144,11 +144,11 @@
 			<version>2.9.2</version>
 		</dependency>
 
-		<!-- <dependency>
+		<dependency>
 			<groupId>com.oracle.ojdbc</groupId>
 			<artifactId>ojdbc8</artifactId>
 			<scope>runtime</scope>
-		</dependency> -->
+		</dependency>
 
 		<!-- Exclude logback, add log4j2 -->
 		<dependency>
