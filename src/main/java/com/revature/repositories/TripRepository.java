@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.revature.models.Trip;
+import com.revature.models.TripStatus;
+
 import org.springframework.stereotype.Repository;
 
 /**
@@ -44,4 +46,14 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
 	 */
 	@Query(value = "select * from trips t join Riders r on t.TRIP_ID = r.TRIP_ID where r.RIDER_ID = :riderId and t.USER_ID = :driverId", nativeQuery = true)
 	List<Trip> getTripsByDriverIdAndByRiderId(int driverId, int riderId);
+	
+	/**
+	 * Retrieves a list of most recent trips with available seats by driver id and trip status
+	 * 
+	 * @param driverId
+	 * @param tripStatus
+	 * @return
+	 */
+	@Query("select t from Trip t where t.driver.userId = ?1 and t.tripStatus = ?2 and t.availableSeats > 0 order by t.tripDate desc")
+	List<Trip> getOpenTripsByDriverIdAndTripStatus(int driverId, TripStatus tripStatus);
 }
