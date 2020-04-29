@@ -1,116 +1,120 @@
 package com.revature.services.impl;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-import static org.mockito.Mockito.when;
+import com.revature.models.User;
+import com.revature.repositories.UserRepository;
+import com.revature.services.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.springframework.test.context.junit4.SpringRunner;
+/**
+ * UserServiceImpl handles any additional services that need to be made before calling the
+ * repository methods.
+ * 
+ * @author Adonis Cabreja
+ *
+ */
 
-import com.revature.models.Batch;
-import com.revature.models.User;
-import com.revature.repositories.UserRepository;
+@Service
+public class UserServiceImpl implements UserService {
 
-@RunWith(SpringRunner.class)
-public class UserServiceImplTest {
-
-	@InjectMocks
-	private UserServiceImpl usi;
+	@Autowired
+	private UserRepository userRepository;
 	
-	@Mock
-	private UserRepository ur;
-	
-	@Test
-	public void testGettingUsers() {
-		
-		List<User> users = new ArrayList<>();
-		users.add(new User());
-		users.add(new User());
-		when(ur.findAll()).thenReturn(users);
-		
-		assertEquals(2, usi.getUsers().size());
+	@Override
+	public List<User> getActiveDrivers() {
+		return userRepository.getActiveDrivers();
 	}
-
-	@Test
-	public void testGettingUserById() {
-
-		User expected = new User(1, "userName", new Batch(), "adonis", "cabreja", "adonis@gmail.com", "123-456-789");
-		when(ur.findById(1)).thenReturn(Optional.of(expected));
-		Optional<User> actual = usi.getUserById(1);
-		if (actual.isPresent())
-			assertEquals(expected, actual.get());
-		else
-			fail();
+	
+	/**
+	 * Calls UserRepository's findAll method found in the JpaRepository.
+	 * 
+	 * @return A list of all the users.
+	 */
+	@Override
+	public List<User> getUsers() {
+		return userRepository.findAll();
 	}
 
-	@Test
-	public void testGettingUserByUsername() {
-		
-		List<User> expected = new ArrayList<>();
-		expected.add(new User(1, "userName", new Batch(), "adonis", "cabreja", "adonis@gmail.com", "123-456-789"));
-		when(ur.getUserByUsername("userName")).thenReturn(expected);
-		List<User> actual = usi.getUserByUsername("userName");
-		
-		assertEquals(expected, actual);
+	/**
+	 * Calls UserRepository's getOne method found in the JpaRepository.
+	 *
+	 * @param id represents the user's id.
+	 * @return A user that matches the id.
+	 */
+	@Override
+	public Optional<User> getUserById(int id) {
+		return userRepository.findById(id);
 	}
 	
-	@Test
-	public void testGettingUserByRole() {
-		
-		List<User> expected = new ArrayList<>();
-		expected.add(new User(1, "userName", new Batch(), "adonis", "cabreja", "adonis@gmail.com", "123-456-789"));
-		when(ur.getUserByRole(true)).thenReturn(expected);
-		List<User> actual = usi.getUserByRole(true);
-		
-		assertEquals(expected, actual);
+	/**
+	 * Calls UserRepository's custom query method getUserByUsername.
+	 * 
+	 * @param username represents the user's username.
+	 * @return A user that matches the username.
+	 */
+	@Override
+	public List<User> getUserByUsername(String username) {
+		return userRepository.getUserByUsername(username);
 	}
 	
-	@Test
-	public void testGettingUserByRoleAndLocation() {
-		
-		List<User> expected = new ArrayList<>();
-		expected.add(new User(1, "userName", new Batch(), "adonis", "cabreja", "adonis@gmail.com", "123-456-789"));
-		when(ur.getUserByRoleAndLocation(true, "location")).thenReturn(expected);
-		List<User> actual = usi.getUserByRoleAndLocation(true, "location");
-		
-		assertEquals(expected, actual);
+	/**
+	 * Calls UserRepository's custom query method getUserByRole.
+	 * 
+	 * @param isDriver represents if the user is a driver or rider.
+	 * @return A list of users by role.
+	 */
+	@Override
+	public List<User> getUserByRole(boolean isDriver) {
+		return userRepository.getUserByRole(isDriver);
 	}
 	
-	@Test
-	public void testAddingUser() {
-		
-		User expected = new User(1, "userName", new Batch(), "adonis", "cabreja", "adonis@gmail.com", "123-456-789");
-		when(ur.save(expected)).thenReturn(expected);
-		User actual = usi.addUser(expected);
-		
-		assertEquals(expected, actual);
+	/**
+	 * Calls UserRepository's custom query method getUserByRoleAndLocation.
+	 * 
+	 * @param isDriver represents if the user is a driver or rider.
+	 * @param location represents the batch location.
+	 * @return A list of users by isDriver and location.
+	 */
+	@Override
+	public List<User> getUserByRoleAndLocation(boolean isDriver, String location) {
+		return userRepository.getUserByRoleAndLocation(isDriver, location);
 	}
 	
-	@Test
-	public void testUpdatingUser() {
-		
-		User expected = new User(1, "userName", new Batch(), "adonis", "cabreja", "adonis@gmail.com", "123-456-789");
-		when(ur.save(expected)).thenReturn(expected);
-		User actual = usi.updateUser(expected);
-		
-		assertEquals(expected, actual);
+	/**
+	 * Calls UserRepository's save method found in the JpaRepository.
+	 * 
+	 * @param user represents the new User object being sent.
+	 * @return The newly created object.
+	 */
+	@Override
+	public User addUser(User user) {
+		return userRepository.save(user);
 	}
-	
-	@Test
-	public void testDeletingUser() {
-		
-		String expected = "User with id: 1 was deleted.";
-		when(ur.existsById(1)).thenReturn(true);
-		String actual = usi.deleteUserById(1);
-		
-		assertEquals(expected, actual);
+
+	/**
+	 * Calls UserRepository's save method found in the JpaRepository.
+	 * 
+	 * @param user represents the updated User object being sent.
+	 * @return The newly updated object.
+	 */
+	@Override
+	public User updateUser(User user) {
+		return userRepository.save(user);
 	}
-	
+
+	/**
+	 * Calls UserRepository's deleteById method found in the JpaRepository.
+	 * 
+	 * @param id represents the user's id.
+	 * @return A string that says which user was deleted.
+	 */
+	@Override
+	public String deleteUserById(int id) {
+		userRepository.deleteById(id);
+		return "User with id: " + id + " was deleted.";
+	}
+
 }
