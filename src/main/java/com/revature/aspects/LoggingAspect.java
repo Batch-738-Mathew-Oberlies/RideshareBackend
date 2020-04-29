@@ -15,7 +15,6 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,6 @@ public class LoggingAspect {
 	private LoggerService loggerService;
 	private HttpServletRequest request;
 	private HttpServletResponse response;
-	private Environment environment;
 	@Autowired
 	public void setLoggerService(LoggerService loggerService) {
 		this.loggerService = loggerService;
@@ -37,10 +35,6 @@ public class LoggingAspect {
 	public void setRequest(HttpServletRequest request, HttpServletResponse response) {
 		this.request = request;
 		this.response = response;
-	}
-	@Autowired
-	public void setEnvironment(Environment environment) {
-		this.environment = environment;
 	}
 	/**
 	 * Automatic logging of:
@@ -73,14 +67,6 @@ public class LoggingAspect {
 			String controlLog = jp.getTarget() + " invoked " + jp.getSignature() + " throwing: " + e;
 			loggerService.getException().warn(controlLog, e);
 			response.setStatus(500);
-			// To make this condition work your production application.properties needs to include "spring.profiles.active=prod"
-			boolean prod = false;
-			for (String profile : environment.getActiveProfiles()) {
-				if(profile.equals("prod"))prod = true;
-			}
-			if(!prod) {
-				throw e;
-			}
 		}finally {
 			//Log Response
 			if(!sensitive) {
