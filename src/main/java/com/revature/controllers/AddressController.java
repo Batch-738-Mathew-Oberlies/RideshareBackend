@@ -49,7 +49,7 @@ public class AddressController {
 		if(foundAddress.isPresent())return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		Address address = addressService.addAddress(new Address(addressDTO));
 		if (address == null) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			return ResponseEntity.badRequest().build();
 		}
 		return ResponseEntity.ok(new AddressDTO(address));
 	}

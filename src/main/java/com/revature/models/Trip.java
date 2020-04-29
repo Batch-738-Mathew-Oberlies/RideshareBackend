@@ -2,6 +2,7 @@ package com.revature.models;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
@@ -49,8 +50,11 @@ public class Trip implements Serializable {
     public Trip(TripDTO trip) {
 		this.tripId = trip.getTripId();
 		this.name = trip.getName();
-		this.driver = trip.getDriver();
-		this.riders = trip.getRiders();
+		this.driver = new User(trip.getDriver());
+		this.riders = new ArrayList<>();
+		for (UserDTO rider : trip.getRiders()) {
+			this.riders.add(new User(rider));
+		}
 		this.availableSeats = trip.getAvailableSeats();
 		this.departure = trip.getDeparture();
 		this.destination = trip.getDestination();

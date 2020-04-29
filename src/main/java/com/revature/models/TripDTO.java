@@ -1,6 +1,7 @@
 package com.revature.models;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -20,9 +21,9 @@ public class TripDTO {
 	private String name;
 
 	@NotNull
-	private User driver;
+	private UserDTO driver;
 
-	private List<User> riders;
+	private List<UserDTO> riders;
 
 	@NotNull
 	private int availableSeats;
@@ -41,8 +42,11 @@ public class TripDTO {
 	public TripDTO(Trip trip) {
 		this.tripId = trip.getTripId();
 		this.name = trip.getName();
-		this.driver = trip.getDriver();
-		this.riders = trip.getRiders();
+		this.driver = new UserDTO(trip.getDriver());
+		this.riders = new ArrayList<>();
+		for (User rider : trip.getRiders()) {
+			this.riders.add(new UserDTO(rider));
+		}
 		this.availableSeats = trip.getAvailableSeats();
 		this.departure = trip.getDeparture();
 		this.destination = trip.getDestination();
