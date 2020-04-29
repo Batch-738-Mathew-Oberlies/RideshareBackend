@@ -11,11 +11,6 @@ import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import java.io.Serializable;
 
 /**
@@ -28,7 +23,7 @@ import java.io.Serializable;
 @Component
 @Entity
 @Table(name="admins")
-@Getter @NoArgsConstructor @Setter @EqualsAndHashCode @ToString
+@Data @NoArgsConstructor
 public class Admin implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
