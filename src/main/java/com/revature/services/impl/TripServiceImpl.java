@@ -63,7 +63,7 @@ public class TripServiceImpl implements TripService {
 	public Trip getCurrentTripByDriverId(int driverId) {
 		
 		List<Trip> trips = tripRepository.getTripsByDriverId(driverId);
-		
+		Trip currentTrip = new Trip();
 		List<Trip> currentTrips = new ArrayList<Trip>();
 		
 		trips.forEach((t)->{
@@ -72,14 +72,20 @@ public class TripServiceImpl implements TripService {
 			}
 		});
 		
-		Collections.sort(currentTrips, new Comparator<Trip>() {
+		Collections.sort(currentTrips, Collections.reverseOrder(new Comparator<Trip>() {
 			  public int compare(Trip t1, Trip t2) {
 			      return t1.getTripDate().compareTo(t2.getTripDate());
 			  }
-		});
+		}));
 		
-		return currentTrips.get(0);
+		try {
+			currentTrip = currentTrips.get(0);
+			
+		} catch (IndexOutOfBoundsException e) {
+			return null;
+		}
 		
+		return currentTrip;
 	}
 
 	@Override

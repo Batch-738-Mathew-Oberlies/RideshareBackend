@@ -65,6 +65,13 @@ public class CarController {
 		Trip currentTrip = tripService.getCurrentTripByDriverId(uid);
 		Car currentCar = carService.getCarByUserId(uid);
 		
+		if (currentTrip == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		if (currentCar == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+			
 		//Create new CarTripDTO
 		CarTripDTO ctdto = new CarTripDTO(currentCar, currentTrip);
 		
