@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Future;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
@@ -13,23 +12,30 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor @Data
 public class TripDTO {
+
 	private int tripId;
-    @NotNull
+
+	@NotNull
 	@Pattern(regexp = "[a-zA-Z0-9 ]+", message = "Trip names may only contain letters, numbers, and spaces")
 	private String name;
-    @NotNull
+
+	@NotNull
 	private User driver;
+
 	private List<User> riders;
-    @NotNull
+
+	@NotNull
 	private int availableSeats;
-    @Valid
-    @NotNull
+
+	@Valid
+	@NotNull
 	private Address departure;
-    @Valid
-    @NotNull
+
+	@Valid
+	@NotNull
 	private Address destination;
-    @NotNull
-    @Future
+
+	@NotNull
 	private LocalDateTime tripDate;
 	
 	public TripDTO(Trip trip) {

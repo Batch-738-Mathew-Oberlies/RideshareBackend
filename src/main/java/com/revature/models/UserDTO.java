@@ -13,7 +13,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UserDTO {
+
 	private int userId;
+
 	@NotBlank(message="Username cannot be blank.")
 	@Size(min=3,max=12, message="Number of characters must be between 3 and 12.")
 	@Pattern(regexp="[a-zA-Z0-9]", message="Username may only have letters and numbers.")
