@@ -57,12 +57,12 @@ public class TripServiceImpl implements TripService {
 	}
 	
 	/**
-	 * This method gets the "CURRENT" trip from a sorted ArrayList by tripDate
+	 * This method gets the most "CURRENT" trip from a sorted ArrayList by tripDate
 	 */
 	@Override
 	public Trip getCurrentTripByDriverId(int driverId) {
 		
-		List<Trip> trips = tripRepository.getOpenTripsByDriverIdAndTripStatus(driverId, TripStatus.CURRENT);
+		List<Trip> trips = tripRepository.getMostRecentTripsByDriverIdAndTripStatus(driverId, TripStatus.CURRENT);
 		
 		if (!trips.isEmpty()) {
 			return trips.get(0);

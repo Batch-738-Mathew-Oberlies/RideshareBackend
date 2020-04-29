@@ -48,12 +48,12 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
 	List<Trip> getTripsByDriverIdAndByRiderId(int driverId, int riderId);
 	
 	/**
-	 * Retrieves a list of most recent trips with available seats by driver id and trip status
+	 * Retrieves a list of most recent trips by driver id and trip status
 	 * 
 	 * @param driverId
 	 * @param tripStatus
-	 * @return
+	 * @return Check {@link com.revature.services.impl.TripServiceImpl}
 	 */
-	@Query("select t from Trip t where t.driver.userId = ?1 and t.tripStatus = ?2 and t.availableSeats > 0 order by t.tripDate desc")
-	List<Trip> getOpenTripsByDriverIdAndTripStatus(int driverId, TripStatus tripStatus);
+	@Query("select t from Trip t where t.driver.userId = ?1 and t.tripStatus = ?2 order by t.tripDate desc")
+	List<Trip> getMostRecentTripsByDriverIdAndTripStatus(int driverId, TripStatus tripStatus);
 }
