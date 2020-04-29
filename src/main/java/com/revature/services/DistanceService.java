@@ -1,11 +1,10 @@
 package com.revature.services;
 
-import com.google.maps.errors.ApiException;
-import com.revature.models.User;
-
 import java.io.IOException;
 import java.util.List;
 
+import com.google.maps.errors.ApiException;
+import com.revature.models.User;
 
 public interface DistanceService {
 
