@@ -7,6 +7,7 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.google.common.base.Optional;
 import com.revature.models.Address;
 import com.revature.models.Batch;
 import com.revature.models.Trip;
@@ -42,7 +42,13 @@ public class TripServiceImplTest {
 	
 	@Test
 	public void testGettingTripById() {
-		Trip expected = new Trip(1, "Get Groceries", new User(), new List<User>(), 4, new Address(), new Address(), new LocalDateTime());
+		User driver = new User(1, "driver", new Batch(), "jose", "avalos", "ja@ja.com", "123-456-7890");
+		List<User> riders = new ArrayList<>();
+		riders.add(new User(2, "rider1", new Batch(), "jean", "lucas", "jl@jl.com", "123-456-7891"));
+		riders.add(new User(3, "rider2", new Batch(), "galo", "romero", "gr@gr.com", "123-456-7892"));
+		Address home = new Address(1, "123 Happy St", "Revature", "CA", "12345");
+		Address work = new Address(1, "456 Work Rd", "Revature", "CA", "12345");
+		Trip expected = new Trip(1, "Get Groceries", driver, riders, 4, home, work, LocalDateTime.now());
 		when(tr.findById(1)).thenReturn(Optional.of(expected));
 		Optional<Trip> actual = tsi.getTripById(1);
 		if (actual.isPresent()) {
@@ -53,30 +59,44 @@ public class TripServiceImplTest {
 	}
 	
 	@Test
-	public List<Trip> testGettingTripsByDriverId() {
+	public void testGettingTripsByDriverId() {
+		User driver = new User(1, "driver", new Batch(), "jose", "avalos", "ja@ja.com", "123-456-7890");
+		List<User> riders = new ArrayList<>();
+		riders.add(new User(2, "rider1", new Batch(), "jean", "lucas", "jl@jl.com", "123-456-7891"));
+		riders.add(new User(3, "rider2", new Batch(), "galo", "romero", "gr@gr.com", "123-456-7892"));
+		Address home = new Address(1, "123 Happy St", "Revature", "CA", "12345");
+		Address work = new Address(1, "456 Work Rd", "Revature", "CA", "12345");
 		List<Trip> trips = new ArrayList<>();
-		User driver = new User(1, "userName", new Batch(), "jose", "avalos", "ja@ja.com", "123-456-7890");
-		trips.add(new Trip(1, "Get Groceries", driver, new List<User>(), 4, new Address(), new Address(), new LocalDateTime());
-		trips.add(new Trip(2, "Go to the gym", driver, new List<User>(), 4, new Address(), new Address(), new LocalDateTime());
+		trips.add(new Trip(1, "Get Groceries", driver, riders, 4, home, work, LocalDateTime.now()));
+		trips.add(new Trip(2, "Go to the gym", driver, riders, 4, home, work, LocalDateTime.now()));
 		when(tr.getTripsByDriverId(1)).thenReturn(trips);
 		
 		assertEquals(2, tsi.getTripsByDriverId(1).size());
 	}
 	
 	@Test
-	public List<Trip> testGettingTripsByRiderId() {
+	public void testGettingTripsByRiderId() {
+		User driver = new User(1, "driver", new Batch(), "jose", "avalos", "ja@ja.com", "123-456-7890");
+		List<User> riders = new ArrayList<>();
+		riders.add(new User(2, "rider1", new Batch(), "jean", "lucas", "jl@jl.com", "123-456-7891"));
+		riders.add(new User(3, "rider2", new Batch(), "galo", "romero", "gr@gr.com", "123-456-7892"));
+		Address home = new Address(1, "123 Happy St", "Revature", "CA", "12345");
+		Address work = new Address(1, "456 Work Rd", "Revature", "CA", "12345");
 		List<Trip> trips = new ArrayList<>();
-		User rider = new User(1, "userName", new Batch(), "jose", "avalos", "ja@ja.com", "123-456-7890");
-		trips.add(new Trip(1, "Get Groceries", new User(), rider, 4, new Address(), new Address(), new LocalDateTime());
-		trips.add(new Trip(2, "Go to the gym", new User(), rider, 4, new Address(), new Address(), new LocalDateTime());
+		trips.add(new Trip(1, "Get Groceries", driver, riders, 4, home, work, LocalDateTime.now()));
+		trips.add(new Trip(2, "Go to the gym", driver, riders, 4, home, work, LocalDateTime.now()));
 		when(tr.getTripsByRiderId(1)).thenReturn(trips);
 		
 		assertEquals(2, tsi.getTripsByRiderId(1).size());
 	}
 	
 	@Test
-	public Trip testAddingTrips() {
-		Trip expected = new Trip(1, "Get Groceries", new User(), new List<User>(), 4, new Address(), new Address(), new LocalDateTime());
+	public void testAddingTrips() {
+		User driver = new User(1, "driver", new Batch(), "jose", "avalos", "ja@ja.com", "123-456-7890");
+		List<User> riders = new ArrayList<>();
+		riders.add(new User(2, "rider1", new Batch(), "jean", "lucas", "jl@jl.com", "123-456-7891"));
+		riders.add(new User(3, "rider2", new Batch(), "galo", "romero", "gr@gr.com", "123-456-7892"));
+		Trip expected = new Trip(1, "Get Groceries", driver, riders, 4, new Address(), new Address(), LocalDateTime.now());
 		when(tr.save(expected)).thenReturn(expected);
 		Trip actual = tsi.addTrip(expected);
 		
@@ -85,7 +105,11 @@ public class TripServiceImplTest {
 	
 	@Test
 	public void testUpdatingUser() {
-		Trip expected = new Trip(1, "Get Groceries", new User(), new List<User>(), 4, new Address(), new Address(), new LocalDateTime());
+		User driver = new User(1, "driver", new Batch(), "jose", "avalos", "ja@ja.com", "123-456-7890");
+		List<User> riders = new ArrayList<>();
+		riders.add(new User(2, "rider1", new Batch(), "jean", "lucas", "jl@jl.com", "123-456-7891"));
+		riders.add(new User(3, "rider2", new Batch(), "galo", "romero", "gr@gr.com", "123-456-7892"));
+		Trip expected = new Trip(1, "Get Groceries", driver, riders, 4, new Address(), new Address(), LocalDateTime.now());
 		when(tr.save(expected)).thenReturn(expected);
 		Trip actual = tsi.updateTrip(expected);
 		
@@ -93,8 +117,8 @@ public class TripServiceImplTest {
 	}
 	
 	@Test
-	public void testDeletingUser() {
-		String expected = "User with id: 1 was deleted.";
+	public void testDeletingTripById() {
+		String expected = "Trip with id: 1 was deleted.";
 		when(tr.existsById(1)).thenReturn(true);
 		String actual = tsi.deleteTripById(1);
 		
