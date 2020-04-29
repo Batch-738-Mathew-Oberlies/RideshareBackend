@@ -62,30 +62,13 @@ public class TripServiceImpl implements TripService {
 	@Override
 	public Trip getCurrentTripByDriverId(int driverId) {
 		
-		List<Trip> trips = tripRepository.getTripsByDriverId(driverId);
-		Trip currentTrip = new Trip();
-		List<Trip> currentTrips = new ArrayList<Trip>();
+		List<Trip> trips = tripRepository.getOpenTripsByDriverIdAndTripStatus(driverId, TripStatus.CURRENT);
 		
-		trips.forEach((t)->{
-			if(t.getTripStatus() == TripStatus.CURRENT) {
-				currentTrips.add(t);
-			}
-		});
-		
-		Collections.sort(currentTrips, Collections.reverseOrder(new Comparator<Trip>() {
-			  public int compare(Trip t1, Trip t2) {
-			      return t1.getTripDate().compareTo(t2.getTripDate());
-			  }
-		}));
-		
-		try {
-			currentTrip = currentTrips.get(0);
-			
-		} catch (IndexOutOfBoundsException e) {
-			return null;
+		if (!trips.isEmpty()) {
+			return trips.get(0);
 		}
 		
-		return currentTrip;
+		return null;
 	}
 
 	@Override
