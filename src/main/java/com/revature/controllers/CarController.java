@@ -52,13 +52,13 @@ public class CarController {
 
 
 	/**
-	 * HTTP GET method (/trips/user/{number})
+	 * HTTP GET method (/trips/driver/{number})
 	 *
 	 * @param id represents the user's id.
 	 * @return A CarTripDTO that matches the user id.
 	 */
 	@ApiOperation(value = "Returns the car and the current trip given the userid", tags = {"Car"})
-	@GetMapping("/trips/user/{id}")
+	@GetMapping("/trips/driver/{id}")
 	public ResponseEntity<CarTripDTO> getCarTripByUserId(@PathVariable("id") int uid) {
 		
 		//Get Trip and Car by user/driver id
