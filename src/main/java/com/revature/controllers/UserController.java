@@ -15,16 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.google.maps.errors.ApiException;
 import com.revature.models.Address;
@@ -83,6 +74,7 @@ public class UserController {
 	 * @param location represents the batch's location.
 	 * @return A list of all the users, users by is-driver, user by username and users by is-driver and location.
 	 */
+	
 	@ApiOperation(value="Returns all users", tags= {"User"}, notes="Can also filter by is-driver, location and username")
 	@GetMapping
 	public List<User> getUsers(
@@ -127,22 +119,23 @@ public class UserController {
 		return user.map(value -> ResponseEntity.ok().body(value))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
-
+	
 	/**
 	 * HTTP POST method (/users)
 	 *
 	 * @param userDTO represents the new User object being sent.
 	 * @return The newly created object with a 201 code.
-	 * <p>
+	 * 
 	 * Sends custom error messages when incorrect input is used
 	 */
-	@ApiOperation(value = "Adds a new user", tags = {"User"})
+	
+	@ApiOperation(value="Adds a new user", tags= {"User"})
 	@PostMapping
 	public ResponseEntity<User> addUser(@Valid @RequestBody UserDTO userDTO) {
 		User user = new User(userDTO);
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
 	}
-
+	
 	/**
 	 * HTTP PUT method (/users)
 	 *

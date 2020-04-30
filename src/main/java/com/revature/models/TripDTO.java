@@ -38,6 +38,7 @@ public class TripDTO {
 
 	@NotNull
 	private LocalDateTime tripDate;
+	private TripStatus tripStatus;
 	
 	public TripDTO(Trip trip) {
 		this.tripId = trip.getTripId();
@@ -51,5 +52,6 @@ public class TripDTO {
 		this.departure = trip.getDeparture();
 		this.destination = trip.getDestination();
 		this.tripDate = trip.getTripDate();
+		this.tripStatus = trip.getTripStatus();
 	}
 }

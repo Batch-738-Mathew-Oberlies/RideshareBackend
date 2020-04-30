@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Component
 @Entity
 @Table(name="users")
-@NoArgsConstructor @Data
+@Data @NoArgsConstructor
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id

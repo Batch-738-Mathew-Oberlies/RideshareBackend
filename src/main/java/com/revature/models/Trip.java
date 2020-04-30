@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
 import org.springframework.stereotype.Component;
 
@@ -47,6 +48,10 @@ public class Trip implements Serializable {
     
     private LocalDateTime tripDate;
     
+    @NotNull
+    @Column(name="trip_status")
+    private TripStatus tripStatus;
+    
     public Trip(TripDTO trip) {
 		this.tripId = trip.getTripId();
 		this.name = trip.getName();
@@ -59,5 +64,6 @@ public class Trip implements Serializable {
 		this.departure = trip.getDeparture();
 		this.destination = trip.getDestination();
 		this.tripDate = trip.getTripDate();
+		this.tripStatus = trip.getTripStatus();
     }
 }

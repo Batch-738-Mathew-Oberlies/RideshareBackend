@@ -2,10 +2,7 @@ package com.revature.models;
 
 import java.io.Serializable;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.stereotype.Component;

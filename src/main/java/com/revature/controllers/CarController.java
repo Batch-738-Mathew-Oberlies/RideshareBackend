@@ -10,19 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.revature.models.Car;
 import com.revature.models.CarDTO;
+import com.revature.models.CarTripDTO;
+import com.revature.models.Trip;
 import com.revature.services.CarService;
+import com.revature.services.TripService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -46,6 +41,9 @@ public class CarController {
 	@Autowired
 	private CarService carService;
 	
+	@Autowired
+	private TripService tripService;
+	
 	/**
 	 * HTTP GET method (/cars)
 	 * 
@@ -57,6 +55,35 @@ public class CarController {
 		return carService.getCars();
 	}
 
+
+	/**
+	 * HTTP GET method (/trips/driver/{number})
+	 *
+	 * @param id represents the user's id.
+	 * @return A CarTripDTO that matches the user id.
+	 */
+	@ApiOperation(value = "Returns the car and the current trip given the userid", tags = {"Car"})
+	@GetMapping("/trips/driver/{id}")
+	public ResponseEntity<CarTripDTO> getCarTripByUserId(@PathVariable("id") int uid) {
+		
+		//Get Trip and Car by user/driver id
+		Trip currentTrip = tripService.getCurrentTripByDriverId(uid);
+		Car currentCar = carService.getCarByUserId(uid);
+		
+		if (currentTrip == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		if (currentCar == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+			
+		//Create new CarTripDTO
+		CarTripDTO ctdto = new CarTripDTO(currentCar, currentTrip);
+		
+		//Send DTO in response
+		return ResponseEntity.status(HttpStatus.OK).body(ctdto);
+	}
+	
 	/**
 	 * HTTP GET method (/cars/{number})
 	 *
@@ -74,6 +101,9 @@ public class CarController {
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
+	
+	
+	
 	/**
 	 * HTTP GET method (/cars/users/{userId})
 	 * 
@@ -87,7 +117,10 @@ public class CarController {
 			@Positive
 			@PathVariable("userId") 
 			int userId) {
-		return carService.getCarByUserId(userId);
+		// Get the car ID
+		Car car = carService.getCarByUserId(userId);
+		
+		return car;
 	}
 
 	/**
