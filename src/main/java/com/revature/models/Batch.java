@@ -3,7 +3,6 @@ package com.revature.models;
 import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.stereotype.Component;
 
@@ -28,7 +27,6 @@ public class Batch implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@PositiveOrZero(message = "Batch number must be a nonnegative number.")
 	@Column(name = "batch_number")
 	private int batchNumber;
 

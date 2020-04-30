@@ -49,8 +49,10 @@ public class UserDTO {
 
 	private boolean isAcceptingRides;
 
+	@Valid
 	private AddressDTO hAddress;
 
+	@Valid
 	private AddressDTO wAddress;
 
 	public UserDTO(User user) {

@@ -17,7 +17,8 @@ import lombok.NoArgsConstructor;
 @Table(name="users")
 @Data @NoArgsConstructor
 public class User implements Serializable {
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -4736936444848317674L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="user_id")

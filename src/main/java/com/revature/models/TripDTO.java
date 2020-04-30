@@ -20,9 +20,11 @@ public class TripDTO {
 	@Pattern(regexp = "[a-zA-Z0-9 ]+", message = "Trip names may only contain letters, numbers, and spaces")
 	private String name;
 
+	@Valid
 	@NotNull
 	private UserDTO driver;
 
+	@Valid
 	private List<UserDTO> riders;
 
 	@NotNull
@@ -30,14 +32,15 @@ public class TripDTO {
 
 	@Valid
 	@NotNull
-	private Address departure;
+	private AddressDTO departure;
 
 	@Valid
 	@NotNull
-	private Address destination;
+	private AddressDTO destination;
 
 	@NotNull
 	private LocalDateTime tripDate;
+	@Valid
 	private TripStatus tripStatus;
 	
 	public TripDTO(Trip trip) {
@@ -49,8 +52,8 @@ public class TripDTO {
 			this.riders.add(new UserDTO(rider));
 		}
 		this.availableSeats = trip.getAvailableSeats();
-		this.departure = trip.getDeparture();
-		this.destination = trip.getDestination();
+		this.departure = new AddressDTO(trip.getDeparture());
+		this.destination = new AddressDTO(trip.getDestination());
 		this.tripDate = trip.getTripDate();
 		this.tripStatus = trip.getTripStatus();
 	}

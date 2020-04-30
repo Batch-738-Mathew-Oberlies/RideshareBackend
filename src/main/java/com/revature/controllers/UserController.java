@@ -77,7 +77,7 @@ public class UserController {
 	
 	@ApiOperation(value="Returns all users", tags= {"User"}, notes="Can also filter by is-driver, location and username")
 	@GetMapping
-	public List<User> getUsers(
+	public ResponseEntity<List<UserDTO>> getUsers(
 			@RequestParam(name="is-driver", required=false)
 			Boolean isDriver,
 
@@ -93,14 +93,26 @@ public class UserController {
 		) {
 
 		if (isDriver != null && location != null) {
-			return userService.getUserByRoleAndLocation(isDriver.booleanValue(), location);
+			List<User> users = userService.getUserByRoleAndLocation(isDriver.booleanValue(), location);
+			return ResponseEntity.ok(listUserToDto(users));
 		} else if (isDriver != null) {
-			return userService.getUserByRole(isDriver.booleanValue());
+			List<User> users = userService.getUserByRole(isDriver.booleanValue());
+			return ResponseEntity.ok(listUserToDto(users));
 		} else if (username != null) {
-			return userService.getUserByUsername(username);
+			List<User> users = userService.getUserByUsername(username);
+			return ResponseEntity.ok(listUserToDto(users));
 		}
 
-		return userService.getUsers();
+		List<User> users = userService.getUsers();
+		return ResponseEntity.ok(listUserToDto(users));
+	}
+	
+	private List<UserDTO> listUserToDto(List<User> users){
+		List<UserDTO> dtos = new ArrayList<>();
+		for (User user : users) {
+			dtos.add(new UserDTO(user));
+		}
+		return dtos;
 	}
 
 	/**
@@ -111,12 +123,12 @@ public class UserController {
 	 */
 	@ApiOperation(value = "Returns user by id", tags = {"User"})
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getUserById(
+	public ResponseEntity<UserDTO> getUserById(
 			@Positive
 			@PathVariable("id") 
 			int id) {
 		Optional<User> user = userService.getUserById(id);
-		return user.map(value -> ResponseEntity.ok().body(value))
+		return user.map(value -> ResponseEntity.ok().body(new UserDTO(value)))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
 	
@@ -131,9 +143,9 @@ public class UserController {
 	
 	@ApiOperation(value="Adds a new user", tags= {"User"})
 	@PostMapping
-	public ResponseEntity<User> addUser(@Valid @RequestBody UserDTO userDTO) {
+	public ResponseEntity<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
 		User user = new User(userDTO);
-		return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
+		return ResponseEntity.status(HttpStatus.CREATED).body(new UserDTO(userService.addUser(user)));
 	}
 	
 	/**
@@ -144,9 +156,9 @@ public class UserController {
 	 */
 	@ApiOperation(value = "Updates user by id", tags = {"User"})
 	@PutMapping("/{id}")
-	public User updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable String id) {
+	public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable String id) {
 		User user = new User(userDTO);
-		return userService.updateUser(user);
+		return ResponseEntity.ok(new UserDTO(userService.updateUser(user)));
 	}
 	
 	/**

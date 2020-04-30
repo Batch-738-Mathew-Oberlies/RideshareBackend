@@ -61,8 +61,8 @@ public class Trip implements Serializable {
 			this.riders.add(new User(rider));
 		}
 		this.availableSeats = trip.getAvailableSeats();
-		this.departure = trip.getDeparture();
-		this.destination = trip.getDestination();
+		this.departure = new Address(trip.getDeparture());
+		this.destination = new Address(trip.getDestination());
 		this.tripDate = trip.getTripDate();
 		this.tripStatus = trip.getTripStatus();
     }
