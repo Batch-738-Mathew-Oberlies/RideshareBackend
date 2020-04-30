@@ -3,7 +3,6 @@ package com.revature.models;
 import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.Valid;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -52,13 +51,11 @@ public class User implements Serializable {
 	private boolean isAcceptingRides;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@Valid
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name = "h_address")
 	private Address hAddress;
 
 	@OneToOne(cascade = CascadeType.ALL)
-	@Valid
 	@LazyCollection(LazyCollectionOption.FALSE)
 	@JoinColumn(name = "w_address")
 	private Address wAddress;

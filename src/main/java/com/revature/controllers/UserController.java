@@ -143,9 +143,9 @@ public class UserController {
 	
 	@ApiOperation(value="Adds a new user", tags= {"User"})
 	@PostMapping
-	public ResponseEntity<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
+	public ResponseEntity<User> addUser(@Valid @RequestBody UserDTO userDTO) {
 		User user = new User(userDTO);
-		return ResponseEntity.status(HttpStatus.CREATED).body(new UserDTO(userService.addUser(user)));
+		return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
 	}
 	
 	/**

@@ -115,10 +115,13 @@ public class UserControllerTest {
 	public void testAddingUser() throws Exception {
 
 		User user = getAdonis();
+		UserDTO dto = new UserDTO(user);
 
-		when(us.addUser(user)).thenReturn(user);
+		when(us.addUser(new User(dto))).thenReturn(user);
 
-		mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(new UserDTO(user))))
+		mvc.perform(post("/users")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(om.writeValueAsString(user)))
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.userName").value("userName"));
 	}
@@ -155,17 +158,17 @@ public class UserControllerTest {
 		adonis.setLastName("Cabreja");
 		adonis.setEmail("adonis@gmail.com");
 		adonis.setPhoneNumber("123-456-7890");
+		adonis.setDriver(true);
+		adonis.setActive(true);
+		adonis.setAcceptingRides(true);
 		Address address = new Address();
 		address.setCity("Youngsville");
 		address.setState("MI");
-		address.setState("123 Fake Street");
+		address.setStreet("123 Fake Street");
 		address.setZip("12123");
 		address.setId(5);
 		adonis.setHAddress(address);
 		adonis.setWAddress(address);
-		adonis.setDriver(true);
-		adonis.setActive(true);
-		adonis.setAcceptingRides(true);
 		return adonis;
 	}
 
