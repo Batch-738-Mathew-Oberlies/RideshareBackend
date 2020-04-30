@@ -67,6 +67,7 @@ public class LoggingAspect {
 			String controlLog = jp.getTarget() + " invoked " + jp.getSignature() + " throwing: " + e;
 			loggerService.getException().warn(controlLog, e);
 			response.setStatus(500);
+			throw e;
 		}finally {
 			//Log Response
 			if(!sensitive) {
