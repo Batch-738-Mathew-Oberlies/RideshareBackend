@@ -25,6 +25,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.models.Address;
 import com.revature.models.Batch;
 import com.revature.models.User;
+import com.revature.models.UserDTO;
 import com.revature.services.BatchService;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
@@ -117,7 +118,7 @@ public class UserControllerTest {
 
 		when(us.addUser(user)).thenReturn(user);
 
-		mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(user)))
+		mvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(new UserDTO(user))))
 				.andExpect(status().isCreated())
 				.andExpect(jsonPath("$.userName").value("userName"));
 	}
@@ -127,7 +128,7 @@ public class UserControllerTest {
 		User user = getAdonis();
 		when(us.updateUser(user)).thenReturn(user);
 
-		mvc.perform(put("/users/{id}", 1).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(user)))
+		mvc.perform(put("/users/{id}", 1).contentType(MediaType.APPLICATION_JSON).content(om.writeValueAsString(new UserDTO(user))))
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.userName").value("userName"));
 	}

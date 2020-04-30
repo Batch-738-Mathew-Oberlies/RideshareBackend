@@ -82,7 +82,7 @@ public class UserController {
 			Boolean isDriver,
 
 			//Prevents SQL and HTML injection by blocking <> and ;.
-			@Pattern(regexp="[a-zA-Z0-9]", message="Username may only have letters and numbers.")
+			@Pattern(regexp="[a-zA-Z0-9]+", message="Username may only have letters and numbers.")
 			@RequestParam(name="username", required=false)
 			String username,
 
