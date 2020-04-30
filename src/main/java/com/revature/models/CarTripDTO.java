@@ -12,15 +12,20 @@ public class CarTripDTO {
 
 	@NotNull
 	@Valid
-	private Car car;
+	private CarDTO car;
 	@NotNull
 	@Valid
-	private Trip currentTrip;
+	private TripDTO currentTrip;
 	
 	public CarTripDTO(Car car, Trip currentTrip) {
 		super();
-		this.car = car;
-		this.currentTrip = currentTrip;
+		this.car = new CarDTO(car);
+		this.currentTrip = new TripDTO(currentTrip);
+	}
+	public CarTripDTO(CarDTO carDto, TripDTO tripDto) {
+		super();
+		this.car = carDto;
+		this.currentTrip = tripDto;
 	}
 	
 	
