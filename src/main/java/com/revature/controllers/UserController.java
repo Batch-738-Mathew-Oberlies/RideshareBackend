@@ -9,6 +9,8 @@ import com.revature.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,6 +67,7 @@ public class UserController {
 	 * @param location represents the batch's location.
 	 * @return A list of all the users, users by is-driver, user by username and users by is-driver and location.
 	 */
+	
 	@ApiOperation(value="Returns all users", tags= {"User"}, notes="Can also filter by is-driver, location and username")
 	@GetMapping
 	public List<User> getUsers(@RequestParam(name="is-driver",required=false)Boolean isDriver,
@@ -95,16 +98,17 @@ public class UserController {
 		return user.map(value -> ResponseEntity.ok().body(value))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
-
+	
 	/**
 	 * HTTP POST method (/users)
 	 *
 	 * @param userDTO represents the new User object being sent.
 	 * @return The newly created object with a 201 code.
-	 * <p>
+	 * 
 	 * Sends custom error messages when incorrect input is used
 	 */
-	@ApiOperation(value = "Adds a new user", tags = {"User"})
+	
+	@ApiOperation(value="Adds a new user", tags= {"User"})
 	@PostMapping
 	public ResponseEntity<User> addUser(@Valid @RequestBody UserDTO userDTO) {
 		User user = new User(userDTO);
@@ -112,7 +116,7 @@ public class UserController {
 		System.out.println(user.isDriver());
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
 	}
-
+	
 	/**
 	 * HTTP PUT method (/users)
 	 *

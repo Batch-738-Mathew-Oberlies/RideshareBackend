@@ -1,23 +1,25 @@
 package com.revature.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
-import org.springframework.stereotype.Component;
+import java.io.Serializable;
 
 import javax.persistence.*;
+
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.io.Serializable;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+import org.springframework.stereotype.Component;
+
+import lombok.*;
 
 @Component
 @Entity
 @Table(name="users")
-@NoArgsConstructor @Data
+@Data @NoArgsConstructor
 public class User implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@Id

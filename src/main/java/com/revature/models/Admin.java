@@ -8,6 +8,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
+
+import org.springframework.stereotype.Component;
+
 import java.io.Serializable;
 
 /**
@@ -20,7 +23,7 @@ import java.io.Serializable;
 @Component
 @Entity
 @Table(name="admins")
-@NoArgsConstructor @Data
+@Data @NoArgsConstructor
 public class Admin implements Serializable {
 	
 	private static final long serialVersionUID = 1L;

@@ -12,6 +12,7 @@ public interface TripService {
 	List<TripDTO> getTripsDTO(int offset);
 	Optional<Trip> getTripById(int id);
 	List<Trip> getTripsByDriverId(int driverId);
+	Trip getCurrentTripByDriverId(int driverId);
 	List<TripDTO> getTripsByDriverIdDTO(int driverId);
 	List<TripDTO> getTripsByDriverIdDTO(int driverId, int offset);
 	List<Trip> getTripsByRiderId(int riderId);
