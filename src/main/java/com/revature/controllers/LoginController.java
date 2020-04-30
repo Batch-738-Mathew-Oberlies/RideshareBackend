@@ -1,12 +1,25 @@
 package com.revature.controllers;
 
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.revature.models.User;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.*;
 
 /**
  * LoginController takes userName  and Password. 
@@ -16,6 +29,7 @@ import java.util.*;
 
 @RestController
 @CrossOrigin
+@Validated
 @RequestMapping("/login")
 public class LoginController {
 
@@ -27,10 +41,11 @@ public class LoginController {
 
 	@GetMapping
 	public Map<String, Set<String>> login(
+			@NotNull
+			//Prevents SQL and HTML injection by blocking <> and ;.
+			@Pattern(regexp="[a-zA-Z0-9]+", message="Username may only have letters and numbers.")
 			@RequestParam(name = "userName") String userName,
 			@RequestParam(name = "passWord") String passWord) {
-		//TODO: Log this instead of System.out
-		System.out.println(userName);
 		Map<String, Set<String>> errors = new HashMap<>();
 		if (userName.length() == 0) {
 			errors.computeIfAbsent("userName", key -> new HashSet<>()).add("userName required!");

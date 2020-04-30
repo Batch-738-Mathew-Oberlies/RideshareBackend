@@ -1,18 +1,31 @@
 package com.revature.models;
 
-import lombok.*;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 public class CarTripDTO {
 
-	private Car car;
-	private Trip currentTrip;
+	@NotNull
+	@Valid
+	private CarDTO car;
+	@NotNull
+	@Valid
+	private TripDTO currentTrip;
 	
 	public CarTripDTO(Car car, Trip currentTrip) {
 		super();
-		this.car = car;
-		this.currentTrip = currentTrip;
+		this.car = new CarDTO(car);
+		this.currentTrip = new TripDTO(currentTrip);
+	}
+	public CarTripDTO(CarDTO carDto, TripDTO tripDto) {
+		super();
+		this.car = carDto;
+		this.currentTrip = tripDto;
 	}
 	
 	

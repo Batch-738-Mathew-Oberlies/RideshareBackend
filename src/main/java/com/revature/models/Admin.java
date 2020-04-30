@@ -1,17 +1,13 @@
 package com.revature.models;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
+import java.io.Serializable;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
-import java.io.Serializable;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Admin class that represents the admins. All admins have an id and a username.
@@ -33,10 +29,7 @@ public class Admin implements Serializable {
 	@Column(name="admin_id")
 	private int adminId;
 	
-	@NotBlank(message="Username cannot be blank.")
 	@Column(name = "user_name")
-	@Size(min = 3, max = 12, message = "Number of characters must be between 3 and 12.")
-	@Pattern(regexp = "^\\w+\\.?\\w+$", message = "Username format is incorrect.")
 	private String userName;
 
 	public Admin(int adminId, String userName) {
