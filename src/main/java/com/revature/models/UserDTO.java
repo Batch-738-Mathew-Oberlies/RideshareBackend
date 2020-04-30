@@ -21,6 +21,7 @@ public class UserDTO {
 	@Pattern(regexp="[a-zA-Z0-9]+", message="Username may only have letters and numbers.")
 	private String userName;
 
+	@Valid
 	@NotNull
 	private BatchDTO batch;
 
