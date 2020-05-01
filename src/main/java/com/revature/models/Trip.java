@@ -8,6 +8,7 @@ import java.util.List;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import lombok.Data;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Component
 @Entity
 @Table(name = "trips")
-@NoArgsConstructor @Data
+@NoArgsConstructor @AllArgsConstructor @Data
 public class Trip implements Serializable {
 	private static final long serialVersionUID = 2388220076246087232L;
 
