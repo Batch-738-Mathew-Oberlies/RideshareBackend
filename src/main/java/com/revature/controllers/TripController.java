@@ -1,5 +1,7 @@
 package com.revature.controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -7,6 +9,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.PositiveOrZero;
 
+import com.google.maps.errors.ApiException;
+import com.revature.services.DistanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,9 +43,11 @@ import io.swagger.annotations.ApiOperation;
 public class TripController {
 	private TripService tripService;
 	private UserService userService;
+	private DistanceService distanceService;
 	@Autowired
-	public TripController(TripService tripService, UserService userService) {
+	public TripController(TripService tripService, UserService userService, DistanceService distanceService) {
 		super();
+		this.distanceService = distanceService;
 		this.tripService = tripService;
 		this.userService = userService;
 	}
@@ -288,4 +294,15 @@ public class TripController {
 
 		return ResponseEntity.noContent().build();
 	}
+
+	@GetMapping("/closest/{address}")
+	public List<Trip> getClosestTrips(
+			@RequestParam(name = "userId", required = true) int userId,
+			@PathVariable String address
+			) throws ApiException, InterruptedException, IOException {
+		List<String> origins = new ArrayList<>();
+		origins.add(address);
+		return distanceService.findClosestTrips(origins, userId);
+	}
+
 }

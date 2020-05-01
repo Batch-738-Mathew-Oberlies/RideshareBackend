@@ -24,6 +24,7 @@ import com.revature.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
+
 /**
  * UserController takes care of handling our requests to /users.
  * It provides methods that can perform tasks like all users, user by role (true or false), user by username,
@@ -48,10 +49,13 @@ public class UserController {
 
 	@ApiOperation(value="Returns user drivers", tags= {"User"})
 	@GetMapping("/driver/{address}")
-	public List <User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
-		List<String> destinationList = new ArrayList<>();
-		String[] origins = {address};
-		return distanceService.distanceMatrix(origins);
+	public List<User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
+
+		//TODO: Log this instead of System.out
+		System.out.println(address);
+		List<String> origins = new ArrayList<>();
+		origins.add(address);
+		return distanceService.findClosestDrivers(origins);
 	}
 	
 	/**

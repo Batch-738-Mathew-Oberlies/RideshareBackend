@@ -11,8 +11,10 @@ import com.google.maps.model.TravelMode;
 import com.google.maps.model.Unit;
 import com.revature.annotations.Timed;
 import com.revature.models.Address;
+import com.revature.models.Trip;
 import com.revature.models.User;
 import com.revature.services.DistanceService;
+import com.revature.services.TripService;
 import com.revature.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,60 +28,94 @@ public class DistanceServiceImpl implements DistanceService {
 	@Autowired
 	private UserService userService;
 
-	//TODO: REFACTOR THIS
+	@Autowired
+	private TripService tripService;
+
 	@Timed
 	@Override
-	public List<User> distanceMatrix(String[] origins) throws ApiException, InterruptedException, IOException {
+	public List<User> findClosestDrivers(List<String> origins) throws ApiException, InterruptedException, IOException {
+
+		// Used to track users by their addresses
 		Map<String, User> userDestMap = new HashMap<>();
-		List<String> destinationList = new ArrayList<>();
+
+		// Used to build the destination matrix
+		List<String> destinations = new ArrayList<>();
+
+		// Populates the two above fields based on their home
+		// address
 		for (User d : userService.getActiveDrivers()) {
+			// TODO: see below comment
+			// if user == currentUser then continue;
 			Address homeAddress = d.getHAddress();
 			String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
-			destinationList.add(fullAdd);
+			destinations.add(fullAdd);
 			userDestMap.put(fullAdd, d);
 		}
-		String[] destinations = destinationList.toArray(new String[0]);
-		GeoApiContext context = new GeoApiContext.Builder().apiKey(getGoogleMAPKey()).build();
-		List<Double> arrList = new ArrayList<>();
-		DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(context);
-		DistanceMatrix t = req.origins(origins).destinations(destinations).mode(TravelMode.DRIVING).units(Unit.IMPERIAL)
-				.await();
-		Map<Double, String> unsortMap = new HashMap<>();
-		for (int i = 0; i < origins.length; i++) {
-			for (int j = 0; j < destinations.length; j++) {
-				try {
-					System.out.println((j + 1) + "): " + t.rows[i].elements[j].distance.inMeters + " meters");
-					arrList.add((double) t.rows[i].elements[j].distance.inMeters);
-					unsortMap.put((double) t.rows[i].elements[j].distance.inMeters, destinations[j]);
-					System.out.println((double) t.rows[i].elements[j].distance.inMeters);
-				} catch (Exception e) {
-					System.out.println("invalid address");
-				}
-			}
-		}
-		System.out.println("-");
-		Collections.sort(arrList);
-		System.out.println(arrList);
-		List<String> destList = new ArrayList<>();
-		arrList.removeIf(r -> (arrList.indexOf(r) > 4));
-		Double[] arrArray = new Double[arrList.size()];
-		arrArray = arrList.toArray(arrArray);
-		System.out.println(arrArray);
-		for (int c = 0; c < arrArray.length; c++) {
-			String destination = unsortMap.get(arrArray[c]);
-			destList.add(destination);
-		}
-		System.out.println(destList);
-		String[] destArray = new String[destList.size()];
-		destArray = destList.toArray(destArray);
+
+		// Create the distance matrix and use computeClosest to get
+		// top 5 closest destinations.
+		DistanceMatrix t = getDistanceMatrix(origins, destinations);
+		int[][] closest = computeClosest(t, 5);
 		List<User> userList = new ArrayList<>();
-		for (int x = 0; x < destArray.length; x++) {
-			User a = userDestMap.get(destArray[x]);
-			System.out.println(a);
-			userList.add(a);
-			System.out.println(userList);
+
+		// Loop through closest and add the corresponding user
+		// from userDestMap to userList.
+		for (int[] destIndex : closest) {
+			// destIndex has only two elements:
+			// [0] refers to the origin index
+			// [1] refers to the destination index
+			String address = destinations.get(destIndex[1]);
+			userList.add(userDestMap.get(address));
 		}
+
 		return userList;
+	}
+
+	@Override
+	public List<Trip> findClosestTrips(List<String> origins, int userId) throws ApiException, InterruptedException, IOException {
+
+		// Used to track users by their addresses
+		Map<String, Trip> tripDestMap = new HashMap<>();
+
+		// Used to build the destination matrix
+		List<String> destinations = new ArrayList<>();
+
+		// Populates the two above fields based on their home
+		// address
+		for (Trip t : tripService.getCurrentTrips()) {
+			if (t.getDriver().getUserId() == userId || t.getAvailableSeats() == 0)
+				continue;
+			Address address = t.getDeparture();
+			String fullAdd = String.format("%s %s, %s", address.getStreet(), address.getCity(), address.getState());
+			destinations.add(fullAdd);
+			tripDestMap.put(fullAdd, t);
+		}
+
+		// Create the distance matrix and use computeClosest to get
+		// top 5 closest destinations.
+		DistanceMatrix t = getDistanceMatrix(origins, destinations);
+		int[][] closest = computeClosest(t, 5);
+		List<Trip> tripList = new ArrayList<>();
+
+		// Loop through closest and add the corresponding user
+		// from userDestMap to userList.
+		for (int[] destIndex : closest) {
+			// destIndex has only two elements:
+			// [0] refers to the origin index
+			// [1] refers to the destination index
+			String address = destinations.get(destIndex[1]);
+			tripList.add(tripDestMap.get(address));
+		}
+
+		return tripList;
+	}
+
+	private DistanceMatrix getDistanceMatrix(List<String> origins, List<String> destinations) throws ApiException, IOException, InterruptedException {
+		GeoApiContext context = new GeoApiContext.Builder().apiKey(getGoogleMAPKey()).build();
+		DistanceMatrixApiRequest req = DistanceMatrixApi.newRequest(context);
+		return req.origins(origins.toArray(new String[0])).destinations(destinations.toArray(new String[0]))
+				.mode(TravelMode.DRIVING).units(Unit.IMPERIAL)
+				.await();
 	}
 
 	/**

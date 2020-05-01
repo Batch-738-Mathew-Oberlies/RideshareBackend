@@ -1,8 +1,6 @@
 package com.revature.services.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
@@ -158,5 +156,10 @@ public class TripServiceImpl implements TripService {
 	public String deleteTripById(int id) {
 		tripRepository.deleteById(id);
 		return "Trip with id: " + id + " was deleted.";
+	}
+
+	@Override
+	public List<Trip> getCurrentTrips() {
+		return tripRepository.getByTripStatus(TripStatus.CURRENT);
 	}
 }
