@@ -297,12 +297,12 @@ public class TripController {
 
 	@GetMapping("/closest/{address}")
 	public List<Trip> getClosestTrips(
-			@RequestParam(name = "userId", required = true) int userId,
+			@RequestParam(name = "userId", required = false) Integer userId,
 			@PathVariable String address
 			) throws ApiException, InterruptedException, IOException {
 		List<String> origins = new ArrayList<>();
 		origins.add(address);
-		return distanceService.findClosestTrips(origins, userId);
+		return distanceService.findClosestTrips(origins, userId == null ? 0 : userId);
 	}
 
 }

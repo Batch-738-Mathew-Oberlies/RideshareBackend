@@ -51,7 +51,7 @@ public class DistanceServiceImpl implements DistanceService {
 			destinations.add(fullAdd);
 			userDestMap.put(fullAdd, d);
 		}
-
+		
 		// Create the distance matrix and use computeClosest to get
 		// top 5 closest destinations.
 		DistanceMatrix t = getDistanceMatrix(origins, destinations);
@@ -134,16 +134,21 @@ public class DistanceServiceImpl implements DistanceService {
 		
 		for (int x = 0; x < distanceMatrix.rows.length; x++) {
 			for (int y = 0; y < distanceMatrix.rows[x].elements.length; y++) {
-				long distance = distanceMatrix.rows[x].elements[y].distance.inMeters;
-				
-				// Store only the closest top values based on this number
-				// This list is always sorted
-				list.add(getIndex(list, distance, top), distance);
-				if (list.size() > top) {
-					list.pop();
+				try {
+					long distance = distanceMatrix.rows[x].elements[y].distance.inMeters;
+					
+					// Store only the closest top values based on this number
+					// This list is always sorted
+					list.add(getIndex(list, distance, top), distance);
+					if (list.size() > top) {
+						list.pop();
+					}
+					
+					distanceMap.put(distance, new AbstractMap.SimpleEntry<>(x, y));
+				} catch (Exception e) {
+					System.out.println("invalid address");
 				}
 				
-				distanceMap.put(distance, new AbstractMap.SimpleEntry<>(x, y));
 			}
 		}
 		// Adds closest indices to the indexMap
@@ -151,6 +156,9 @@ public class DistanceServiceImpl implements DistanceService {
 		while (i < list.size()) {
 			Collection<Map.Entry<Integer, Integer>> ties = distanceMap.get(list.get(i));
 			for (Map.Entry<Integer, Integer> tie : ties) {
+				if (i >= list.size()) {
+					break;
+				}
 				indexMap[i][0] = tie.getKey();
 				indexMap[i][1] = tie.getValue();
 				i++;
