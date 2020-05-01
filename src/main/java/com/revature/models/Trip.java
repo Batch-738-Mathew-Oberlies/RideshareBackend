@@ -58,9 +58,11 @@ public class Trip implements Serializable {
 		this.name = trip.getName();
 		this.driver = new User(trip.getDriver());
 		this.riders = new ArrayList<>();
-		for (UserDTO rider : trip.getRiders()) {
-			this.riders.add(new User(rider));
-		}
+		if (trip.getRiders() != null) {
+            for (UserDTO rider : trip.getRiders()) {
+                this.riders.add(new User(rider));
+            }
+        }
 		this.availableSeats = trip.getAvailableSeats();
 		this.departure = new Address(trip.getDeparture());
 		this.destination = new Address(trip.getDestination());
