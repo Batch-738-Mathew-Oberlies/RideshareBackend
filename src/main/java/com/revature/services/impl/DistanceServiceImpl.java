@@ -180,13 +180,7 @@ public class DistanceServiceImpl implements DistanceService {
 	}
 
 	public String getGoogleMAPKey() {
-		Map<String, String> env = System.getenv();
-		for (Map.Entry<String, String> entry : env.entrySet()) {
-			if (entry.getKey().equals("googleMapAPIKey")) {
-				return entry.getValue();
-			}
-		}
-		return null;
+		return System.getenv("googleMapAPIKey");
 	}
 	
 	
