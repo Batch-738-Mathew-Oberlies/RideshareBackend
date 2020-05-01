@@ -7,7 +7,6 @@ import com.google.maps.errors.ApiException;
 import com.revature.models.Trip;
 import com.revature.models.User;
 
-
 public interface DistanceService {
 
 	List<User> findClosestDrivers(List<String> origins) throws ApiException, InterruptedException, IOException;

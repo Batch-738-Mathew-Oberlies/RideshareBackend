@@ -24,7 +24,6 @@ import com.revature.services.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 
-
 /**
  * UserController takes care of handling our requests to /users.
  * It provides methods that can perform tasks like all users, user by role (true or false), user by username,

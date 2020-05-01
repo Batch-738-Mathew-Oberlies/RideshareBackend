@@ -146,7 +146,6 @@ public class DistanceServiceImpl implements DistanceService {
 				distanceMap.put(distance, new AbstractMap.SimpleEntry<>(x, y));
 			}
 		}
-		
 		// Adds closest indices to the indexMap
 		int i = 0;
 		while (i < list.size()) {
