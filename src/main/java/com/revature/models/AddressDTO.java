@@ -15,6 +15,9 @@ public class AddressDTO {
 	@Pattern(regexp = "[a-zA-Z0-9 ,]+", message = "Addresses may only contain letters, numbers, spaces, and commas")
 	@NotBlank(message = "Street cannot be blank.")
 	private String street;
+	
+	@Pattern(regexp = "[a-zA-Z0-9 ]*", message = "Apts may only contain letters, numbers, and spaces")
+	private String apt;
 
 	@Pattern(regexp = "[a-zA-Z]+([ -][a-zA-Z]+)*", message = "Cities must be words made from letters separated by a single space or -.")
 	@NotBlank(message = "City cannot be blank.")
@@ -35,6 +38,7 @@ public class AddressDTO {
 		if (address != null) {
 			this.id = address.getId();
 			this.street = address.getStreet();
+			this.apt = address.getApt();
 			this.city = address.getCity();
 			this.state = address.getState();
 			this.zip = address.getZip();
