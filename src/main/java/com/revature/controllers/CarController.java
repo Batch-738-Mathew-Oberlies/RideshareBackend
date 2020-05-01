@@ -1,18 +1,26 @@
 package com.revature.controllers;
 
-import com.revature.models.Car;
-import com.revature.models.CarDTO;
-import com.revature.services.CarService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import com.revature.models.Car;
+import com.revature.models.CarDTO;
+import com.revature.models.CarTripDTO;
+import com.revature.models.Trip;
+import com.revature.services.CarService;
+import com.revature.services.TripService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * CarController takes care of handling our requests to /cars.
@@ -26,11 +34,15 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/cars")
 @CrossOrigin
+@Validated
 @Api(tags= {"Car"})
 public class CarController {
 
 	@Autowired
 	private CarService carService;
+	
+	@Autowired
+	private TripService tripService;
 	
 	/**
 	 * HTTP GET method (/cars)
@@ -43,6 +55,35 @@ public class CarController {
 		return carService.getCars();
 	}
 
+
+	/**
+	 * HTTP GET method (/trips/driver/{number})
+	 *
+	 * @param id represents the user's id.
+	 * @return A CarTripDTO that matches the user id.
+	 */
+	@ApiOperation(value = "Returns the car and the current trip given the userid", tags = {"Car"})
+	@GetMapping("/trips/driver/{id}")
+	public ResponseEntity<CarTripDTO> getCarTripByUserId(@PathVariable("id") int uid) {
+		
+		//Get Trip and Car by user/driver id
+		Trip currentTrip = tripService.getCurrentTripByDriverId(uid);
+		Car currentCar = carService.getCarByUserId(uid);
+		
+		if (currentTrip == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+		if (currentCar == null) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+		}
+			
+		//Create new CarTripDTO
+		CarTripDTO ctdto = new CarTripDTO(currentCar, currentTrip);
+		
+		//Send DTO in response
+		return ResponseEntity.status(HttpStatus.OK).body(ctdto);
+	}
+	
 	/**
 	 * HTTP GET method (/cars/{number})
 	 *
@@ -51,11 +92,17 @@ public class CarController {
 	 */
 	@ApiOperation(value = "Returns car by id", tags = {"Car"})
 	@GetMapping("/{id}")
-	public ResponseEntity<Car> getCarById(@PathVariable("id") int id) {
+	public ResponseEntity<Car> getCarById(
+			@Positive
+			@PathVariable("id") 
+			int id) {
 		Optional<Car> car = carService.getCarById(id);
 		return car.map(value -> ResponseEntity.ok().body(value))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
+	
+	
+	
 	
 	/**
 	 * HTTP GET method (/cars/users/{userId})
@@ -66,8 +113,14 @@ public class CarController {
 	
 	@ApiOperation(value="Returns car by user id", tags= {"Car"})
 	@GetMapping("/users/{userId}")
-	public Car getCarByUserId(@PathVariable("userId") int userId) {
-		return carService.getCarByUserId(userId);
+	public Car getCarByUserId(
+			@Positive
+			@PathVariable("userId") 
+			int userId) {
+		// Get the car ID
+		Car car = carService.getCarByUserId(userId);
+		
+		return car;
 	}
 
 	/**
@@ -104,7 +157,10 @@ public class CarController {
 	 */
 	@ApiOperation(value="Deletes car by id", tags= {"Car"})
 	@DeleteMapping("/{id}")
-	public String deleteCarById(@PathVariable("id") int id) {
+	public String deleteCarById(
+			@Positive
+			@PathVariable("id") 
+			int id) {
 		return carService.deleteCarById(id);
 	}
 }

@@ -1,21 +1,31 @@
 package com.revature.controllers;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
 import com.google.maps.errors.ApiException;
 import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.models.UserDTO;
 import com.revature.services.DistanceService;
 import com.revature.services.UserService;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import javax.validation.Valid;
-import java.io.IOException;
-import java.util.*;
 
 /**
  * UserController takes care of handling our requests to /users.
@@ -29,6 +39,7 @@ import java.util.*;
 @RestController
 @RequestMapping("/users")
 @CrossOrigin
+@Validated
 @Api(tags = {"User"})
 public class UserController {
 
@@ -41,8 +52,6 @@ public class UserController {
 	@ApiOperation(value="Returns user drivers", tags= {"User"})
 	@GetMapping("/driver/{address}")
 	public List <User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
-		//TODO: Log this instead of System.out
-		System.out.println(address);
 		List<String> destinationList = new ArrayList<>();
 		String[] origins = {address};
 		Map<String, User> topfive = new HashMap<>();
@@ -65,21 +74,45 @@ public class UserController {
 	 * @param location represents the batch's location.
 	 * @return A list of all the users, users by is-driver, user by username and users by is-driver and location.
 	 */
+	
 	@ApiOperation(value="Returns all users", tags= {"User"}, notes="Can also filter by is-driver, location and username")
 	@GetMapping
-	public List<User> getUsers(@RequestParam(name="is-driver",required=false)Boolean isDriver,
-							   @RequestParam(name="username",required=false)String username,
-							   @RequestParam(name="location", required=false)String location) {
+	public ResponseEntity<List<UserDTO>> getUsers(
+			@RequestParam(name="is-driver", required=false)
+			Boolean isDriver,
+
+			//Prevents SQL and HTML injection by blocking <> and ;.
+			@Pattern(regexp="[a-zA-Z0-9]+", message="Username may only have letters and numbers.")
+			@RequestParam(name="username", required=false)
+			String username,
+
+			//Prevents SQL and HTML injection by blocking <> and ;. Long term we will want to refactor as this long irregular string pushes RESTs requirements
+			@Pattern(regexp = "[a-zA-Z0-9 ,]+", message = "Batch location may only contain letters, numbers, spaces, and commas")
+			@RequestParam(name="location", required=false)
+			String location
+		) {
 
 		if (isDriver != null && location != null) {
-			return userService.getUserByRoleAndLocation(isDriver.booleanValue(), location);
+			List<User> users = userService.getUserByRoleAndLocation(isDriver.booleanValue(), location);
+			return ResponseEntity.ok(listUserToDto(users));
 		} else if (isDriver != null) {
-			return userService.getUserByRole(isDriver.booleanValue());
+			List<User> users = userService.getUserByRole(isDriver.booleanValue());
+			return ResponseEntity.ok(listUserToDto(users));
 		} else if (username != null) {
-			return userService.getUserByUsername(username);
+			List<User> users = userService.getUserByUsername(username);
+			return ResponseEntity.ok(listUserToDto(users));
 		}
 
-		return userService.getUsers();
+		List<User> users = userService.getUsers();
+		return ResponseEntity.ok(listUserToDto(users));
+	}
+	
+	private List<UserDTO> listUserToDto(List<User> users){
+		List<UserDTO> dtos = new ArrayList<>();
+		for (User user : users) {
+			dtos.add(new UserDTO(user));
+		}
+		return dtos;
 	}
 
 	/**
@@ -90,29 +123,31 @@ public class UserController {
 	 */
 	@ApiOperation(value = "Returns user by id", tags = {"User"})
 	@GetMapping("/{id}")
-	public ResponseEntity<User> getUserById(@PathVariable("id") int id) {
+	public ResponseEntity<UserDTO> getUserById(
+			@Positive
+			@PathVariable("id") 
+			int id) {
 		Optional<User> user = userService.getUserById(id);
-		return user.map(value -> ResponseEntity.ok().body(value))
+		return user.map(value -> ResponseEntity.ok().body(new UserDTO(value)))
 				.orElseGet(() -> ResponseEntity.notFound().build());
 	}
-
+	
 	/**
 	 * HTTP POST method (/users)
 	 *
 	 * @param userDTO represents the new User object being sent.
 	 * @return The newly created object with a 201 code.
-	 * <p>
+	 * 
 	 * Sends custom error messages when incorrect input is used
 	 */
-	@ApiOperation(value = "Adds a new user", tags = {"User"})
+	
+	@ApiOperation(value="Adds a new user", tags= {"User"})
 	@PostMapping
 	public ResponseEntity<User> addUser(@Valid @RequestBody UserDTO userDTO) {
 		User user = new User(userDTO);
-		//TODO: Log this instead of System.out
-		System.out.println(user.isDriver());
 		return ResponseEntity.status(HttpStatus.CREATED).body(userService.addUser(user));
 	}
-
+	
 	/**
 	 * HTTP PUT method (/users)
 	 *
@@ -121,9 +156,9 @@ public class UserController {
 	 */
 	@ApiOperation(value = "Updates user by id", tags = {"User"})
 	@PutMapping("/{id}")
-	public User updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable String id) {
+	public ResponseEntity<UserDTO> updateUser(@Valid @RequestBody UserDTO userDTO, @PathVariable String id) {
 		User user = new User(userDTO);
-		return userService.updateUser(user);
+		return ResponseEntity.ok(new UserDTO(userService.updateUser(user)));
 	}
 	
 	/**
@@ -134,7 +169,10 @@ public class UserController {
 	 */
 	@ApiOperation(value="Deletes user by id", tags= {"User"})
 	@DeleteMapping("/{id}")
-	public String deleteUserById(@PathVariable("id")int id) {
+	public String deleteUserById(
+			@Positive
+			@PathVariable("id")
+			int id) {
 
 		return userService.deleteUserById(id);
 	}

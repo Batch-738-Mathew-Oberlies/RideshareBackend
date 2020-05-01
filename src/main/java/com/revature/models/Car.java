@@ -1,14 +1,21 @@
 package com.revature.models;
 
+import java.io.Serializable;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.springframework.stereotype.Component;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.stereotype.Component;
-
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Positive;
-import java.io.Serializable;
 
 /**
  * Car class that represents a user's car. All cars have an id, color, seats, make, model, year
@@ -32,19 +39,10 @@ public class Car implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column(name="car_id")
 	private int carId;
-
 	private String color;
-
-	@Positive(message = "Number of seats must be a positive number.")
 	private int seats;
-
-	@NotBlank(message = "Car make cannot be blank.")
 	private String make;
-
-	@NotBlank(message = "Car model cannot be blank.")
 	private String model;
-
-	@Positive(message = "Car year must be a positive number.")
 	@Column(name = "car_year")
 	private int year;
 
@@ -65,4 +63,3 @@ public class Car implements Serializable {
 		}
 	}
 }
-

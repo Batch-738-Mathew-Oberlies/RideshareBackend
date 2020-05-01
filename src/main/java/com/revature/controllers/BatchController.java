@@ -1,18 +1,33 @@
 package com.revature.controllers;
 
-import com.revature.models.Batch;
-import com.revature.models.BatchDTO;
-import com.revature.services.BatchService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.List;
+import java.util.Optional;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import com.revature.models.Batch;
+import com.revature.models.BatchDTO;
+import com.revature.services.BatchService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * BatchController takes care of handling our requests to /batches.
@@ -26,6 +41,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/batches")
 @CrossOrigin
+@Validated
 @Api(tags= {"Batch"})
 public class BatchController {
 
@@ -40,7 +56,12 @@ public class BatchController {
 	 */
 	@ApiOperation(value="Returns all batches", tags= {"Batch"}, notes="Can also filter by location")
 	@GetMapping
-	public List<Batch> getBatches(@RequestParam(name="location",required=false)String location) {
+	public List<Batch> getBatches(
+			//Prevents SQL and HTML injection by blocking <> and ;. Long term we will want to refactor as this long irregular string pushes RESTs requirements
+			@Pattern(regexp = "[a-zA-Z0-9 ,]+", message = "Batch location may only contain letters, numbers, spaces, and commas") 
+			@RequestParam(name="location",required=false) 
+			String location
+			) {
 		if (location != null) {
 			return batchService.getBatchByLocation(location);
 		}
@@ -55,7 +76,10 @@ public class BatchController {
 	 */
 	@ApiOperation(value = "Returns batch by number", tags = {"Batch"})
 	@GetMapping("/{id}")
-	public ResponseEntity<Batch> getBatchByNumber(@PathVariable("id") int id) {
+	public ResponseEntity<Batch> getBatchByNumber(
+			@Positive
+			@PathVariable("id") 
+			int id) {
 		Optional<Batch> batch = batchService.getBatchByNumber(id);
 		return batch.map(value -> ResponseEntity.ok().body(value))
 				.orElseGet(() -> ResponseEntity.notFound().build());
@@ -95,7 +119,10 @@ public class BatchController {
 	 */
 	@ApiOperation(value = "Deletes batch by number", tags = {"Batch"})
 	@DeleteMapping("/{id}")
-	public String deleteBatchByNumber(@PathVariable("id") int number) {
+	public String deleteBatchByNumber(
+			@Positive
+			@PathVariable("id") 
+			int number) {
 
 		return batchService.deleteBatchByNumber(number);
 	}

@@ -1,10 +1,17 @@
 package com.revature.controllers;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.revature.models.Car;
-import com.revature.models.CarDTO;
-import com.revature.models.User;
-import com.revature.services.CarService;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,14 +21,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.revature.models.Car;
+import com.revature.models.CarDTO;
+import com.revature.models.User;
+import com.revature.services.CarService;
+import com.revature.services.TripService;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(CarController.class)
@@ -35,6 +40,9 @@ public class CarControllerTest {
 	
 	@MockBean
 	private CarService cs;
+	
+	@MockBean
+	private TripService ts;
 		
 	@Test
 	public void testGettingCars() throws Exception {
