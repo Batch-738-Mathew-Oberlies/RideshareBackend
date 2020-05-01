@@ -43,17 +43,17 @@ public class UserDTO {
 	@Pattern(regexp = "^\\d{3}-\\d{3}-\\d{4}$", message="Phone number format is incorrect.")
 	private String phoneNumber;
 
-	private boolean isDriver;
+	private boolean driver;
 
-	private boolean isActive;
+	private boolean active;
 
-	private boolean isAcceptingRides;
-
-	@Valid
-	private AddressDTO hAddress;
+	private boolean acceptingRides;
 
 	@Valid
-	private AddressDTO wAddress;
+	private AddressDTO homeAddress;
+
+	@Valid
+	private AddressDTO workAddress;
 
 	public UserDTO(User user) {
 		super();
@@ -65,11 +65,11 @@ public class UserDTO {
 			this.lastName = user.getLastName();
 			this.email = user.getEmail();
 			this.phoneNumber = user.getPhoneNumber();
-			this.isDriver = user.isDriver();
-			this.isActive = user.isActive();
-			this.isAcceptingRides = user.isAcceptingRides();
-			this.hAddress = new AddressDTO(user.getHAddress());
-			this.wAddress = new AddressDTO(user.getWAddress());
+			this.driver = user.isDriver();
+			this.active = user.isActive();
+			this.acceptingRides = user.isAcceptingRides();
+			this.homeAddress = new AddressDTO(user.getHomeAddress());
+			this.workAddress = new AddressDTO(user.getWorkAddress());
 		}
 	}
 }
