@@ -39,6 +39,7 @@ import io.swagger.annotations.ApiOperation;
 public class TripController {
 	private TripService tripService;
 	private UserService userService;
+
 	@Autowired
 	public TripController(TripService tripService, UserService userService) {
 		super();
@@ -49,10 +50,8 @@ public class TripController {
 	/**
 	 * HTTP GET method (/trips)
 	 *
-	 * @param riderId Optional: The id of a rider
-	 * @param driverId Optional: The id of a driver
-	 * @param offset Optional: How many entries to skip over
-	 * @return A list of all the trips.
+	 * @param offset optional: how many entries to skip over.
+	 * @return a list of all the trips along with a 200 code.
 	 */
 	@ApiOperation(value = "Return all trips", tags = {"Trip"})
 	@GetMapping
@@ -60,14 +59,15 @@ public class TripController {
 			@PositiveOrZero
 			@RequestParam(name = "offset", required = false) 
 			Integer offset
-			) {
-		List<TripDTO> trips = null;
+	) {
+		List<TripDTO> trips;
 		if (offset != null) {
 			trips = tripService.getTripsDTO(offset);
-		}else {
+		} else {
 			trips = tripService.getTripsDTO();
 		}
-		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
+
+		if (!trips.isEmpty()) return ResponseEntity.ok(trips);
 
 		return ResponseEntity.noContent().build();
 	}
@@ -75,15 +75,16 @@ public class TripController {
 	/**
 	 * HTTP GET method (/trips/{tripId})
 	 *
-	 * @param id represent the trip's ID.
-	 * @return A trip that matches the ID.
+	 * @param id represent the Trip's ID.
+	 * @return a trip that matches the ID along with a 200 code.
 	 */
 	@ApiOperation(value = "Return trip by ID", tags = {"Trip"})
 	@GetMapping("/{id}")
 	public ResponseEntity<TripDTO> getTripById(
 			@Positive
 			@PathVariable("id") 
-			int id) {
+			int id
+	) {
 		Optional<Trip> trip = tripService.getTripById(id);
 
 		if (trip.isPresent()) return ResponseEntity.ok(new TripDTO(trip.get()));
@@ -93,8 +94,8 @@ public class TripController {
 
 	/**
 	 * HTTP POST method (/trips)
-	 * @param trip represents the new Trip object being sent.
-	 * @return The newly created object along with a 201 code.
+	 * @param tripDTO represents the new Trip object being sent.
+	 * @return the newly created object along with a 201 code.
 	 */
 	@ApiOperation(value = "Adds a new trip")
 	@PostMapping
@@ -109,10 +110,10 @@ public class TripController {
 	/**
 	 * HTTP PUT method (/trips)
 	 *
-	 * @param trip represent the updated Trip object being sent.
-	 * @return The newly updated Trip object.
+	 * @param tripDTO represents the updated Trip object being sent.
+	 * @return the newly updated Trip object along with a 201 code.
 	 */
-	@ApiOperation(value = "Updates a trip by ID", tags = {"Trip"})
+	@ApiOperation(value = "Updates a trip", tags = {"Trip"})
 	@PutMapping
 	public ResponseEntity<TripDTO> updateTrip(@Valid @RequestBody TripDTO tripDTO) {
 		Optional<Trip> existingTrip = tripService.getTripById(tripDTO.getTripId());
@@ -126,14 +127,15 @@ public class TripController {
 	 * HTTP DELETE method (/trips/{id})
 	 *
 	 * @param id represents the Trip's ID.
-	 * @return A string that says which Trip was deleted.
+	 * @return a string that says which Trip was deleted.
 	 */
 	@ApiOperation(value = "Deletes a trip by ID", tags = {"Trip"})
 	@DeleteMapping("/{id}")
 	public ResponseEntity<String> deleteTripById(
 			@Positive
 			@PathVariable("id") 
-			int id) {
+			int id
+	) {
 		Optional<Trip> trip = tripService.getTripById(id);
 
 		if (trip.isPresent()) {
@@ -146,15 +148,15 @@ public class TripController {
 	}
 
 	/**
-	 * HTTP GET method (/trips/rider/)
+	 * HTTP GET method (/trips/rider)
 	 * 
-	 * @param riderId
-	 * @param offset
-	 * @return A list of trips matching the rider's ID.
+	 * @param riderId represents the rider User's ID.
+	 * @param offset optional: how many entries to skip over.
+	 * @return a list of trips matching the rider's ID.
 	 */
 	@ApiOperation(value = "Return all trips", tags = {"Trip"})
 	@GetMapping("/rider")
-	public ResponseEntity<List<TripDTO>> getTripsByRider(
+	public ResponseEntity<List<TripDTO>> getTripsByRiderId(
 			@Positive
 			@RequestParam(name = "riderId") 
 			Integer riderId,
@@ -162,14 +164,15 @@ public class TripController {
 			@Positive
 			@RequestParam(name = "offset", required = false) 
 			Integer offset
-			){
-		List<TripDTO> trips = null;
+	) {
+		List<TripDTO> trips;
 		if (offset != null) {
 			trips = tripService.getTripsByRiderIdDTO(riderId, offset);
-		}else {
+		} else {
 			trips = tripService.getTripsByRiderIdDTO(riderId);
 		}
-		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
+
+		if (!trips.isEmpty()) return ResponseEntity.ok(trips);
 
 		return ResponseEntity.noContent().build();
 	}
@@ -177,13 +180,13 @@ public class TripController {
 	/**
 	 * HTTP POST method (/trips/rider)
 	 * 
-	 * @param tripId represents the id of the trip the person is joining
-	 * @param rider represents the User joining the trip.
-	 * @return The newly updated Trip object.
+	 * @param tripId represents the ID of the Trip the person is joining.
+	 * @param riderId represents the ID of the User joining the trip.
+	 * @return the newly updated Trip object.
 	 */
 	@ApiOperation(value = "Adds a user to a trip", tags = {"Rider", "Trip"})
 	@PostMapping("/rider")
-	public ResponseEntity<TripDTO> updateTripRider(
+	public ResponseEntity<TripDTO> updateTripRiders(
 			@Positive
 			@RequestParam(name = "tripId") 
 			Integer tripId,
@@ -191,20 +194,20 @@ public class TripController {
 			@Positive
 			@RequestParam(name = "riderId") 
 			Integer riderId
-			){
+	) {
 		Optional<Trip> existingTrip = tripService.getTripById(tripId);
 		Optional<User> existingUser = userService.getUserById(riderId);
 		
-		if(existingTrip.isPresent() && existingUser.isPresent()) {
+		if (existingTrip.isPresent() && existingUser.isPresent()) {
 			Trip trip = existingTrip.get();
 			List<User> riders = trip.getRiders();
 			riders.add(existingUser.get());
 			int numberOfSeats = trip.getAvailableSeats() - 1;
-			if(numberOfSeats < 0)return ResponseEntity.status(HttpStatus.CONFLICT).build();
+			if (numberOfSeats < 0) return ResponseEntity.status(HttpStatus.CONFLICT).build();
 			trip.setAvailableSeats(numberOfSeats);
 			tripService.updateTrip(trip);
 			return ResponseEntity.accepted().body(new TripDTO(trip));
-		}else {
+		} else {
 			return ResponseEntity.notFound().build();
 		}
 	}
@@ -212,9 +215,9 @@ public class TripController {
 	/**
 	 * HTTP DELETE method (/trips/rider)
 	 * 
-	 * @param tripId represents the id of the trip the person is joining
-	 * @param rider represents the User joining the trip.
-	 * @return The newly updated Trip object.
+	 * @param tripId represents the ID of the Trip the person is joining.
+	 * @param riderId represents the ID of the User joining the trip.
+	 * @return the newly updated Trip object.
 	 */
 	@ApiOperation(value = "Removes a user from a trip", tags = {"Rider", "Trip"})
 	@DeleteMapping("/rider")
@@ -226,23 +229,23 @@ public class TripController {
 			@Positive
 			@RequestParam(name = "riderId") 
 			Integer riderId
-			){
+	) {
 		Optional<Trip> existingTrip = tripService.getTripById(tripId);
 		Optional<User> existingUser = userService.getUserById(riderId);
 		
-		if(existingTrip.isPresent() && existingUser.isPresent()) {
+		if (existingTrip.isPresent() && existingUser.isPresent()) {
 			Trip trip = existingTrip.get();
 			List<User> riders = trip.getRiders();
 			int riderLength = riders.size();
 			riders.remove(existingUser.get());
-			if(riders.size() < riderLength) {
+			if (riders.size() < riderLength) {
 				trip.setAvailableSeats(trip.getAvailableSeats() + 1);
 				tripService.updateTrip(trip);
 				return ResponseEntity.accepted().body(new TripDTO(trip));
-			}else {
+			} else {
 				return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build();
 			}
-		}else {
+		} else {
 			return ResponseEntity.notFound().build();
 		}
 	}
@@ -250,14 +253,14 @@ public class TripController {
 	/**
 	 * HTTP GET method (/trips/driver)
 	 * 
-	 * @param driverId
-	 * @param riderId Optional: if included filters only the trips that also had that rider
-	 * @param offset
-	 * @return A list of trips matching the driver's ID.
+	 * @param driverId represents the ID of the User designated as driver.
+	 * @param riderId optional: filters only the trips that also have that rider.
+	 * @param offset optional: how many entries to skip over.
+	 * @return a list of trips matching the driver's ID.
 	 */
 	@ApiOperation(value = "Return all trips matching a driver's ID", tags = {"Trip", "Driver"})
 	@GetMapping("/driver")
-	public ResponseEntity<List<TripDTO>> getTripsByDriver(
+	public ResponseEntity<List<TripDTO>> getTripsByDriverId(
 			@Positive
 			@RequestParam(name = "driverId") 
 			Integer driverId,
@@ -269,22 +272,23 @@ public class TripController {
 			@PositiveOrZero
 			@RequestParam(name = "offset", required = false) 
 			Integer offset
-			) {
-		List<TripDTO> trips = null;
+	) {
+		List<TripDTO> trips;
 		if (riderId == null) {
 			if (offset != null) {
 				trips = tripService.getTripsByDriverIdDTO(driverId, offset);
-			}else {
+			} else {
 				trips = tripService.getTripsByDriverIdDTO(driverId);
 			}
-		}else {
+		} else {
 			if (offset != null) {
 				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId, offset);
-			}else {
+			} else {
 				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId);
 			}
 		}
-		if (trips != null && !trips.isEmpty()) return ResponseEntity.ok(trips);
+
+		if (!trips.isEmpty()) return ResponseEntity.ok(trips);
 
 		return ResponseEntity.noContent().build();
 	}
