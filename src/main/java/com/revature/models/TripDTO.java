@@ -40,16 +40,19 @@ public class TripDTO {
 
 	@NotNull
 	private LocalDateTime tripDate;
+
 	@Valid
 	private TripStatus tripStatus;
-	
+
 	public TripDTO(Trip trip) {
 		this.tripId = trip.getTripId();
 		this.name = trip.getName();
 		this.driver = new UserDTO(trip.getDriver());
 		this.riders = new ArrayList<>();
-		for (User rider : trip.getRiders()) {
-			this.riders.add(new UserDTO(rider));
+		if (trip.getRiders() != null) {
+			for (User rider : trip.getRiders()) {
+				this.riders.add(new UserDTO(rider));
+			}
 		}
 		this.availableSeats = trip.getAvailableSeats();
 		this.departure = new AddressDTO(trip.getDeparture());
