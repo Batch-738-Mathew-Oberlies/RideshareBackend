@@ -26,8 +26,8 @@ public class MockObjects {
         address.setStreet("123 Fake Street");
         address.setZip("12123");
         address.setId(5);
-        adonis.setHAddress(address);
-        adonis.setWAddress(address);
+        adonis.setHomeAddress(address);
+        adonis.setWorkAddress(address);
         return adonis;
     }
 
@@ -37,8 +37,8 @@ public class MockObjects {
         trip.setName("Grocery store");
         trip.setDriver(getAdonis());
         trip.setAvailableSeats(1);
-        trip.setDeparture(getAdonis().getHAddress());
-        trip.setDestination(getAdonis().getWAddress());
+        trip.setDeparture(getAdonis().getHomeAddress());
+        trip.setDestination(getAdonis().getWorkAddress());
         trip.setTripDate(LocalDateTime.now());
         trip.setTripStatus(TripStatus.CURRENT);
         return trip;
