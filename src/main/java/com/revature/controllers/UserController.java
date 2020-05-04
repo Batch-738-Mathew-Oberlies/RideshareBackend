@@ -56,7 +56,7 @@ public class UserController {
 		String[] origins = {address};
 		Map<String, User> topfive = new HashMap<>();
 		for (User d : userService.getActiveDrivers()) {
-			Address homeAddress = d.getHAddress();
+			Address homeAddress = d.getHomeAddress();
 			String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
 			destinationList.add(fullAdd);
 			topfive.put(fullAdd, d);

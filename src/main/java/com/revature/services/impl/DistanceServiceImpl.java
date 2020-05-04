@@ -31,7 +31,7 @@ public class DistanceServiceImpl implements DistanceService {
 		Map<String, User> userDestMap = new HashMap<>();
 		List<String> destinationList = new ArrayList<>();
 		for (User d : userService.getActiveDrivers()) {
-			Address homeAddress = d.getHAddress();
+			Address homeAddress = d.getHomeAddress();
 			String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
 			destinationList.add(fullAdd);
 			userDestMap.put(fullAdd, d);
