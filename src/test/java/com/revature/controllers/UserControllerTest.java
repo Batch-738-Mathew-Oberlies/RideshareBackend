@@ -167,8 +167,8 @@ public class UserControllerTest {
 		address.setStreet("123 Fake Street");
 		address.setZip("12123");
 		address.setId(5);
-		adonis.setHAddress(address);
-		adonis.setWAddress(address);
+		adonis.setHomeAddress(address);
+		adonis.setWorkAddress(address);
 		return adonis;
 	}
 
