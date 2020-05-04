@@ -21,11 +21,11 @@ public class CarDTO {
 	private int seats;
 
 	@NotBlank(message = "Car make cannot be blank.")
-	@Pattern(regexp = "[a-zA-Z0-9 ]+", message = "A car's make may only contain letters, numbers, and spaces.")
+	@Pattern(regexp = "[a-zA-Z0-9 -]+", message = "A car's make may only contain letters, numbers, hyphens and spaces.")
 	private String make;
 
 	@NotBlank(message = "Car model cannot be blank.")
-	@Pattern(regexp = "[a-zA-Z0-9 ]+", message = "A car's model may only contain letters, numbers, and spaces.")
+	@Pattern(regexp = "[a-zA-Z0-9 -]+", message = "A car's model may only contain letters, numbers, hyphens and spaces.")
 	private String model;
 
 	@Positive(message = "Car year must be a positive number.")
