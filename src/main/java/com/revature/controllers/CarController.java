@@ -86,9 +86,9 @@ public class CarController {
 	
 	
 	/**
-	 * HTTP PUT method (/trips/driver/{number})
+	 * HTTP PUT method (/trips)
 	 *
-	 * @param id represents the user's id.
+	 * @param carTripDTO represents the updated CarTrip object being sent.
 	 * @return A CarTripDTO that matches the user id.
 	 */
 	@ApiOperation(value = "Updates the car and the current trip", tags = {"Car"})
