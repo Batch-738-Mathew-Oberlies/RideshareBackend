@@ -84,6 +84,31 @@ public class CarController {
 		return ResponseEntity.status(HttpStatus.OK).body(ctdto);
 	}
 	
+	
+	/**
+	 * HTTP PUT method (/trips)
+	 *
+	 * @param carTripDTO represents the updated CarTrip object being sent.
+	 * @return A CarTripDTO that matches the user id.
+	 */
+	@ApiOperation(value = "Updates the car and the current trip", tags = {"Car"})
+	@PutMapping("/trips")
+	public ResponseEntity<CarTripDTO> updateCarTripByUserId(@Valid @RequestBody CarTripDTO carTripDTO) {
+		
+		// Get car and current trip from car trip DTO
+		Car car = new Car(carTripDTO.getCar());
+		Trip trip = new Trip(carTripDTO.getCurrentTrip());
+		
+		// Updates car and trip in database
+		Car updatedCar = carService.updateCar(car);
+		Trip updatedTrip = tripService.updateTrip(trip);
+		
+		// Create DTO from the updated car and trip and send DTO in response
+		CarTripDTO ctdto = new CarTripDTO(updatedCar, updatedTrip);
+		return ResponseEntity.status(HttpStatus.OK).body(ctdto);
+	}
+	
+	
 	/**
 	 * HTTP GET method (/cars/{number})
 	 *
