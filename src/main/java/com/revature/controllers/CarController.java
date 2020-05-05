@@ -92,7 +92,7 @@ public class CarController {
 	 * @return A CarTripDTO that matches the user id.
 	 */
 	@ApiOperation(value = "Updates the car and the current trip", tags = {"Car"})
-	@PutMapping("/trips/driver")
+	@PutMapping("/trips")
 	public ResponseEntity<CarTripDTO> updateCarTripByUserId(@Valid @RequestBody CarTripDTO carTripDTO) {
 		
 		// Get car and current trip from car trip DTO
