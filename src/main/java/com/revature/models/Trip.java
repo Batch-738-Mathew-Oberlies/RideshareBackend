@@ -70,27 +70,4 @@ public class Trip implements Serializable {
 		this.tripStatus = trip.getTripStatus();
     }
     
-    /**
-     * This constructor is for TripServiceImplTest purposes
-     * @param tripId
-     * @param name
-     * @param driver
-     * @param riders
-     * @param availableSeats
-     * @param departure
-     * @param destination
-     * @param tripDate
-     */
-	public Trip(int tripId, String name, User driver, List<User> riders, int availableSeats, Address departure, Address destination,
-			LocalDateTime tripDate) {
-		super();
-		this.tripId = tripId;
-		this.name = name;
-		this.driver = driver;
-		this.riders = riders;
-		this.availableSeats = availableSeats;
-		this.departure = departure;
-		this.destination = destination;
-		this.tripDate = tripDate;
-	}
 }

@@ -4,6 +4,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.revature.exceptions.IllegalNullArgumentException;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -35,13 +37,14 @@ public class AddressDTO {
 
 	public AddressDTO(Address address) {
 		super();
-		if (address != null) {
-			this.id = address.getId();
-			this.street = address.getStreet();
-			this.apt = address.getApt();
-			this.city = address.getCity();
-			this.state = address.getState();
-			this.zip = address.getZip();
+		if (address == null) {
+			throw new IllegalNullArgumentException("AddressDTO requires an address to construct.");
 		}
+		this.id = address.getId();
+		this.street = address.getStreet();
+		this.apt = address.getApt();
+		this.city = address.getCity();
+		this.state = address.getState();
+		this.zip = address.getZip();
 	}
 }

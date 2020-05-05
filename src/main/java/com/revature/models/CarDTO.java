@@ -5,6 +5,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 
+import com.revature.exceptions.IllegalNullArgumentException;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -36,15 +38,16 @@ public class CarDTO {
 
 	public CarDTO(Car car) {
 		super();
-		if (car != null) {
-			this.carId = car.getCarId();
-			this.color = car.getColor();
-			this.seats = car.getSeats();
-			this.make = car.getMake();
-			this.model = car.getModel();
-			this.year = car.getYear();
-			this.user = new UserDTO(car.getUser());
+		if (car == null) {
+			throw new IllegalNullArgumentException("Car DTO requires a car parameter");
 		}
+		this.carId = car.getCarId();
+		this.color = car.getColor();
+		this.seats = car.getSeats();
+		this.make = car.getMake();
+		this.model = car.getModel();
+		this.year = car.getYear();
+		this.user = new UserDTO(car.getUser());
 	}
 	
 	

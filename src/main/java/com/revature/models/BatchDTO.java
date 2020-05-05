@@ -4,6 +4,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.PositiveOrZero;
 
+import com.revature.exceptions.IllegalNullArgumentException;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -20,9 +22,10 @@ public class BatchDTO {
 
 	public BatchDTO(Batch batch) {
 		super();
-		if (batch != null) {
-			this.batchNumber = batch.getBatchNumber();
-			this.batchLocation = batch.getBatchLocation();
+		if(batch == null) {
+			throw new IllegalNullArgumentException("BatchDTO requires a batch to construct.");
 		}
+		this.batchNumber = batch.getBatchNumber();
+		this.batchLocation = batch.getBatchLocation();
 	}
 }
