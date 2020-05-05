@@ -46,7 +46,7 @@ public class DistanceServiceImpl implements DistanceService {
 		for (User d : userService.getActiveDrivers()) {
 			// TODO: see below comment
 			// if user == currentUser then continue;
-			Address homeAddress = d.getHAddress();
+			Address homeAddress = d.getHomeAddress();
 			String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
 			destinations.add(fullAdd);
 			userDestMap.put(fullAdd, d);

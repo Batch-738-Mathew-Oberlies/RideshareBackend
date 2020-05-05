@@ -49,9 +49,6 @@ public class UserController {
 	@ApiOperation(value="Returns user drivers", tags= {"User"})
 	@GetMapping("/driver/{address}")
 	public List<User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
-
-		//TODO: Log this instead of System.out
-		System.out.println(address);
 		List<String> origins = new ArrayList<>();
 		origins.add(address);
 		return distanceService.findClosestDrivers(origins);
