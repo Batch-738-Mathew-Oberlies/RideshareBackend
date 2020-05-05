@@ -53,4 +53,16 @@ public class MockObjects {
         a.setStreet("123 Fake Street");
         return a;
     }
+
+    public static Car getCar() {
+        Car c = new Car();
+        c.setCarId(1);
+        c.setColor("red");
+        c.setMake("Nissan");
+        c.setModel("Versa");
+        c.setSeats(8);
+        c.setUser(getAdonis());
+        c.setYear(2020);
+        return c;
+    }
 }

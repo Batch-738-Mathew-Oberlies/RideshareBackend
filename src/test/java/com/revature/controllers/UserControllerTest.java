@@ -43,8 +43,8 @@ public class UserControllerTest {
 	@Test
 	public void testGettingUsers() throws Exception {
 		List<User> users = new ArrayList<>();
-		users.add(new User());
-		users.add(new User());
+		users.add(MockObjects.getAdonis());
+		users.add(MockObjects.getAdonis());
 
 		when(us.getUsers()).thenReturn(users);
 

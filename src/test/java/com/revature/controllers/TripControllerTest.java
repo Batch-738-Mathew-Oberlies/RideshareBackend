@@ -5,6 +5,7 @@ import com.revature.models.Trip;
 import com.revature.models.TripDTO;
 import com.revature.models.User;
 import com.revature.models.UserDTO;
+import com.revature.services.DistanceService;
 import com.revature.services.TripService;
 import com.revature.services.UserService;
 import com.revature.utilities.MockObjects;
@@ -41,6 +42,9 @@ public class TripControllerTest {
 
     @MockBean
     private UserService userService;
+
+    @MockBean
+    private DistanceService distanceService;
 
     @Test
     public void testGetTrips() throws Exception {
