@@ -4,6 +4,8 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.revature.exceptions.IllegalNullArgumentException;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,9 +21,10 @@ public class AdminDTO {
 
 	public AdminDTO(Admin admin) {
 		super();
-		if (admin != null) {
-			this.adminId = admin.getAdminId();
-			this.userName = admin.getUserName();
+		if (admin == null) {
+			throw new IllegalNullArgumentException("The AdminDTO requires an admin object to construct");
 		}
+		this.adminId = admin.getAdminId();
+		this.userName = admin.getUserName();
 	}
 }

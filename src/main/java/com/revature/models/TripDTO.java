@@ -8,6 +8,8 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
+import com.revature.exceptions.IllegalNullArgumentException;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -45,6 +47,9 @@ public class TripDTO {
 	private TripStatus tripStatus;
 
 	public TripDTO(Trip trip) {
+		if(trip == null) {
+			throw new IllegalNullArgumentException("TripDTO requires a trip to construct.");
+		}
 		this.tripId = trip.getTripId();
 		this.name = trip.getName();
 		this.driver = new UserDTO(trip.getDriver());

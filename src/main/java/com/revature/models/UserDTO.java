@@ -7,6 +7,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import com.revature.exceptions.IllegalNullArgumentException;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -57,19 +59,20 @@ public class UserDTO {
 
 	public UserDTO(User user) {
 		super();
-		if (user != null) {
-			this.userId = user.getUserId();
-			this.userName = user.getUserName();
-			this.batch = new BatchDTO(user.getBatch());
-			this.firstName = user.getFirstName();
-			this.lastName = user.getLastName();
-			this.email = user.getEmail();
-			this.phoneNumber = user.getPhoneNumber();
-			this.driver = user.isDriver();
-			this.active = user.isActive();
-			this.acceptingRides = user.isAcceptingRides();
-			this.homeAddress = new AddressDTO(user.getHomeAddress());
-			this.workAddress = new AddressDTO(user.getWorkAddress());
+		if (user == null) {
+			throw new IllegalNullArgumentException("UserDTO requires a user to construct.");
 		}
+		this.userId = user.getUserId();
+		this.userName = user.getUserName();
+		this.batch = new BatchDTO(user.getBatch());
+		this.firstName = user.getFirstName();
+		this.lastName = user.getLastName();
+		this.email = user.getEmail();
+		this.phoneNumber = user.getPhoneNumber();
+		this.driver = user.isDriver();
+		this.active = user.isActive();
+		this.acceptingRides = user.isAcceptingRides();
+		this.homeAddress = new AddressDTO(user.getHomeAddress());
+		this.workAddress = new AddressDTO(user.getWorkAddress());
 	}
 }
