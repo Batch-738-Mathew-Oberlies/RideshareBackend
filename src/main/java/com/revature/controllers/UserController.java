@@ -2,9 +2,7 @@ package com.revature.controllers;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -18,7 +16,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import com.google.maps.errors.ApiException;
-import com.revature.models.Address;
 import com.revature.models.User;
 import com.revature.models.UserDTO;
 import com.revature.services.DistanceService;
@@ -51,19 +48,10 @@ public class UserController {
 
 	@ApiOperation(value="Returns user drivers", tags= {"User"})
 	@GetMapping("/driver/{address}")
-	public List <User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
-		List<String> destinationList = new ArrayList<>();
-		String[] origins = {address};
-		Map<String, User> topfive = new HashMap<>();
-		for (User d : userService.getActiveDrivers()) {
-			Address homeAddress = d.getHomeAddress();
-			String fullAdd = String.format("%s %s, %s", homeAddress.getStreet(), homeAddress.getCity(), homeAddress.getState());
-			destinationList.add(fullAdd);
-			topfive.put(fullAdd, d);
-		}
-		String[] destinations = new String[destinationList.size()];
-		destinations = destinationList.toArray(destinations);
-		return distanceService.distanceMatrix(origins, destinations);
+	public List<User> getTopFiveDrivers(@PathVariable("address")String address) throws ApiException, InterruptedException, IOException {
+		List<String> origins = new ArrayList<>();
+		origins.add(address);
+		return distanceService.findClosestDrivers(origins);
 	}
 	
 	/**

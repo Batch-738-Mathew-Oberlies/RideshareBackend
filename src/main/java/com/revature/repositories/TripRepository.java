@@ -56,4 +56,6 @@ public interface TripRepository extends JpaRepository<Trip, Integer> {
 	 */
 	@Query("select t from Trip t where t.driver.userId = ?1 and t.tripStatus = ?2 order by t.tripDate desc")
 	List<Trip> getMostRecentTripsByDriverIdAndTripStatus(int driverId, TripStatus tripStatus);
+
+	List<Trip> getByTripStatus(TripStatus tripStatus);
 }

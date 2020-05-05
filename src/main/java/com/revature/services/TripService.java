@@ -24,4 +24,5 @@ public interface TripService {
 	Trip addTrip(Trip trip);
 	Trip updateTrip(Trip trip);
 	String deleteTripById(int id);
+	List<Trip> getCurrentTrips();
 }
