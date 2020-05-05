@@ -1,13 +1,12 @@
 package com.revature.models;
 
+import com.revature.exceptions.IllegalNullArgumentException;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.revature.exceptions.IllegalNullArgumentException;
-
-import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
@@ -17,8 +16,8 @@ public class AddressDTO {
 	@Pattern(regexp = "[a-zA-Z0-9 ,]+", message = "Addresses may only contain letters, numbers, spaces, and commas")
 	@NotBlank(message = "Street cannot be blank.")
 	private String street;
-	
-	@Pattern(regexp = "[a-zA-Z0-9 ]*", message = "Apts may only contain letters, numbers, and spaces")
+
+	@Pattern(regexp = "^[#]?[a-zA-Z0-9 ]*", message = "Apts may only contain letters, numbers, and spaces")
 	private String apt;
 
 	@Pattern(regexp = "[a-zA-Z]+([ -][a-zA-Z]+)*", message = "Cities must be words made from letters separated by a single space or -.")
