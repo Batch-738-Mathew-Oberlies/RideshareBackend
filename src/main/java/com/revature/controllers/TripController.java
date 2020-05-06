@@ -56,22 +56,12 @@ public class TripController {
 	/**
 	 * HTTP GET method (/trips)
 	 *
-	 * @param offset optional: how many entries to skip over.
 	 * @return a list of all the trips along with a 200 code.
 	 */
 	@ApiOperation(value = "Return all trips", tags = {"Trip"})
 	@GetMapping
-	public ResponseEntity<List<TripDTO>> getTrips(
-			@PositiveOrZero
-			@RequestParam(name = "offset", required = false) 
-			Integer offset
-	) {
-		List<TripDTO> trips;
-		if (offset != null) {
-			trips = tripService.getTripsDTO(offset);
-		} else {
-			trips = tripService.getTripsDTO();
-		}
+	public ResponseEntity<List<TripDTO>> getTrips() {
+		List<TripDTO> trips = tripService.getTripsDTO();
 
 		if (!trips.isEmpty()) return ResponseEntity.ok(trips);
 
@@ -146,7 +136,6 @@ public class TripController {
 
 		if (trip.isPresent()) {
 			String message = tripService.deleteTripById(id);
-
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(message);
 		}
 
@@ -157,7 +146,6 @@ public class TripController {
 	 * HTTP GET method (/trips/rider)
 	 * 
 	 * @param riderId represents the rider User's ID.
-	 * @param offset optional: how many entries to skip over.
 	 * @return a list of trips matching the rider's ID.
 	 */
 	@ApiOperation(value = "Return all trips", tags = {"Trip"})
@@ -165,18 +153,9 @@ public class TripController {
 	public ResponseEntity<List<TripDTO>> getTripsByRiderId(
 			@Positive
 			@RequestParam(name = "riderId") 
-			Integer riderId,
-
-			@Positive
-			@RequestParam(name = "offset", required = false) 
-			Integer offset
+			Integer riderId
 	) {
-		List<TripDTO> trips;
-		if (offset != null) {
-			trips = tripService.getTripsByRiderIdDTO(riderId, offset);
-		} else {
-			trips = tripService.getTripsByRiderIdDTO(riderId);
-		}
+		List<TripDTO> trips = tripService.getTripsByRiderIdDTO(riderId);
 
 		if (!trips.isEmpty()) return ResponseEntity.ok(trips);
 
@@ -261,7 +240,6 @@ public class TripController {
 	 * 
 	 * @param driverId represents the ID of the User designated as driver.
 	 * @param riderId optional: filters only the trips that also have that rider.
-	 * @param offset optional: how many entries to skip over.
 	 * @return a list of trips matching the driver's ID.
 	 */
 	@ApiOperation(value = "Return all trips matching a driver's ID", tags = {"Trip", "Driver"})
@@ -273,26 +251,11 @@ public class TripController {
 
 			@Positive
 			@RequestParam(name = "riderId", required = false) 
-			Integer riderId,
-			
-			@PositiveOrZero
-			@RequestParam(name = "offset", required = false) 
-			Integer offset
+			Integer riderId
 	) {
 		List<TripDTO> trips;
-		if (riderId == null) {
-			if (offset != null) {
-				trips = tripService.getTripsByDriverIdDTO(driverId, offset);
-			} else {
-				trips = tripService.getTripsByDriverIdDTO(driverId);
-			}
-		} else {
-			if (offset != null) {
-				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId, offset);
-			} else {
-				trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId);
-			}
-		}
+		if (riderId == null) trips = tripService.getTripsByDriverIdDTO(driverId);
+		else trips = tripService.getTripsByDriverIdAndByRiderIdDTO(driverId, riderId);
 
 		if (!trips.isEmpty()) return ResponseEntity.ok(trips);
 
@@ -310,14 +273,13 @@ public class TripController {
 	 * @throws InterruptedException
 	 * @throws IOException
 	 */
-	@GetMapping("/closest/{address}")
-	public List<Trip> getClosestTrips(
-			@RequestParam(name = "userId", required = false) Integer userId,
-			@PathVariable String address
-			) throws ApiException, InterruptedException, IOException {
-		List<String> origins = new ArrayList<>();
-		origins.add(address);
-		return distanceService.findClosestTrips(origins, userId == null ? 0 : userId);
-	}
-
+//	@GetMapping("/closest/{address}")
+//	public List<Trip> getClosestTrips(
+//			@RequestParam(name = "userId", required = false) Integer userId,
+//			@PathVariable String address
+//	) throws ApiException, InterruptedException, IOException {
+//		List<String> origins = new ArrayList<>();
+//		origins.add(address);
+//		return distanceService.findClosestTrips(origins, userId == null ? 0 : userId);
+//	}
 }
