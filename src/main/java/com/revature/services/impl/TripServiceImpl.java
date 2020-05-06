@@ -24,18 +24,7 @@ public class TripServiceImpl implements TripService {
 	}
 	
 	@Override
-	public List<TripDTO> getTripsDTO(){
-		List<Trip> tripsRaw = this.getTrips();
-		List<TripDTO> trips = new ArrayList<>();
-		for (Trip trip : tripsRaw) {
-			trips.add(new TripDTO(trip));
-		}
-		return trips;
-	}
-	
-	//TODO add pagination support
-	@Override
-	public List<TripDTO> getTripsDTO(int offset){
+	public List<TripDTO> getTripsDTO() {
 		List<Trip> tripsRaw = this.getTrips();
 		List<TripDTO> trips = new ArrayList<>();
 		for (Trip trip : tripsRaw) {
@@ -50,53 +39,12 @@ public class TripServiceImpl implements TripService {
 	}
 
 	@Override
-	public List<Trip> getTripsByDriverId(int driverId) {
-		return tripRepository.getTripsByDriverId(driverId);
-	}
-	
-	/**
-	 * This method gets the most "CURRENT" trip from a sorted ArrayList by tripDate
-	 */
-	@Override
-	public Trip getCurrentTripByDriverId(int driverId) {
-		
-		List<Trip> trips = tripRepository.getMostRecentTripsByDriverIdAndTripStatus(driverId, TripStatus.CURRENT);
-		
-		if (!trips.isEmpty()) {
-			return trips.get(0);
-		}
-		
-		return null;
-	}
-
-	@Override
-	public List<TripDTO> getTripsByDriverIdDTO(int driverId){
-		List<Trip> tripsRaw = this.getTripsByDriverId(driverId);
-		List<TripDTO> trips = new ArrayList<>();
-		for (Trip trip : tripsRaw) {
-			trips.add(new TripDTO(trip));
-		}
-		return trips;
-	}
-	
-	//TODO add pagination support
-	@Override
-	public List<TripDTO> getTripsByDriverIdDTO(int driverId, int offset){
-		List<Trip> tripsRaw = this.getTripsByDriverId(driverId);
-		List<TripDTO> trips = new ArrayList<>();
-		for (Trip trip : tripsRaw) {
-			trips.add(new TripDTO(trip));
-		}
-		return trips;
-	}
-
-	@Override
 	public List<Trip> getTripsByRiderId(int riderId) {
 		return tripRepository.getTripsByRiderId(riderId);
 	}
 
 	@Override
-	public List<TripDTO> getTripsByRiderIdDTO(int riderId){
+	public List<TripDTO> getTripsByRiderIdDTO(int riderId) {
 		List<Trip> tripsRaw = this.getTripsByRiderId(riderId);
 		List<TripDTO> trips = new ArrayList<>();
 		for (Trip trip : tripsRaw) {
@@ -104,11 +52,15 @@ public class TripServiceImpl implements TripService {
 		}
 		return trips;
 	}
-	
-	//TODO add pagination support
+
 	@Override
-	public List<TripDTO> getTripsByRiderIdDTO(int riderId, int offset){
-		List<Trip> tripsRaw = this.getTripsByRiderId(riderId);
+	public List<Trip> getTripsByDriverId(int driverId) {
+		return tripRepository.getTripsByDriverId(driverId);
+	}
+
+	@Override
+	public List<TripDTO> getTripsByDriverIdDTO(int driverId) {
+		List<Trip> tripsRaw = this.getTripsByDriverId(driverId);
 		List<TripDTO> trips = new ArrayList<>();
 		for (Trip trip : tripsRaw) {
 			trips.add(new TripDTO(trip));
@@ -122,18 +74,7 @@ public class TripServiceImpl implements TripService {
 	}
 
 	@Override
-	public List<TripDTO> getTripsByDriverIdAndByRiderIdDTO(int driverId, int riderId){
-		List<Trip> tripsRaw = this.getTripsByDriverIdAndByRiderId(driverId, riderId);
-		List<TripDTO> trips = new ArrayList<>();
-		for (Trip trip : tripsRaw) {
-			trips.add(new TripDTO(trip));
-		}
-		return trips;
-	}
-	
-	//TODO add pagination support
-	@Override
-	public List<TripDTO> getTripsByDriverIdAndByRiderIdDTO(int driverId, int riderId, int offset){
+	public List<TripDTO> getTripsByDriverIdAndByRiderIdDTO(int driverId, int riderId) {
 		List<Trip> tripsRaw = this.getTripsByDriverIdAndByRiderId(driverId, riderId);
 		List<TripDTO> trips = new ArrayList<>();
 		for (Trip trip : tripsRaw) {
@@ -161,5 +102,17 @@ public class TripServiceImpl implements TripService {
 	@Override
 	public List<Trip> getCurrentTrips() {
 		return tripRepository.getByTripStatus(TripStatus.CURRENT);
+	}
+
+	/**
+	 * This method gets the most "CURRENT" trip from a sorted ArrayList by tripDate
+	 */
+	@Override
+	public Trip getCurrentTripByDriverId(int driverId) {
+		List<Trip> trips = tripRepository.getMostRecentTripsByDriverIdAndTripStatus(driverId, TripStatus.CURRENT);
+
+		if (!trips.isEmpty()) return trips.get(0);
+
+		return null;
 	}
 }
