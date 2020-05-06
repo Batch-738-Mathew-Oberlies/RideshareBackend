@@ -23,129 +23,170 @@ import static org.mockito.Mockito.when;
 @RunWith(SpringRunner.class)
 public class TripServiceImplTest {
 	@InjectMocks
-	private TripServiceImpl tsi;
+	private TripServiceImpl tripService;
 	
 	@Mock
-	private TripRepository tr;
+	private TripRepository tripRepository;
 	
 	@Test
-	public void testGettingTrips() {
+	public void testGetTrips() {
 		List<Trip> trips = new ArrayList<>();
-		trips.add(new Trip());
-		trips.add(new Trip());
-		when(tr.findAll()).thenReturn(trips);
+		trips.add(MockObjects.getTrip());
+		trips.add(MockObjects.getTrip());
+
+		when(tripRepository.findAll()).thenReturn(trips);
 		
-		assertEquals(2, tsi.getTrips().size());
+		assertEquals(2, tripService.getTripsDTO().size());
 	}
 	
 	@Test
-	public void testGettingTripById() {
-		List<User> riders = new ArrayList<>();
-		riders.add(MockObjects.getAdonis());
-		riders.add(MockObjects.getAdonis());
+	public void testGetTripById() {
 		Trip expected = MockObjects.getTrip();
-		when(tr.findById(1)).thenReturn(Optional.of(expected));
-		Optional<Trip> actual = tsi.getTripById(1);
-		if (actual.isPresent()) {
-			assertEquals(expected, actual.get());
-		} else {
-			fail();
-		}
+
+		when(tripRepository.findById(expected.getTripId())).thenReturn(Optional.of(expected));
+
+		Optional<Trip> actual = tripService.getTripById(expected.getTripId());
+		if (actual.isPresent()) assertEquals(expected, actual.get());
+		else fail();
 	}
-	
+
 	@Test
-	public void testGettingTripsByDriverId() {
+	public void testGetTripsByRiderId() {
 		List<User> riders = new ArrayList<>();
-		riders.add(MockObjects.getAdonis());
-		riders.add(MockObjects.getAdonis());
+		User rider = MockObjects.getAdonis();
+		riders.add(rider);
+
+		Trip trip1 = MockObjects.getTrip();
+		trip1.setRiders(riders);
+		Trip trip2 = MockObjects.getTrip();
+		trip2.setRiders(riders);
+
 		List<Trip> trips = new ArrayList<>();
-		trips.add(MockObjects.getTrip());
-		trips.add(MockObjects.getTrip());
-		when(tr.getTripsByDriverId(1)).thenReturn(trips);
+		trips.add(trip1);
+		trips.add(trip2);
+
+		when(tripRepository.getTripsByRiderId(rider.getUserId())).thenReturn(trips);
 		
-		assertEquals(2, tsi.getTripsByDriverId(1).size());
+		assertEquals(2, tripService.getTripsByRiderIdDTO(rider.getUserId()).size());
 	}
-	
+
 	@Test
-	public void testGettingTripsByRiderId() {
-		List<User> riders = new ArrayList<>();
-		riders.add(MockObjects.getAdonis());
-		riders.add(MockObjects.getAdonis());
+	public void testGetTripsByDriverId() {
+		User driver = MockObjects.getAdonis();
+
 		List<Trip> trips = new ArrayList<>();
-		trips.add(MockObjects.getTrip());
-		trips.add(MockObjects.getTrip());
-		when(tr.getTripsByRiderId(1)).thenReturn(trips);
-		
-		assertEquals(2, tsi.getTripsByRiderId(1).size());
+		Trip trip1 = MockObjects.getTrip();
+		trip1.setDriver(driver);
+		trips.add(trip1);
+
+		Trip trip2 = MockObjects.getTrip();
+		trip2.setDriver(driver);
+		trips.add(trip2);
+
+		when(tripRepository.getTripsByDriverId(driver.getUserId())).thenReturn(trips);
+
+		assertEquals(2, tripService.getTripsByDriverIdDTO(driver.getUserId()).size());
 	}
-	
+
 	@Test
-	public void testAddingTrips() {
+	public void testGetTripsByDriverIdAndRiderId() {
+		User driver = MockObjects.getAdonis();
+		driver.setUserId(1);
+
 		List<User> riders = new ArrayList<>();
-		riders.add(MockObjects.getAdonis());
-		riders.add(MockObjects.getAdonis());
+		User rider = MockObjects.getAdonis();
+		rider.setUserId(2);
+		riders.add(rider);
+
+		List<Trip> trips = new ArrayList<>();
+		Trip trip1 = MockObjects.getTrip();
+		trip1.setDriver(driver);
+		trip1.setRiders(riders);
+		trips.add(trip1);
+
+		Trip trip2 = MockObjects.getTrip();
+		trip2.setDriver(driver);
+		trip2.setRiders(riders);
+		trips.add(trip2);
+
+		when(tripRepository.getTripsByDriverIdAndByRiderId(
+				driver.getUserId(), rider.getUserId()
+		))
+				.thenReturn(trips);
+
+		assertEquals(2, tripService.getTripsByDriverIdAndByRiderIdDTO(
+				driver.getUserId(), rider.getUserId()
+		)
+				.size());
+	}
+
+	@Test
+	public void testAddTrips() {
 		Trip expected = MockObjects.getTrip();
-		when(tr.save(expected)).thenReturn(expected);
-		Trip actual = tsi.addTrip(expected);
-		
+
+		when(tripRepository.save(expected)).thenReturn(expected);
+
+		Trip actual = tripService.addTrip(expected);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
-	public void testUpdatingUser() {
-		List<User> riders = new ArrayList<>();
-		riders.add(MockObjects.getAdonis());
-		riders.add(MockObjects.getAdonis());
+	public void testUpdateTrip() {
 		Trip expected = MockObjects.getTrip();
-		when(tr.save(expected)).thenReturn(expected);
-		Trip actual = tsi.updateTrip(expected);
-		
+
+		when(tripRepository.save(expected)).thenReturn(expected);
+
+		Trip actual = tripService.updateTrip(expected);
 		assertEquals(expected, actual);
 	}
-	
+
 	@Test
-	public void testDeletingTripById() {
+	public void testDeleteTripById() {
 		String expected = "Trip with id: 1 was deleted.";
-		when(tr.existsById(1)).thenReturn(true);
-		String actual = tsi.deleteTripById(1);
-		
+
+		when(tripRepository.existsById(1)).thenReturn(true);
+
+		String actual = tripService.deleteTripById(1);
 		assertEquals(expected, actual);
 	}
-	
+
+	@Test
+	public void testGetCurrentTrips() {
+		List<Trip> trips = new ArrayList<>();
+		Trip trip1 = MockObjects.getTrip();
+		Trip trip2 = MockObjects.getTrip();
+		trips.add(trip1);
+		trips.add(trip2);
+
+		when(tripRepository.getByTripStatus(TripStatus.CURRENT)).thenReturn(trips);
+
+		List<Trip> actual = tripService.getCurrentTrips();
+		assertNotNull(actual);
+	}
+
 	@Test
 	public void testGetCurrentTripsByDriverId() {
-		List<Trip> list = new ArrayList<>();
+		List<Trip> trips = new ArrayList<>();
 		Trip trip1 = MockObjects.getTrip();
 		Trip trip2 = MockObjects.getTrip();
 		User driver = MockObjects.getAdonis();
 		trip1.setDriver(driver);
 		trip2.setDriver(driver);
-		list.add(trip1);
-		list.add(trip2);
-		when(tr.getMostRecentTripsByDriverIdAndTripStatus(1, TripStatus.CURRENT))
-			.thenReturn(list);
-		when(tr.getMostRecentTripsByDriverIdAndTripStatus(2, TripStatus.CURRENT))
-		.thenReturn(Collections.emptyList());
-		Trip actual1 = tsi.getCurrentTripByDriverId(1);
-		Trip actual2 = tsi.getCurrentTripByDriverId(2);
-		
-		verify(tr).getMostRecentTripsByDriverIdAndTripStatus(1, TripStatus.CURRENT);
-		verify(tr).getMostRecentTripsByDriverIdAndTripStatus(2, TripStatus.CURRENT);
-		assertEquals(list.get(0), actual1);
-		assertNull(actual2);	
-	}
-	
-	@Test
-	public void testGetTripsByDriverIdDTO() {
-		List<Trip> list = new ArrayList<>();
-		User driver = MockObjects.getAdonis();
-		Trip trip1 = MockObjects.getTrip();
-		trip1.setDriver(driver);
-		Trip trip2 = MockObjects.getTrip();
-		trip2.setDriver(driver);
-		list.add(trip1);
-		list.add(trip2);
-		when(tr.getMostRecentTripsByDriverIdAndTripStatus(1, TripStatus.CURRENT))
-			.thenReturn(list);
+		trips.add(trip1);
+		trips.add(trip2);
+
+		when(tripRepository.getMostRecentTripsByDriverIdAndTripStatus(1, TripStatus.CURRENT))
+				.thenReturn(trips);
+		when(tripRepository.getMostRecentTripsByDriverIdAndTripStatus(2, TripStatus.CURRENT))
+				.thenReturn(Collections.emptyList());
+
+		Trip actual1 = tripService.getCurrentTripByDriverId(1);
+		Trip actual2 = tripService.getCurrentTripByDriverId(2);
+
+		verify(tripRepository).getMostRecentTripsByDriverIdAndTripStatus(1, TripStatus.CURRENT);
+		verify(tripRepository).getMostRecentTripsByDriverIdAndTripStatus(2, TripStatus.CURRENT);
+
+		assertEquals(trips.get(0), actual1);
+		assertNull(actual2);
 	}
 }
